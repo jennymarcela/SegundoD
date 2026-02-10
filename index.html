@@ -20,181 +20,54 @@
             transition: all 0.2s ease;
         }
         .calendar-btn:hover {
-            transform: scale(1.05);
+            transform: scale(1.03);
         }
-        .birthday-pulse {
-            animation: pulse 2s infinite;
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
         }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .link-style {
             color: #2563eb;
             text-decoration: underline;
-            word-break: break-all;
-        }
-        .hidden-week {
-            display: none;
         }
         .past-day {
             opacity: 0.7;
             filter: grayscale(20%);
         }
+        .day-card-content {
+            min-height: 580px;
+        }
     </style>
 </head>
 <body class="p-4 md:p-8">
-    <div class="max-w-6xl mx-auto bg-white rounded-[40px] shadow-2xl overflow-hidden border-8 border-white relative">
+    <div class="max-w-[95%] mx-auto bg-white rounded-[40px] shadow-2xl overflow-hidden border-8 border-white relative">
         
-        <!-- Decoración Superior y Navegación -->
+        <!-- CABECERA -->
         <div class="bg-emerald-500 p-6 text-white relative overflow-hidden">
             <div class="absolute top-2 left-4 text-4xl opacity-50">🌿</div>
             
             <div class="text-center">
-                <h1 class="text-4xl md:text-5xl font-extrabold tracking-widest uppercase mb-2">School Timetable</h1>
-                <p id="week-label" class="text-xl font-bold bg-white text-emerald-600 inline-block px-6 py-1 rounded-full uppercase">Semana Actual (Feb 09 - 13)</p>
+                <h1 class="text-4xl md:text-5xl font-extrabold tracking-widest uppercase mb-2">School Timetable 2D</h1>
+                <p id="week-label" class="text-xl font-bold bg-white text-emerald-600 inline-block px-6 py-1 rounded-full uppercase shadow-sm">Cargando...</p>
             </div>
 
-            <!-- Botón de Siguiente Semana -->
-            <button onclick="toggleWeek()" id="nav-btn" class="absolute top-6 right-6 bg-emerald-400 hover:bg-emerald-300 text-white font-bold py-2 px-4 rounded-2xl shadow-lg border-2 border-white transition-all transform hover:scale-110 flex items-center gap-2 z-10">
+            <button onclick="toggleWeek()" id="nav-btn" class="absolute top-6 right-6 bg-white text-emerald-600 hover:bg-emerald-50 font-bold py-2 px-6 rounded-2xl shadow-lg transition-all transform hover:scale-105 flex items-center gap-2 z-20 border-2 border-emerald-100">
                 <span id="btn-text">Ver Próxima Semana</span>
                 <span id="btn-icon">➡️</span>
             </button>
         </div>
 
-        <!-- CONTENIDO: SEMANA ACTUAL -->
-        <div id="week-current" class="grid grid-cols-1 md:grid-cols-5 gap-4 p-6 bg-emerald-50">
-            
-            <!-- LUNES 09 - RESTAURADO -->
-            <div class="flex flex-col h-full past-day">
-                <div class="bg-blue-500 text-white p-3 text-center rounded-t-3xl font-bold uppercase text-lg">Lunes 09</div>
-                <div class="bg-white p-4 flex-grow border-x-4 border-b-4 border-blue-500 rounded-b-3xl card-shadow flex flex-col">
-                    <div class="mb-3">
-                        <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Día 4</span>
-                    </div>
-
-                    <div class="mb-3 bg-yellow-50 border border-yellow-200 rounded-xl p-2">
-                        <p class="text-[9px] font-bold text-yellow-700 uppercase">🎂 CUMPLEAÑOS:</p>
-                        <p class="text-[10px] text-gray-700 font-bold">Martín Chacón (Feb 07)</p>
-                    </div>
-                    
-                    <div class="mb-3 text-xs">
-                        <p class="font-bold text-gray-700 mb-0.5">👔 Uniforme:</p>
-                        <p class="text-blue-600 font-bold uppercase italic">Diario 👞</p>
-                    </div>
-
-                    <div class="mb-3 flex-grow">
-                        <p class="font-bold text-gray-700 text-xs mb-1">📚 Horario:</p>
-                        <ul class="text-[10px] text-gray-600 space-y-0.5">
-                            <li>• Perfil, Natural, Math, English, Teatro</li>
-                            <li class="font-bold text-emerald-700">• ESP: Práctica Sinónimos/Antónimos</li>
-                        </ul>
-                    </div>
-                    <p class="text-[9px] text-center font-bold text-gray-400 mt-2 uppercase">✓ Día Finalizado</p>
-                </div>
-            </div>
-
-            <!-- MARTES 10 -->
-            <div class="flex flex-col h-full">
-                <div class="bg-yellow-400 text-white p-3 text-center rounded-t-3xl font-bold uppercase text-lg">Martes 10</div>
-                <div class="bg-white p-4 flex-grow border-x-4 border-b-4 border-yellow-400 rounded-b-3xl card-shadow flex flex-col">
-                    <div class="mb-4"><span class="bg-yellow-100 text-yellow-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Día 5</span></div>
-                    <div class="mb-4"><p class="font-bold text-gray-700 text-xs mb-0.5">👔 Uniforme:</p><p class="text-yellow-600 font-bold text-sm uppercase">Sudadera</p></div>
-                    <div class="flex-grow p-2 bg-blue-50 rounded-xl border border-blue-200">
-                        <p class="font-bold text-blue-700 text-[9px] mb-1 uppercase">📖 PRÁCTICA ESPAÑOL:</p>
-                        <a href="https://wordwall.net/es/resource/32706393" target="_blank" class="text-[9px] link-style font-bold">Sinónimos/Antónimos</a>
-                    </div>
-                    <button onclick="addToCalendar('Martes 10', 'Sudadera', 'ESP: https://wordwall.net/es/resource/32706393', '20260209T170000', '20260209T180000', '')" class="calendar-btn mt-4 w-full bg-yellow-50 text-yellow-600 border border-yellow-200 py-2 rounded-xl text-[10px] font-bold">📅 Recordatorio</button>
-                </div>
-            </div>
-
-            <!-- MIÉRCOLES 11 -->
-            <div class="flex flex-col h-full">
-                <div class="bg-pink-400 text-white p-3 text-center rounded-t-3xl font-bold uppercase text-lg">Miércoles 11</div>
-                <div class="bg-white p-4 flex-grow border-x-4 border-b-4 border-pink-400 rounded-b-3xl card-shadow flex flex-col">
-                    <div class="mb-4"><span class="bg-pink-100 text-pink-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Día 6</span></div>
-                    <div class="mb-3"><p class="font-bold text-gray-700 text-xs mb-0.5">👔 Uniforme:</p><p class="text-pink-600 font-bold text-sm uppercase">Diario (C)</p></div>
-                    <div class="mb-2 flex-grow">
-                        <div class="bg-orange-50 p-2 rounded-xl border-2 border-orange-200 mb-2">
-                            <p class="font-bold text-orange-700 text-[9px] mb-1 uppercase">🚀 TAREA CLASIFICACIÓN:</p>
-                            <p class="text-[8px] text-gray-700 leading-tight">Materiales 5x5 cm limpios.</p>
-                        </div>
-                        <div class="bg-blue-50 p-2 rounded-xl border border-blue-200">
-                            <p class="font-bold text-blue-700 text-[9px] mb-1 uppercase">📖 PRÁCTICA ESPAÑOL:</p>
-                            <a href="https://wordwall.net/es/resource/32706393" target="_blank" class="text-[8px] link-style font-bold">Wordwall: Activa</a>
-                        </div>
-                    </div>
-                    <button onclick="addDetailedTask('Miércoles 11', 'Diario', '20260210T170000', '20260210T180000')" class="calendar-btn mt-3 w-full bg-orange-600 text-white py-2 rounded-xl text-[10px] font-bold">📅 Recordatorio</button>
-                </div>
-            </div>
-
-            <!-- JUEVES 12 -->
-            <div class="flex flex-col h-full">
-                <div class="bg-sky-400 text-white p-3 text-center rounded-t-3xl font-bold uppercase text-lg">Jueves 12</div>
-                <div class="bg-white p-4 flex-grow border-x-4 border-b-4 border-sky-400 rounded-b-3xl card-shadow flex flex-col">
-                    <div class="mb-4"><span class="bg-sky-100 text-sky-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Día 1</span></div>
-                    <div class="mb-3"><p class="font-bold text-gray-700 text-xs mb-0.5">👔 Uniforme:</p><p class="text-sky-600 font-bold text-sm uppercase">Sudadera</p></div>
-                    <div class="mb-4 flex-grow">
-                        <div class="bg-blue-50 p-2 rounded-xl border border-blue-200">
-                            <p class="font-bold text-blue-700 text-[9px] mb-1 uppercase">📖 PRÁCTICA ESPAÑOL:</p>
-                            <a href="https://wordwall.net/es/resource/32706393" target="_blank" class="text-[8px] link-style font-bold">Link: Wordwall</a>
-                        </div>
-                    </div>
-                    <button onclick="addToCalendar('Jueves 12', 'Sudadera', 'ESP: https://wordwall.net/es/resource/32706393', '20260211T170000', '20260211T180000', '')" class="calendar-btn mt-4 w-full bg-sky-50 text-sky-600 border border-sky-200 py-2 rounded-xl text-[10px] font-bold">📅 Recordatorio</button>
-                </div>
-            </div>
-
-            <!-- VIERNES 13 -->
-            <div class="flex flex-col h-full">
-                <div class="bg-orange-400 text-white p-3 text-center rounded-t-3xl font-bold uppercase text-lg">Viernes 13</div>
-                <div class="bg-white p-4 flex-grow border-x-4 border-b-4 border-orange-400 rounded-b-3xl card-shadow flex flex-col">
-                    <div class="mb-4"><span class="bg-orange-100 text-orange-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Día 2</span></div>
-                    <div class="mb-3"><p class="font-bold text-gray-700 text-xs mb-0.5">👔 Uniforme:</p><p class="text-orange-600 font-bold text-sm uppercase">Diario</p></div>
-                    <div class="mb-4 flex-grow">
-                        <div class="bg-blue-50 p-2 rounded-xl border border-blue-200">
-                            <p class="font-bold text-blue-700 text-[9px] mb-1 uppercase">📖 PRÁCTICA ESPAÑOL:</p>
-                            <a href="https://wordwall.net/es/resource/32706393" target="_blank" class="text-[8px] link-style font-bold">Link: Wordwall</a>
-                        </div>
-                    </div>
-                    <button onclick="addToCalendar('Viernes 13', 'Diario', 'ESP: https://wordwall.net/es/resource/32706393', '20260212T170000', '20260212T180000', '')" class="calendar-btn mt-4 w-full bg-orange-50 text-orange-600 border border-orange-200 py-2 rounded-xl text-[10px] font-bold">📅 Recordatorio</button>
-                </div>
+        <!-- CONTENEDOR PRINCIPAL -->
+        <div id="main-content" class="p-6 bg-emerald-50">
+            <div id="grid-container" class="grid grid-cols-1 md:grid-cols-5 gap-4 fade-in">
+                <!-- Inyectado por JS -->
             </div>
         </div>
 
-        <!-- CONTENIDO: PRÓXIMA SEMANA -->
-        <div id="week-next" class="grid grid-cols-1 md:grid-cols-5 gap-4 p-6 bg-emerald-50 hidden-week">
-            <!-- LUNES 16 -->
-            <div class="flex flex-col h-full">
-                <div class="bg-blue-500 text-white p-3 text-center rounded-t-3xl font-bold uppercase text-lg">Lunes 16</div>
-                <div class="bg-white p-4 flex-grow border-x-4 border-b-4 border-blue-500 rounded-b-3xl card-shadow flex flex-col">
-                    <div class="mb-4"><span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Día 3</span></div>
-                    <div class="mb-4"><p class="font-bold text-gray-700 text-xs mb-0.5">👔 Uniforme:</p><p class="text-blue-600 font-bold text-sm uppercase">Diario</p></div>
-                    <div class="flex-grow flex items-center justify-center p-4 bg-gray-50 rounded-2xl border border-dashed border-gray-300">
-                        <p class="text-[10px] text-gray-400 italic font-bold">Clases Día 3</p>
-                    </div>
-                </div>
-            </div>
-            <!-- ... Repetir estructura para los demás días de la próxima semana ... -->
-            <div class="flex flex-col h-full">
-                <div class="bg-yellow-400 text-white p-3 text-center rounded-t-3xl font-bold uppercase text-lg">Martes 17</div>
-                <div class="bg-white p-4 flex-grow border-x-4 border-b-4 border-yellow-400 rounded-b-3xl card-shadow flex flex-col text-center justify-center"><p class="text-[10px] text-gray-400">Sudadera - Día 4</p></div>
-            </div>
-            <div class="flex flex-col h-full">
-                <div class="bg-pink-400 text-white p-3 text-center rounded-t-3xl font-bold uppercase text-lg">Miércoles 18</div>
-                <div class="bg-white p-4 flex-grow border-x-4 border-b-4 border-pink-400 rounded-b-3xl card-shadow flex flex-col text-center justify-center"><p class="text-[10px] text-gray-400">Diario - Día 5</p></div>
-            </div>
-            <div class="flex flex-col h-full">
-                <div class="bg-sky-400 text-white p-3 text-center rounded-t-3xl font-bold uppercase text-lg">Jueves 19</div>
-                <div class="bg-white p-4 flex-grow border-x-4 border-b-4 border-sky-400 rounded-b-3xl card-shadow flex flex-col text-center justify-center"><p class="text-[10px] text-gray-400">Sudadera - Día 6</p></div>
-            </div>
-            <div class="flex flex-col h-full">
-                <div class="bg-orange-400 text-white p-3 text-center rounded-t-3xl font-bold uppercase text-lg">Viernes 20</div>
-                <div class="bg-white p-4 flex-grow border-x-4 border-b-4 border-orange-400 rounded-b-3xl card-shadow flex flex-col text-center justify-center"><p class="text-[10px] text-gray-400">Diario - Día 1</p></div>
-            </div>
-        </div>
-
-        <!-- Footer -->
+        <!-- FOOTER -->
         <div class="bg-white p-5 border-t-2 border-dashed border-gray-200 flex flex-wrap items-center justify-between gap-4">
             <div class="flex items-center gap-3">
                 <div class="bg-emerald-100 p-2 rounded-full text-2xl">🥳</div>
@@ -204,54 +77,135 @@
                 </div>
             </div>
             <div class="bg-blue-50 text-blue-600 px-4 py-2 rounded-2xl text-[10px] font-bold border border-blue-100 uppercase">
-                📖 TAREA ESPAÑOL ACTIVA
+                📖 Horarios Oficiales Cargados (Días 1-4)
             </div>
         </div>
     </div>
 
     <script>
-        let isNextWeek = false;
+        let currentWeekNum = 1;
+
+        // DICCIONARIO DE HORARIOS OFICIALES (Actualizado por el usuario)
+        const schedules = {
+            1: "<li>• Danza</li><li>• Psicomotricidad</li><li>• Español</li><li>• Artes</li><li>• Math</li><li>• English</li>",
+            2: "<li>• STEAM</li><li>• Social</li><li>• Science</li><li>• Español</li><li>• English</li><li>• Phonics</li><li>• Math</li>",
+            3: "<li>• P.E.</li><li>• Art</li><li>• Math</li><li>• English</li><li>• Science</li><li>• Español</li>",
+            4: "<li>• Perfil</li><li>• Science</li><li>• Math</li><li>• English</li><li>• Teatro</li><li>• Español</li>",
+            5: "<li class='text-gray-400 italic font-medium'>Por confirmar</li>",
+            6: "<li class='text-gray-400 italic font-medium'>Por confirmar</li>"
+        };
+
+        const weekData = {
+            1: {
+                label: "Semana Actual (Feb 09 - 13)",
+                days: [
+                    { nombre: "Lunes 09", numDia: 4, uniforme: "Diario 👞", past: true, bday: "Martín Chacón (Feb 07)" },
+                    { nombre: "Martes 10", numDia: 5, uniforme: "Sudadera", past: false, link: "https://wordwall.net/es/resource/32706393" },
+                    { nombre: "Miércoles 11", numDia: 6, uniforme: "Diario (C)", past: false, tarea: true },
+                    { nombre: "Jueves 12", numDia: 1, uniforme: "Sudadera", past: false },
+                    { nombre: "Viernes 13", numDia: 2, uniforme: "Diario", past: false }
+                ]
+            },
+            2: {
+                label: "Próxima Semana (Feb 16 - 20)",
+                days: [
+                    { nombre: "Lunes 16", numDia: 3, uniforme: "Diario", past: false },
+                    { nombre: "Martes 17", numDia: 4, uniforme: "Sudadera", past: false },
+                    { nombre: "Miércoles 18", numDia: 5, uniforme: "Diario", past: false },
+                    { nombre: "Jueves 19", numDia: 6, uniforme: "Sudadera", past: false },
+                    { nombre: "Viernes 20", numDia: 1, uniforme: "Diario", past: false }
+                ]
+            }
+        };
+
+        function renderWeek(weekNum) {
+            const container = document.getElementById('grid-container');
+            const data = weekData[weekNum];
+            document.getElementById('week-label').innerText = data.label;
+            container.innerHTML = ''; 
+
+            data.days.forEach(day => {
+                const colors = {
+                    "Lunes": "bg-blue-500 border-blue-500",
+                    "Martes": "bg-yellow-400 border-yellow-400",
+                    "Miércoles": "bg-pink-400 border-pink-400",
+                    "Jueves": "bg-sky-400 border-sky-400",
+                    "Viernes": "bg-orange-400 border-orange-400"
+                };
+                const dayKey = day.nombre.split(' ')[0];
+                const colorClass = colors[dayKey] || "bg-emerald-500 border-emerald-500";
+
+                const cardHTML = `
+                    <div class="flex flex-col h-full ${day.past ? 'past-day' : ''}">
+                        <div class="${colorClass.split(' ')[0]} text-white p-3 text-center rounded-t-3xl font-bold uppercase text-lg shadow-sm">
+                            ${day.nombre}
+                        </div>
+                        <div class="bg-white p-4 flex-grow border-x-4 border-b-4 ${colorClass.split(' ')[1]} rounded-b-3xl card-shadow flex flex-col day-card-content">
+                            <div class="mb-3">
+                                <span class="bg-gray-100 text-gray-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Día ${day.numDia}</span>
+                            </div>
+
+                            ${day.bday ? `
+                            <div class="mb-3 bg-yellow-50 border border-yellow-200 rounded-xl p-2">
+                                <p class="text-[9px] font-bold text-yellow-700 uppercase">🎂 CUMPLEAÑOS:</p>
+                                <p class="text-[10px] text-gray-700 font-bold">${day.bday}</p>
+                            </div>` : ''}
+
+                            <div class="mb-3">
+                                <p class="font-bold text-gray-700 text-xs mb-0.5">👔 Uniforme:</p>
+                                <p class="${colorClass.split(' ')[0].replace('bg-', 'text-')} font-bold text-sm uppercase italic leading-tight">${day.uniforme}</p>
+                            </div>
+
+                            ${day.tarea ? `
+                            <div class="bg-orange-50 p-3 rounded-2xl border-2 border-orange-200 mb-3 shadow-sm">
+                                <p class="font-bold text-orange-700 text-[9px] mb-1 uppercase">🚀 TAREA MATERIALES:</p>
+                                <ul class="text-[9px] text-gray-800 space-y-0.5 font-semibold">
+                                    <li>• 2-4 piezas Papel, Plástico, Metal</li>
+                                    <li class="text-orange-600 italic">Limpios y de 5x5 cm</li>
+                                </ul>
+                            </div>` : ''}
+
+                            <div class="mb-3 flex-grow">
+                                <p class="font-bold text-gray-400 text-[10px] uppercase mb-1 tracking-wider">📚 Horario</p>
+                                <ul class="text-[11px] text-gray-700 space-y-1 font-medium">
+                                    ${schedules[day.numDia]}
+                                </ul>
+                                ${day.link ? `
+                                <div class="mt-4 p-2 bg-blue-50 rounded-xl border border-blue-200 shadow-sm">
+                                    <p class="font-bold text-blue-700 text-[9px] mb-1 uppercase tracking-tight">🔗 Práctica Español:</p>
+                                    <a href="${day.link}" target="_blank" class="text-[9px] link-style font-bold block truncate">Juego Wordwall Sinónimos</a>
+                                </div>` : ''}
+                            </div>
+
+                            ${day.past ? 
+                                `<p class="text-[9px] text-center font-bold text-gray-400 mt-2 uppercase">✓ Día Finalizado</p>` : 
+                                `<button onclick="handleCalendar('${day.nombre}', '${day.uniforme}', ${day.tarea})" class="calendar-btn mt-4 w-full bg-gray-50 text-gray-500 border border-gray-200 py-2.5 rounded-xl text-[10px] font-bold shadow-sm">📅 Agendar Recordatorio</button>`
+                            }
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', cardHTML);
+            });
+        }
 
         function toggleWeek() {
-            isNextWeek = !isNextWeek;
-            const weekCurrent = document.getElementById('week-current');
-            const weekNext = document.getElementById('week-next');
-            const weekLabel = document.getElementById('week-label');
+            currentWeekNum = currentWeekNum === 1 ? 2 : 1;
             const btnText = document.getElementById('btn-text');
-            const btnIcon = document.getElementById('btn-icon');
             const footerBday = document.getElementById('birthday-footer');
-
-            if (isNextWeek) {
-                weekCurrent.classList.add('hidden-week');
-                weekNext.classList.remove('hidden-week');
-                weekLabel.innerText = "Próxima Semana (Feb 16 - 20)";
-                btnText.innerText = "Volver a Actual";
-                btnIcon.innerText = "⬅️";
-                footerBday.innerText = "Prepárate para Marzo: Ada Rodríguez (Mar 01)";
-            } else {
-                weekCurrent.classList.remove('hidden-week');
-                weekNext.classList.add('hidden-week');
-                weekLabel.innerText = "Semana Actual (Feb 09 - 13)";
-                btnText.innerText = "Ver Próxima Semana";
-                btnIcon.innerText = "➡️";
-                footerBday.innerText = "No tendremos más por este mes";
-            }
+            btnText.innerText = currentWeekNum === 2 ? "Volver a Actual" : "Ver Próxima Semana";
+            footerBday.innerText = currentWeekNum === 2 ? "Marzo: Ada Rodríguez (Mar 01)" : "No tendremos más por este mes";
+            renderWeek(currentWeekNum);
         }
 
-        function addToCalendar(dia, uniforme, detalles, start, end, cumple) {
-            const extra = cumple ? `\n\n${cumple}` : '';
-            const title = encodeURIComponent(`RECUERDO 2D: ${dia} - ${uniforme}`);
-            const text = encodeURIComponent(`MAÑANA ES ${dia}\n👔 UNIFORME: ${uniforme}\n📚 RECURSO ESPAÑOL: https://wordwall.net/es/resource/32706393\n\n${detalles}${extra}`);
-            const gCalUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${text}&dates=${start}/${end}`;
-            window.open(gCalUrl, '_blank');
-        }
+        window.handleCalendar = function(dia, uniforme, tieneTarea) {
+            const title = encodeURIComponent(`CLASE 2D: ${dia}`);
+            let body = `Recordatorio para mañana ${dia}\n\n👔 UNIFORME: ${uniforme}\n`;
+            if(tieneTarea) body += `\n🚨 TAREA MATERIALES (Reciclaje):\n- Papel, Plástico, Metal limpios (5x5cm).\n`;
+            body += `\n📖 Revisa el horario oficial en el organizador interactivo.`;
+            window.open(`https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${encodeURIComponent(body)}`, '_blank');
+        };
 
-        function addDetailedTask(dia, uniforme, start, end) {
-            const title = encodeURIComponent(`🚨 IMPORTANTE 2D: Tarea y Práctica Español`);
-            const detalles = `MAÑANA ES ${dia}\n👔 UNIFORME: ${uniforme}\n\n♻️ TAREA CLASIFICACIÓN:\n- Papel, Plástico, Metal (2-4 piezas c/u).\n- Limpios 5x5 cm.\n\n📖 PRÁCTICA ESPAÑOL:\n🔗 https://wordwall.net/es/resource/32706393`;
-            const gCalUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${encodeURIComponent(detalles)}&dates=${start}/${end}`;
-            window.open(gCalUrl, '_blank');
-        }
+        document.addEventListener('DOMContentLoaded', () => renderWeek(1));
     </script>
 </body>
 </html>
