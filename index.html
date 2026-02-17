@@ -88,7 +88,7 @@
         </div>
 
         <div class="bg-emerald-50 text-emerald-700 px-4 py-2 text-center text-[10px] font-bold border-t border-emerald-100 uppercase">
-            ⚙️ Calendario Dinámico | Enlace Microhabilidades Actualizado
+            ⚙️ Calendario Dinámico | Horario Actualizado v2025-2026
         </div>
     </div>
 
@@ -134,13 +134,14 @@
         const CYCLE_ANCHOR_DATE = new Date(2026, 1, 16); 
         const CYCLE_ANCHOR_DAY_NUM = 3; 
 
+        // --- HORARIO ACTUALIZADO SEGÚN PDF ---
         const schedules = {
-            1: "<li>• P.E.</li><li>• Math</li><li>• English</li><li>• STEAM</li><li>• Español</li><li>• Danza</li>",
-            2: "<li>• STEAM</li><li>• Social</li><li>• Science</li><li>• Español</li><li>• English</li><li>• Phonics</li><li>• Math</li>",
-            3: "<li>• P.E.</li><li>• Art</li><li>• Math</li><li>• English</li><li>• Science</li><li>• Español</li>",
-            4: "<li>• Perfil</li><li>• Science</li><li>• Math</li><li>• English</li><li>• Teatro</li><li>• Español</li>",
-            5: "<li>• Socioemocional</li><li>• Español</li><li>• P.E.</li><li>• Música</li><li>• English</li><li>• Math</li>",
-            6: "<li>• Science</li><li>• English</li><li>• Español</li><li>• Math</li><li>• Social</li><li>• Phonics</li>"
+            1: "<li>• Psicomotricidad</li><li>• Math</li><li>• English</li><li>• STEM</li><li>• Español</li><li>• Danza</li>",
+            2: "<li>• English</li><li>• Música</li><li>• Español</li><li>• Social Science</li><li>• Science</li><li>• Math</li>",
+            3: "<li>• Science</li><li>• Español</li><li>• English</li><li>• Phonics</li><li>• Math</li><li>• Psicomotricidad</li>",
+            4: "<li>• English</li><li>• Español</li><li>• Perfil Evergreenista</li><li>• Artes</li><li>• Science</li><li>• Math</li>",
+            5: "<li>• English</li><li>• Phonics</li><li>• Psicomotricidad</li><li>• Español</li><li>• Social Science</li><li>• Math</li>",
+            6: "<li>• Artes</li><li>• Español</li><li>• Socioemocional</li><li>• Math</li><li>• English</li><li>• Teatro</li>"
         };
 
         const specialActivities = {};
@@ -183,6 +184,7 @@
 
         function getUniformByCycle(cycleDay) {
             if (!cycleDay) return "N/A";
+            // Días 1, 3, 5: Sudadera | Días 2, 4, 6: Diario
             return (cycleDay % 2 !== 0) ? "Sudadera 👟" : "Diario 👞";
         }
 
