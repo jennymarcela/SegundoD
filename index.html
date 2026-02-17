@@ -71,7 +71,7 @@
                 <div class="bg-purple-100 p-2 rounded-full text-2xl">🧠</div>
                 <div>
                     <p class="font-bold text-gray-800 text-xs uppercase">Microhabilidades:</p>
-                    <a href="https://gemini.google.com/share/28b4c60d0794?hl=es_419" target="_blank" class="text-[10px] link-style font-bold text-purple-700">Juegos Mentales</a>
+                    <a href="https://gemini.google.com/share/33c59ed472e7" target="_blank" class="text-[10px] link-style font-bold text-purple-700">Juegos Mentales</a>
                 </div>
             </div>
 
@@ -88,7 +88,7 @@
         </div>
 
         <div class="bg-emerald-50 text-emerald-700 px-4 py-2 text-center text-[10px] font-bold border-t border-emerald-100 uppercase">
-            ⚙️ Calendario Dinámico | Lógica de Festejos en Días Hábiles Activa
+            ⚙️ Calendario Dinámico | Enlace Microhabilidades Actualizado
         </div>
     </div>
 
@@ -97,7 +97,7 @@
         const BIRTHDAYS = [
             { name: "Luciana Rubio", month: 0, day: 5 },
             { name: "Martín Chacón", month: 1, day: 7 },
-            { name: "Ada Rodríguez", month: 2, day: 1 }, // Domingo -> Se celebra Lunes 2
+            { name: "Ada Rodríguez", month: 2, day: 1 },
             { name: "Mateo Zambrano", month: 2, day: 2 },
             { name: "Profe Viviana Espinosa", month: 2, day: 3 },
             { name: "Alejandro Marmolejo", month: 2, day: 6 },
@@ -123,7 +123,7 @@
             { name: "Pablo Galeano", month: 11, day: 27 }
         ];
 
-        // --- FESTIVOS COLOMBIA 2026 (Para mover celebraciones) ---
+        // --- FESTIVOS COLOMBIA 2026 ---
         const HOLIDAYS_2026 = [
             "2026-01-01", "2026-01-12", "2026-03-23", "2026-04-02", "2026-04-03",
             "2026-05-01", "2026-05-18", "2026-06-08", "2026-06-15", "2026-06-29",
@@ -147,7 +147,6 @@
         let viewOffset = 0; 
         let startDayCalculated;
 
-        // Determina si una fecha es inhábil (fin de semana o festivo)
         function isNonWorkingDay(date) {
             const day = date.getDay();
             if (day === 0 || day === 6) return true;
@@ -155,7 +154,6 @@
             return HOLIDAYS_2026.includes(iso);
         }
 
-        // Busca el siguiente día de clase para celebrar
         function getNextSchoolDay(date) {
             let check = new Date(date);
             while (isNonWorkingDay(check)) {
@@ -213,7 +211,6 @@
             const endOfView = new Date(startDayCalculated);
             endOfView.setDate(startOfView.getDate() + 6);
 
-            // Buscar si alguien cumple o se celebra esta semana
             const inView = BIRTHDAYS.find(b => {
                 const realDate = new Date(startOfView.getFullYear(), b.month, b.day);
                 const celebDate = getNextSchoolDay(realDate);
@@ -225,7 +222,6 @@
                 const realDate = new Date(startOfView.getFullYear(), inView.month, inView.day);
                 const celebDate = getNextSchoolDay(realDate);
                 const isDeferred = realDate.getTime() !== celebDate.getTime();
-                
                 footer.innerHTML = `<span class="text-emerald-600 animate-pulse">🎂 ¡CELEBRACIÓN!</span><br>${inView.name} ${isDeferred ? '(Postergado)' : ''}`;
                 return;
             }
@@ -263,12 +259,9 @@
                 const numDiaCiclo = getCycleDay(currentDate);
                 const uniformText = getUniformByCycle(numDiaCiclo);
                 
-                // --- NUEVA LÓGICA DE BÚSQUEDA ---
-                // Buscamos si hoy es el día real del cumple O si hoy es el día de celebración (lunes post-finde)
                 const bdayNotice = BIRTHDAYS.reduce((acc, b) => {
                     const realDate = new Date(currentDate.getFullYear(), b.month, b.day);
                     const celebDate = getNextSchoolDay(realDate);
-                    
                     if (currentDate.getTime() === celebDate.getTime()) {
                         const isDeferred = realDate.getTime() !== celebDate.getTime();
                         acc.push({ name: b.name, deferred: isDeferred });
