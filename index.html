@@ -366,27 +366,21 @@
 
         window.handleCalendar = function(dateStr, dayName, uniform, activityText) {
             const decodedActivity = decodeURIComponent(activityText);
-            const title = encodeURIComponent(`COLEGIO 2D: ${dayName}`);
+            // Título ajustado según solicitud
+            const title = encodeURIComponent(`Recordatorio Actividad Colegio: ${dayName}`);
             const body = encodeURIComponent(`👔 UNIFORME: ${uniform}\n\n📝 TAREAS:\n${decodedActivity}`);
             
             // Formatear fecha base (YYYYMMDD)
             const dateParts = dateStr.split('-');
             const yearMonthDay = dateParts.join('');
             
-            // LÓGICA DE RECORDATORIO PROACTIVA:
             // Ponemos el evento a las 07:20 AM del día de la clase
-            // y agregamos un recordatorio 14.5 horas antes (que da aprox las 4:50 PM del día anterior)
             const startTime = "072000"; 
             const endTime = "082000"; 
             
             const dates = `${yearMonthDay}T${startTime}/${yearMonthDay}T${endTime}`;
 
-            // URL con parámetro de recordatorio (add=1440 es un día, usamos lógica de Google para sugerir alertas)
-            // Google Calendar no permite definir la alerta exacta vía URL pública de forma estándar, 
-            // pero al ponerle una hora fija de mañana (07:20), la mayoría de configuraciones móviles 
-            // notifican "mañana tienes un evento" o "en 15 min". 
-            // Para asegurar las 5 PM, lo mejor es que el evento tenga el horario de entrada.
-            
+            // Abrir Google Calendar
             window.open(`https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${body}&sf=true&output=xml`, '_blank');
         };
 
