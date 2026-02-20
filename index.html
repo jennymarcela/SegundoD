@@ -34,10 +34,7 @@
             100% { background-color: #fee2e2; border-color: #fca5a5; }
         }
 
-        /* Estilo visual del calendario anual */
         .annual-table th, .annual-table td { border: 2px solid #ecfdf5; }
-        
-        /* CABECERA FIJA (Sticky) para el Calendario Anual */
         .annual-table thead th {
             position: sticky;
             top: -1px;
@@ -60,7 +57,6 @@
             background-color: #d1fae5 !important;
         }
 
-        /* Ajustes de tamaño de letra específicos para el calendario anual */
         .annual-text-date { font-size: 1.1rem; }
         .annual-text-sub { font-size: 0.95rem; }
         .annual-text-bday { font-size: 0.9rem; }
@@ -81,19 +77,20 @@
         <!-- CABECERA -->
         <div class="bg-emerald-500 p-6 text-white relative overflow-hidden no-print">
             <div class="absolute top-2 left-4 text-4xl opacity-50">🌿</div>
-            <div class="text-center">
+            <div class="text-center relative z-10">
                 <h1 class="text-4xl md:text-5xl font-extrabold tracking-widest uppercase mb-2">School Timetable 2D</h1>
                 <p id="week-label" class="text-xl font-bold bg-white text-emerald-600 inline-block px-6 py-1 rounded-full uppercase shadow-sm tracking-tight">Cargando...</p>
             </div>
             
-            <div class="absolute top-6 right-6 flex gap-2 z-20">
-                <button onclick="toggleView('annual')" id="annual-btn" class="bg-white text-emerald-600 hover:bg-emerald-50 font-bold py-2 px-4 rounded-2xl shadow-lg transition-all transform hover:scale-105 border-2 border-emerald-100 flex items-center gap-2">
-                    <span>Calendario Anual</span>
-                    <span>📅</span>
-                </button>
-                <button onclick="toggleWeekView()" id="nav-btn" class="bg-white text-emerald-600 hover:bg-emerald-50 font-bold py-2 px-6 rounded-2xl shadow-lg transition-all transform hover:scale-105 flex items-center gap-2 border-2 border-emerald-100">
+            <!-- Botones Reposicionados en Columna -->
+            <div class="absolute top-4 right-6 flex flex-col gap-2 z-20">
+                <button onclick="toggleWeekView()" id="nav-btn" class="bg-white text-emerald-600 hover:bg-emerald-50 font-bold py-2 px-6 rounded-2xl shadow-lg transition-all transform hover:scale-105 flex items-center justify-between gap-2 border-2 border-emerald-100 min-w-[210px]">
                     <span id="btn-text">Ver Próxima Semana</span>
                     <span id="btn-icon">➡️</span>
+                </button>
+                <button onclick="toggleView('annual')" id="annual-btn" class="bg-white text-emerald-600 hover:bg-emerald-50 font-bold py-2 px-6 rounded-2xl shadow-lg transition-all transform hover:scale-105 border-2 border-emerald-100 flex items-center justify-between gap-2 min-w-[210px]">
+                    <span>Calendario Anual</span>
+                    <span>📅</span>
                 </button>
             </div>
         </div>
@@ -132,8 +129,9 @@
             </div>
         </div>
 
-        <!-- FOOTER -->
+        <!-- FOOTER (RECURSOS FIJOS) -->
         <div class="bg-white p-5 border-t-2 border-dashed border-gray-200 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 no-print">
+            <!-- Cumpleaños -->
             <div class="flex items-center gap-3">
                 <div class="bg-emerald-100 p-2 rounded-full text-2xl">🥳</div>
                 <div>
@@ -141,34 +139,35 @@
                     <p id="birthday-footer" class="text-[10px] text-gray-500 font-bold leading-tight text-emerald-700">Calculando...</p>
                 </div>
             </div>
+            <!-- Recurso Español -->
             <div class="flex items-center gap-3 md:border-l md:pl-6 border-gray-100">
                 <div class="bg-blue-100 p-2 rounded-full text-2xl">📚</div>
                 <div>
                     <p class="font-bold text-gray-800 text-xs uppercase">Práctica Español:</p>
-                    <a href="https://wordwall.net/es/resource/32706393" target="_blank" class="text-[10px] link-style font-bold">Sinónimos</a>
+                    <a href="https://wordwall.net/es/resource/32706393" target="_blank" class="text-[10px] link-style font-bold">Sinónimos y Antónimos</a>
                 </div>
             </div>
+            <!-- Recurso Juegos Mentales (Brain Training) -->
             <div class="flex items-center gap-3 lg:border-l lg:pl-6 border-gray-100">
                 <div class="bg-purple-100 p-2 rounded-full text-2xl">🧠</div>
                 <div>
-                    <p class="font-bold text-gray-800 text-xs uppercase">Microhabilidades:</p>
-                    <a href="https://gemini.google.com/share/33c59ed472e7" target="_blank" class="text-[10px] link-style font-bold">Juegos</a>
+                    <p class="font-bold text-gray-800 text-xs uppercase">Juegos Mentales:</p>
+                    <a href="https://www.cokitos.com/tag/juegos-de-atencion/" target="_blank" class="text-[10px] link-style font-bold">Entrena tu Atención</a>
                 </div>
             </div>
+            <!-- Recurso Phonics -->
             <div class="flex items-center gap-3 lg:border-l lg:pl-6 border-gray-100">
                 <div class="bg-red-100 p-2 rounded-full text-2xl">🔊</div>
                 <div>
-                    <p class="font-bold text-gray-800 text-xs uppercase">Phonics:</p>
-                    <a href="https://www.youtube.com/watch?v=ChqnN3cKzXQ" target="_blank" class="text-[9px] link-style font-bold">Video Sounds</a>
+                    <p class="font-bold text-gray-800 text-xs uppercase">Phonics Sounds:</p>
+                    <a href="https://www.youtube.com/watch?v=ChqnN3cKzXQ" target="_blank" class="text-[10px] link-style font-bold">Video: Pronunciation</a>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // FECHA ACTUAL DE REFERENCIA (Sincronizada con Bogotá)
         const REAL_TODAY = new Date();
-        REAL_TODAY.setHours(REAL_TODAY.getHours() - 5); // Ajuste manual simple si el sistema no está en UTC-5
 
         const BIRTHDAYS = [
             { name: "Luciana Rubio", month: 0, day: 5 },
@@ -212,21 +211,36 @@
         const schedules = {
             1: "<li>• Psicomotricidad</li><li>• Math</li><li>• English</li><li>• STEM</li><li>• Español</li><li>• Danza</li>",
             2: "<li>• English</li><li>• Música</li><li>• Español</li><li>• Social Science</li><li>• Science</li><li>• Math</li>",
-            3: "<li>• Science</li><li>• Español</li><li>• English</li><li>• Phonics</li><li>• Math</li><li>• Psicomotricidad</li>",
+            3: "<li>• Science</li><li>• Español</li><li>• English</li><li>• Phonics</li><li>• Math</li><li><li>• Psicomotricidad</li>",
             4: "<li>• English</li><li>• Español</li><li>• Perfil Evergreenista</li><li>• Artes</li><li>• Science</li><li>• Math</li>",
             5: "<li>• English</li><li>• Phonics</li><li>• Psicomotricidad</li><li>• Español</li><li>• Social Science</li><li>• Math</li>",
             6: "<li>• Artes</li><li>• Español</li><li>• Socioemocional</li><li>• Math</li><li>• English</li><li>• Teatro</li>"
         };
 
         const specialActivities = {
+            "2026-02-16": {
+                html: `<div class="bg-blue-50 p-2 rounded-lg border border-blue-200 mb-2"><p class="text-[9px] text-blue-700 font-black uppercase">🗳️ GOBIERNO ESCOLAR:</p><p class="text-[10px] text-blue-800 font-bold leading-tight">Socialización de requisitos en tutoría.</p></div>`,
+                reminder: "Gobierno Escolar: Socialización requisitos"
+            },
             "2026-02-19": {
-                html: `<div class="emergency-alert p-2 rounded-lg border border-red-300 mb-2"><p class="text-[9px] text-red-700 font-black uppercase">⚠️ AVISO IMPORTANTE:</p><p class="text-[10px] text-red-800 font-bold leading-tight">SALIDA TEMPRANA 2:00 P.M.</p></div>`,
+                html: `<div class="emergency-alert p-2 rounded-lg border border-red-300 mb-2"><p class="text-[9px] text-red-700 font-black uppercase">⚠️ AVISO:</p><p class="text-[10px] text-red-800 font-bold leading-tight uppercase">Salida Temprana 2:00 P.M.</p></div>`,
                 reminder: "SALIDA TEMPRANA 2:00 PM"
+            },
+            "2026-02-23": {
+                html: `<div class="bg-orange-100 p-2 rounded-lg border border-orange-200 mb-2"><p class="text-[9px] text-orange-700 font-black uppercase">🗳️ PLAZO FINAL:</p><p class="text-[10px] text-orange-800 font-bold leading-tight">Entrega hoja de vida al tutor.</p></div>`,
+                reminder: "Gobierno Escolar: Plazo entrega hoja de vida"
+            },
+            "2026-02-24": {
+                html: `<div class="bg-emerald-50 p-2 rounded-lg border border-emerald-200 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🗳️ GOBIERNO ESCOLAR:</p><p class="text-[10px] text-emerald-800 font-bold leading-tight">Confirmación y aprobación candidaturas.</p></div>`,
+                reminder: "Gobierno Escolar: Aprobación candidaturas"
             },
             "2026-02-27": {
                 html: `<div class="bg-purple-100 p-2 rounded-lg border border-purple-300 mb-2"><p class="text-[9px] text-purple-700 font-black uppercase">📂 SOCIOEMOCIONAL:</p><p class="text-[10px] text-purple-800 font-bold leading-tight italic">Traer la carpeta con la portada impresa.</p></div>`,
                 reminder: "Socioemocional: Traer carpeta con portada"
-            }
+            },
+            "2026-03-02": { html: `<div class="bg-blue-50 p-2 rounded-lg border border-blue-200 mb-2"><p class="text-[9px] text-blue-700 font-black uppercase">🗳️ CAMPAÑA:</p><p class="text-[10px] text-blue-800 font-bold leading-tight">Inicio socialización propuestas.</p></div>`, reminder: "Campaña: Socialización propuestas" },
+            "2026-03-09": { html: `<div class="emergency-alert p-2 rounded-lg border border-red-300 mb-2"><p class="text-[9px] text-red-700 font-black uppercase">🗳️ ELECCIONES:</p><p class="text-[10px] text-red-800 font-bold leading-tight">Día de votación Gobierno Escolar.</p></div>`, reminder: "DÍA DE ELECCIONES" },
+            "2026-03-13": { html: `<div class="bg-emerald-100 p-2 rounded-lg border border-emerald-300 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">📜 POSESIÓN:</p><p class="text-[10px] text-emerald-800 font-bold leading-tight">Posesión oficial representantes.</p></div>`, reminder: "Posesión de representantes" }
         };
 
         let viewOffset = 0; 
@@ -334,6 +348,9 @@
                             if (bdays.length > 0) {
                                 cellContent += bdays.map(b => `<p class="text-blue-800 annual-text-bday mt-1 leading-tight font-black">🎂 ${b.name}</p>`).join('');
                             }
+                            if (specialActivities[iso]) {
+                                cellContent += `<p class="text-[9px] mt-1 text-orange-600 font-bold">⚠️ ${specialActivities[iso].reminder}</p>`;
+                            }
                             cycleRow[cycle] = { 
                                 html: cellContent,
                                 isToday: iso === todayISO
@@ -384,7 +401,6 @@
                 const iso = curr.toISOString().split('T')[0];
                 const isToday = iso === todayISO;
                 
-                // Normalizamos fechas para comparación de "pasado"
                 const tempToday = new Date(REAL_TODAY);
                 tempToday.setHours(0,0,0,0);
                 const tempCurr = new Date(curr);
@@ -428,6 +444,7 @@
         function toggleWeekView() {
             viewOffset = viewOffset === 0 ? 1 : 0;
             document.getElementById('btn-text').innerText = viewOffset === 0 ? "Ver Próxima Semana" : "Volver a Actual";
+            document.getElementById('btn-icon').innerText = viewOffset === 0 ? "➡️" : "⬅️";
             renderCalendar();
         }
 
@@ -448,7 +465,6 @@
             window.open(`https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${dateStrClean}T070000/${dateStrClean}T080000&details=${encodeURIComponent(details)}`, '_blank');
         };
 
-        // Iniciar aplicación
         window.onload = function() {
             renderCalendar();
         };
