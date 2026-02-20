@@ -61,9 +61,20 @@
         .annual-text-sub { font-size: 0.95rem; }
         .annual-text-bday { font-size: 0.9rem; }
 
+        /* Estilo para los botones fijos en el scroll del calendario anual */
+        .sticky-nav-annual {
+            position: sticky;
+            top: 80px;
+            float: right;
+            z-index: 60;
+            margin-right: -20px;
+            display: flex;
+            gap: 12px;
+        }
+
         @media print {
             .no-print { display: none !important; }
-            #annual-view { display: block !important; padding: 0 !important; }
+            #annual-view { display: block !important; padding: 0 !important; overflow: visible !important; max-height: none !important; }
             body { background: white !important; padding: 0 !important; }
             .max-w-\[95\%\] { max-width: 100% !important; border: none !important; }
             table { font-size: 12px !important; }
@@ -82,7 +93,7 @@
                 <p id="week-label" class="text-xl font-bold bg-white text-emerald-600 inline-block px-6 py-1 rounded-full uppercase shadow-sm tracking-tight">Cargando...</p>
             </div>
             
-            <!-- Botones Reposicionados en Columna -->
+            <!-- Botones de Navegación Principal -->
             <div class="absolute top-4 right-6 flex flex-col gap-2 z-20">
                 <button onclick="toggleWeekView()" id="nav-btn" class="bg-white text-emerald-600 hover:bg-emerald-50 font-bold py-2 px-6 rounded-2xl shadow-lg transition-all transform hover:scale-105 flex items-center justify-between gap-2 border-2 border-emerald-100 min-w-[210px]">
                     <span id="btn-text">Ver Próxima Semana</span>
@@ -101,14 +112,21 @@
         </div>
 
         <!-- VISTA ANUAL -->
-        <div id="annual-view" class="hidden p-6 bg-emerald-50 max-h-[85vh] overflow-y-auto">
-            <div class="bg-white rounded-3xl p-8 shadow-xl fade-in">
-                <div class="flex justify-between items-center mb-8 no-print">
+        <div id="annual-view" class="hidden p-6 bg-emerald-50 max-h-[85vh] overflow-y-auto relative">
+            <div class="bg-white rounded-3xl p-8 shadow-xl fade-in relative">
+                
+                <!-- Navegación Fija (Sticky) para Scroll en Calendario -->
+                <div class="sticky-nav-annual no-print">
+                    <button onclick="window.print()" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-xl shadow-2xl hover:bg-blue-700 transition-all border-2 border-white flex items-center gap-2">
+                        <span>🖨️ Imprimir</span>
+                    </button>
+                    <button onclick="toggleView('weekly')" class="bg-emerald-600 text-white font-bold py-3 px-6 rounded-xl shadow-2xl hover:bg-emerald-700 transition-all border-2 border-white flex items-center gap-2">
+                        <span>⬅️ Volver</span>
+                    </button>
+                </div>
+
+                <div class="mb-8 no-print">
                     <h2 class="text-4xl font-black text-emerald-800 uppercase tracking-tighter">Cronograma Escolar 2026</h2>
-                    <div class="flex gap-3">
-                        <button onclick="window.print()" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:bg-blue-700 transition-all text-lg">Imprimir</button>
-                        <button onclick="toggleView('weekly')" class="bg-emerald-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:bg-emerald-700 transition-all text-lg">Cerrar</button>
-                    </div>
                 </div>
                 
                 <table class="w-full annual-table border-collapse">
@@ -131,7 +149,6 @@
 
         <!-- FOOTER (RECURSOS FIJOS) -->
         <div class="bg-white p-5 border-t-2 border-dashed border-gray-200 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 no-print">
-            <!-- Cumpleaños -->
             <div class="flex items-center gap-3">
                 <div class="bg-emerald-100 p-2 rounded-full text-2xl">🥳</div>
                 <div>
@@ -139,7 +156,6 @@
                     <p id="birthday-footer" class="text-[10px] text-gray-500 font-bold leading-tight text-emerald-700">Calculando...</p>
                 </div>
             </div>
-            <!-- Recurso Español -->
             <div class="flex items-center gap-3 md:border-l md:pl-6 border-gray-100">
                 <div class="bg-blue-100 p-2 rounded-full text-2xl">📚</div>
                 <div>
@@ -147,7 +163,6 @@
                     <a href="https://wordwall.net/es/resource/32706393" target="_blank" class="text-[10px] link-style font-bold">Sinónimos y Antónimos</a>
                 </div>
             </div>
-            <!-- Recurso Juegos Mentales (Brain Training) -->
             <div class="flex items-center gap-3 lg:border-l lg:pl-6 border-gray-100">
                 <div class="bg-purple-100 p-2 rounded-full text-2xl">🧠</div>
                 <div>
@@ -155,7 +170,6 @@
                     <a href="https://www.cokitos.com/tag/juegos-de-atencion/" target="_blank" class="text-[10px] link-style font-bold">Entrena tu Atención</a>
                 </div>
             </div>
-            <!-- Recurso Phonics -->
             <div class="flex items-center gap-3 lg:border-l lg:pl-6 border-gray-100">
                 <div class="bg-red-100 p-2 rounded-full text-2xl">🔊</div>
                 <div>
@@ -218,29 +232,11 @@
         };
 
         const specialActivities = {
-            "2026-02-16": {
-                html: `<div class="bg-blue-50 p-2 rounded-lg border border-blue-200 mb-2"><p class="text-[9px] text-blue-700 font-black uppercase">🗳️ GOBIERNO ESCOLAR:</p><p class="text-[10px] text-blue-800 font-bold leading-tight">Socialización de requisitos en tutoría.</p></div>`,
-                reminder: "Gobierno Escolar: Socialización requisitos"
-            },
-            "2026-02-19": {
-                html: `<div class="emergency-alert p-2 rounded-lg border border-red-300 mb-2"><p class="text-[9px] text-red-700 font-black uppercase">⚠️ AVISO:</p><p class="text-[10px] text-red-800 font-bold leading-tight uppercase">Salida Temprana 2:00 P.M.</p></div>`,
-                reminder: "SALIDA TEMPRANA 2:00 PM"
-            },
-            "2026-02-23": {
-                html: `<div class="bg-orange-100 p-2 rounded-lg border border-orange-200 mb-2"><p class="text-[9px] text-orange-700 font-black uppercase">🗳️ PLAZO FINAL:</p><p class="text-[10px] text-orange-800 font-bold leading-tight">Entrega hoja de vida al tutor.</p></div>`,
-                reminder: "Gobierno Escolar: Plazo entrega hoja de vida"
-            },
-            "2026-02-24": {
-                html: `<div class="bg-emerald-50 p-2 rounded-lg border border-emerald-200 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🗳️ GOBIERNO ESCOLAR:</p><p class="text-[10px] text-emerald-800 font-bold leading-tight">Confirmación y aprobación candidaturas.</p></div>`,
-                reminder: "Gobierno Escolar: Aprobación candidaturas"
-            },
-            "2026-02-27": {
-                html: `<div class="bg-purple-100 p-2 rounded-lg border border-purple-300 mb-2"><p class="text-[9px] text-purple-700 font-black uppercase">📂 SOCIOEMOCIONAL:</p><p class="text-[10px] text-purple-800 font-bold leading-tight italic">Traer la carpeta con la portada impresa.</p></div>`,
-                reminder: "Socioemocional: Traer carpeta con portada"
-            },
-            "2026-03-02": { html: `<div class="bg-blue-50 p-2 rounded-lg border border-blue-200 mb-2"><p class="text-[9px] text-blue-700 font-black uppercase">🗳️ CAMPAÑA:</p><p class="text-[10px] text-blue-800 font-bold leading-tight">Inicio socialización propuestas.</p></div>`, reminder: "Campaña: Socialización propuestas" },
-            "2026-03-09": { html: `<div class="emergency-alert p-2 rounded-lg border border-red-300 mb-2"><p class="text-[9px] text-red-700 font-black uppercase">🗳️ ELECCIONES:</p><p class="text-[10px] text-red-800 font-bold leading-tight">Día de votación Gobierno Escolar.</p></div>`, reminder: "DÍA DE ELECCIONES" },
-            "2026-03-13": { html: `<div class="bg-emerald-100 p-2 rounded-lg border border-emerald-300 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">📜 POSESIÓN:</p><p class="text-[10px] text-emerald-800 font-bold leading-tight">Posesión oficial representantes.</p></div>`, reminder: "Posesión de representantes" }
+            "2026-02-16": { html: `<div class="bg-blue-50 p-2 rounded-lg border border-blue-200 mb-2"><p class="text-[9px] text-blue-700 font-black uppercase">🗳️ GOBIERNO ESCOLAR:</p><p class="text-[10px] text-blue-800 font-bold leading-tight">Socialización de requisitos en tutoría.</p></div>`, reminder: "Gobierno Escolar: Socialización requisitos" },
+            "2026-02-19": { html: `<div class="emergency-alert p-2 rounded-lg border border-red-300 mb-2"><p class="text-[9px] text-red-700 font-black uppercase">⚠️ AVISO:</p><p class="text-[10px] text-red-800 font-bold leading-tight uppercase">Salida Temprana 2:00 P.M.</p></div>`, reminder: "SALIDA TEMPRANA 2:00 PM" },
+            "2026-02-23": { html: `<div class="bg-orange-100 p-2 rounded-lg border border-orange-200 mb-2"><p class="text-[9px] text-orange-700 font-black uppercase">🗳️ PLAZO FINAL:</p><p class="text-[10px] text-orange-800 font-bold leading-tight">Entrega hoja de vida al tutor.</p></div>`, reminder: "Gobierno Escolar: Plazo entrega hoja de vida" },
+            "2026-02-24": { html: `<div class="bg-emerald-50 p-2 rounded-lg border border-emerald-200 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🗳️ GOBIERNO ESCOLAR:</p><p class="text-[10px] text-emerald-800 font-bold leading-tight">Confirmación y aprobación candidaturas.</p></div>`, reminder: "Gobierno Escolar: Aprobación candidaturas" },
+            "2026-02-27": { html: `<div class="bg-purple-100 p-2 rounded-lg border border-purple-300 mb-2"><p class="text-[9px] text-purple-700 font-black uppercase">📂 SOCIOEMOCIONAL:</p><p class="text-[10px] text-purple-800 font-bold leading-tight italic">Traer la carpeta con la portada impresa.</p></div>`, reminder: "Socioemocional: Traer carpeta con portada" }
         };
 
         let viewOffset = 0; 
@@ -304,6 +300,7 @@
                 document.getElementById('annual-view').classList.remove('hidden');
                 document.getElementById('week-label').innerText = "Cronograma Anual 2026";
                 renderAnnualCalendar();
+                document.getElementById('annual-view').scrollTop = 0;
             } else {
                 document.getElementById('weekly-view').classList.remove('hidden');
                 document.getElementById('nav-btn').classList.remove('hidden');
@@ -334,27 +331,17 @@
 
                     if (isNonWorkingDay(checkDate)) {
                         let info = `<span class="font-bold annual-text-date">${dateLabel}</span>`;
-                        if (bdays.length > 0) {
-                            info += bdays.map(b => `<br><span class="text-blue-700 font-black annual-text-bday">🎂 ${b.name}</span>`).join('');
-                        } else if (isHoliday(checkDate)) {
-                            info += `<br><span class="text-red-600 font-black uppercase annual-text-sub">FESTIVO</span>`;
-                        }
+                        if (bdays.length > 0) info += bdays.map(b => `<br><span class="text-blue-700 font-black annual-text-bday">🎂 ${b.name}</span>`).join('');
+                        else if (isHoliday(checkDate)) info += `<br><span class="text-red-600 font-black uppercase annual-text-sub">FESTIVO</span>`;
                         weekendItems.push(info);
                     } else {
                         const cycle = getCycleDay(checkDate);
                         if (cycle) {
                             let cellContent = `<p class="font-black text-gray-900 annual-text-date mb-1">${dateLabel}</p>`;
                             cellContent += `<p class="annual-text-sub font-bold text-emerald-700 leading-tight">${getUniformByCycle(cycle)}</p>`;
-                            if (bdays.length > 0) {
-                                cellContent += bdays.map(b => `<p class="text-blue-800 annual-text-bday mt-1 leading-tight font-black">🎂 ${b.name}</p>`).join('');
-                            }
-                            if (specialActivities[iso]) {
-                                cellContent += `<p class="text-[9px] mt-1 text-orange-600 font-bold">⚠️ ${specialActivities[iso].reminder}</p>`;
-                            }
-                            cycleRow[cycle] = { 
-                                html: cellContent,
-                                isToday: iso === todayISO
-                            };
+                            if (bdays.length > 0) cellContent += bdays.map(b => `<p class="text-blue-800 annual-text-bday mt-1 leading-tight font-black">🎂 ${b.name}</p>`).join('');
+                            if (specialActivities[iso]) cellContent += `<p class="text-[9px] mt-1 text-orange-600 font-bold">⚠️ ${specialActivities[iso].reminder}</p>`;
+                            cycleRow[cycle] = { html: cellContent, isToday: iso === todayISO };
                             daysInCycle++;
                         }
                     }
@@ -363,18 +350,13 @@
 
                 let rowHtml = `<tr class="border-b-2 border-emerald-50">
                     <td class="bg-emerald-50 p-4 text-center font-black text-emerald-800 text-sm uppercase border-r border-emerald-100">S${weekNumber++}</td>`;
-                
                 for (let c = 1; c <= 6; c++) {
                     const d = cycleRow[c];
-                    rowHtml += d ? `<td class="p-4 text-center cycle-${c} ${d.isToday ? 'is-today-annual' : ''}">
-                        ${d.html}
-                    </td>` : `<td class="p-4 bg-gray-50 opacity-10"></td>`;
+                    rowHtml += d ? `<td class="p-4 text-center cycle-${c} ${d.isToday ? 'is-today-annual' : ''}">${d.html}</td>` : `<td class="p-4 bg-gray-50 opacity-10"></td>`;
                 }
-
                 rowHtml += `<td class="p-4 weekend-col annual-text-sub leading-relaxed border-l border-emerald-100">
                     ${weekendItems.length > 0 ? weekendItems.join('<div class="my-2 border-b border-gray-200"></div>') : '-'}
                 </td></tr>`;
-                
                 tbody.insertAdjacentHTML('beforeend', rowHtml);
             }
         }
@@ -387,7 +369,6 @@
             
             let startDay = getMondayOfCurrentWeek();
             startDay.setDate(startDay.getDate() + (viewOffset * 7));
-            
             const endDay = new Date(startDay);
             endDay.setDate(endDay.getDate() + 4);
             document.getElementById('week-label').innerText = `${viewOffset === 0 ? 'Semana Actual' : 'Próxima Semana'} (${startDay.getDate()}/${startDay.getMonth()+1} - ${endDay.getDate()}/${endDay.getMonth()+1})`;
@@ -400,13 +381,6 @@
                 curr.setDate(startDay.getDate() + i);
                 const iso = curr.toISOString().split('T')[0];
                 const isToday = iso === todayISO;
-                
-                const tempToday = new Date(REAL_TODAY);
-                tempToday.setHours(0,0,0,0);
-                const tempCurr = new Date(curr);
-                tempCurr.setHours(0,0,0,0);
-                
-                const isPast = tempCurr < tempToday;
                 const itsHoliday = isHoliday(curr);
                 const numDia = getCycleDay(curr);
                 const uniform = itsHoliday ? "N/A" : getUniformByCycle(numDia);
@@ -418,11 +392,10 @@
                     return acc;
                 }, []);
                 bdays.forEach(name => activityHtml += `<div class="bg-blue-100 p-2 rounded-lg border border-blue-200 mb-2 text-[10px] text-blue-700 font-bold">🎂 Cumple: ${name}</div>`);
-                
                 if (specialActivities[iso]) activityHtml += specialActivities[iso].html;
 
                 container.insertAdjacentHTML('beforeend', `
-                    <div class="flex flex-col h-full ${isPast ? 'past-day' : ''} ${isToday ? 'scale-105 z-10' : ''}">
+                    <div class="flex flex-col h-full ${isToday ? 'scale-105 z-10' : ''}">
                         <div class="${itsHoliday ? 'bg-gray-400' : colors[i]} text-white p-3 text-center rounded-t-3xl font-bold uppercase text-lg">
                             ${isToday ? '⭐️ ' : ''}${dayNames[i]} ${curr.getDate()}
                         </div>
@@ -465,9 +438,7 @@
             window.open(`https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${dateStrClean}T070000/${dateStrClean}T080000&details=${encodeURIComponent(details)}`, '_blank');
         };
 
-        window.onload = function() {
-            renderCalendar();
-        };
+        window.onload = function() { renderCalendar(); };
     </script>
 </body>
 </html>
