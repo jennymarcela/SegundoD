@@ -61,7 +61,6 @@
         .annual-text-sub { font-size: 0.95rem; }
         .annual-text-bday { font-size: 0.9rem; }
 
-        /* Estilo para los botones fijos en el scroll del calendario anual */
         .sticky-nav-annual {
             position: sticky;
             top: 80px;
@@ -93,7 +92,6 @@
                 <p id="week-label" class="text-xl font-bold bg-white text-emerald-600 inline-block px-6 py-1 rounded-full uppercase shadow-sm tracking-tight">Cargando...</p>
             </div>
             
-            <!-- Botones de Navegación Principal -->
             <div class="absolute top-4 right-6 flex flex-col gap-2 z-20">
                 <button onclick="toggleWeekView()" id="nav-btn" class="bg-white text-emerald-600 hover:bg-emerald-50 font-bold py-2 px-6 rounded-2xl shadow-lg transition-all transform hover:scale-105 flex items-center justify-between gap-2 border-2 border-emerald-100 min-w-[210px]">
                     <span id="btn-text">Ver Próxima Semana</span>
@@ -115,7 +113,6 @@
         <div id="annual-view" class="hidden p-6 bg-emerald-50 max-h-[85vh] overflow-y-auto relative">
             <div class="bg-white rounded-3xl p-8 shadow-xl fade-in relative">
                 
-                <!-- Navegación Fija (Sticky) para Scroll en Calendario -->
                 <div class="sticky-nav-annual no-print">
                     <button onclick="window.print()" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-xl shadow-2xl hover:bg-blue-700 transition-all border-2 border-white flex items-center gap-2">
                         <span>🖨️ Imprimir</span>
@@ -231,13 +228,48 @@
             6: "<li>• Artes</li><li>• Español</li><li>• Socioemocional</li><li>• Math</li><li>• English</li><li>• Teatro</li>"
         };
 
+        // Actividades Especiales con los rangos solicitados
+        const granjaRange = ["2026-03-09", "2026-03-10", "2026-03-11", "2026-03-12", "2026-03-13"];
+        const salidaRange = ["2026-04-13", "2026-04-14", "2026-04-15", "2026-04-16", "2026-04-17"];
+        const muestraRange = ["2026-04-27", "2026-04-28"];
+
         const specialActivities = {
-            "2026-02-16": { html: `<div class="bg-blue-50 p-2 rounded-lg border border-blue-200 mb-2"><p class="text-[9px] text-blue-700 font-black uppercase">🗳️ GOBIERNO ESCOLAR:</p><p class="text-[10px] text-blue-800 font-bold leading-tight">Socialización de requisitos en tutoría.</p></div>`, reminder: "Gobierno Escolar: Socialización requisitos" },
+            "2026-02-16": { html: `<div class="bg-blue-50 p-2 rounded-lg border border-blue-200 mb-2"><p class="text-[9px] text-blue-700 font-black uppercase">🗳️ GOBIERNO ESCOLAR:</p><p class="text-[10px] text-blue-800 font-bold leading-tight">Socialización de funciones y requisitos.</p></div>`, reminder: "Gobierno Escolar: Socialización" },
             "2026-02-19": { html: `<div class="emergency-alert p-2 rounded-lg border border-red-300 mb-2"><p class="text-[9px] text-red-700 font-black uppercase">⚠️ AVISO:</p><p class="text-[10px] text-red-800 font-bold leading-tight uppercase">Salida Temprana 2:00 P.M.</p></div>`, reminder: "SALIDA TEMPRANA 2:00 PM" },
-            "2026-02-23": { html: `<div class="bg-orange-100 p-2 rounded-lg border border-orange-200 mb-2"><p class="text-[9px] text-orange-700 font-black uppercase">🗳️ PLAZO FINAL:</p><p class="text-[10px] text-orange-800 font-bold leading-tight">Entrega hoja de vida al tutor.</p></div>`, reminder: "Gobierno Escolar: Plazo entrega hoja de vida" },
-            "2026-02-24": { html: `<div class="bg-emerald-50 p-2 rounded-lg border border-emerald-200 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🗳️ GOBIERNO ESCOLAR:</p><p class="text-[10px] text-emerald-800 font-bold leading-tight">Confirmación y aprobación candidaturas.</p></div>`, reminder: "Gobierno Escolar: Aprobación candidaturas" },
-            "2026-02-27": { html: `<div class="bg-purple-100 p-2 rounded-lg border border-purple-300 mb-2"><p class="text-[9px] text-purple-700 font-black uppercase">📂 SOCIOEMOCIONAL:</p><p class="text-[10px] text-purple-800 font-bold leading-tight italic">Traer la carpeta con la portada impresa.</p></div>`, reminder: "Socioemocional: Traer carpeta con portada" }
+            "2026-02-23": { html: `<div class="bg-orange-100 p-2 rounded-lg border border-orange-200 mb-2"><p class="text-[9px] text-orange-700 font-black uppercase">🗳️ PLAZO FINAL:</p><p class="text-[10px] text-orange-800 font-bold leading-tight">Entrega hoja de vida al tutor.</p></div>`, reminder: "Gobierno Escolar: Plazo entrega HV" },
+            "2026-02-24": { html: `<div class="bg-emerald-50 p-2 rounded-lg border border-emerald-200 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🗳️ GOBIERNO ESCOLAR:</p><p class="text-[10px] text-emerald-800 font-bold leading-tight">Confirmación y aprobación de candidaturas.</p></div>`, reminder: "Gobierno Escolar: Aprobación candidaturas" },
+            "2026-02-27": { html: `<div class="bg-purple-100 p-2 rounded-lg border border-purple-300 mb-2"><p class="text-[9px] text-purple-700 font-black uppercase">📂 SOCIOEMOCIONAL:</p><p class="text-[10px] text-purple-800 font-bold leading-tight italic">Traer la carpeta con la portada impresa.</p></div>`, reminder: "Socioemocional: Traer carpeta" },
+            
+            // Marzo - Gobierno Escolar Campaña y Elecciones
+            "2026-03-02": { html: `<div class="bg-yellow-100 p-2 rounded-lg border border-yellow-300 mb-2"><p class="text-[9px] text-yellow-700 font-black uppercase">📢 CAMPAÑA:</p><p class="text-[10px] text-yellow-800 font-bold leading-tight">Inicio socialización de propuestas.</p></div>`, reminder: "Gobierno Escolar: Socialización propuestas" },
+            "2026-03-09": { html: `<div class="bg-emerald-100 p-2 rounded-lg border border-emerald-300 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🗳️ ELECCIONES:</p><p class="text-[10px] text-emerald-800 font-bold leading-tight uppercase">Votaciones Gobierno Escolar.</p></div>`, reminder: "ELECCIONES GOBIERNO ESCOLAR" },
+            "2026-03-13": { html: `<div class="bg-blue-100 p-2 rounded-lg border border-blue-300 mb-2"><p class="text-[9px] text-blue-700 font-black uppercase">📜 POSESIÓN:</p><p class="text-[10px] text-blue-800 font-bold leading-tight">Posesión oficial de representantes.</p></div>`, reminder: "Posesión Gobierno Escolar" }
         };
+
+        // Inyectar Rangos de Trimestre
+        granjaRange.forEach(date => {
+            const current = specialActivities[date] ? specialActivities[date].html : "";
+            specialActivities[date] = { 
+                html: current + `<div class="bg-amber-100 p-2 rounded-lg border border-amber-300 mb-2"><p class="text-[9px] text-amber-700 font-black uppercase">🚜 GRANJA:</p><p class="text-[10px] text-amber-800 font-bold leading-tight italic">Pendiente asignar día exacto.</p></div>`,
+                reminder: "Visita Granja (Semana)"
+            };
+        });
+
+        salidaRange.forEach(date => {
+            const current = specialActivities[date] ? specialActivities[date].html : "";
+            specialActivities[date] = { 
+                html: current + `<div class="bg-cyan-100 p-2 rounded-lg border border-cyan-300 mb-2"><p class="text-[9px] text-cyan-700 font-black uppercase">🚌 SALIDA:</p><p class="text-[10px] text-cyan-800 font-bold leading-tight italic">Pendiente asignar día exacto.</p></div>`,
+                reminder: "Salida Proyectos (Semana)"
+            };
+        });
+
+        muestraRange.forEach(date => {
+            const current = specialActivities[date] ? specialActivities[date].html : "";
+            specialActivities[date] = { 
+                html: current + `<div class="bg-indigo-100 p-2 rounded-lg border border-indigo-300 mb-2"><p class="text-[9px] text-indigo-700 font-black uppercase">🎭 MUESTRA:</p><p class="text-[10px] text-indigo-800 font-bold leading-tight italic">Pendiente asignar día exacto.</p></div>`,
+                reminder: "Muestra Proyectos"
+            };
+        });
 
         let viewOffset = 0; 
         let currentActiveView = 'weekly';
