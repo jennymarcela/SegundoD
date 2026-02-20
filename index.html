@@ -14,6 +14,7 @@
             background-size: 20px 20px;
         }
         .card-shadow { box-shadow: 0 8px 0px rgba(0,0,0,0.05); }
+        .solid-shadow { box-shadow: 4px 4px 0px rgba(0,0,0,0.1); }
         .calendar-btn { transition: all 0.2s ease; }
         .calendar-btn:hover { transform: scale(1.03); }
         .fade-in { animation: fadeIn 0.3s ease-in-out; }
@@ -23,7 +24,7 @@
         }
         .link-style { color: #2563eb; text-decoration: underline; }
         .past-day { opacity: 0.7; filter: grayscale(20%); }
-        .day-card-content { min-height: 700px; }
+        .day-card-content { min-height: 550px; }
         .emergency-alert {
             animation: pulse-red 2s infinite;
         }
@@ -32,33 +33,92 @@
             50% { background-color: #fecaca; border-color: #f87171; }
             100% { background-color: #fee2e2; border-color: #fca5a5; }
         }
+
+        /* Estilo visual del calendario anual - MEJORADO PARA LEGIBILIDAD */
+        .annual-table th, .annual-table td { border: 2px solid #ecfdf5; }
+        .cycle-1 { background-color: #eff6ff; }
+        .cycle-2 { background-color: #fefce8; }
+        .cycle-3 { background-color: #fdf2f8; }
+        .cycle-4 { background-color: #f0f9ff; }
+        .cycle-5 { background-color: #fff7ed; }
+        .cycle-6 { background-color: #faf5ff; }
+        .weekend-col { background-color: #f8fafc; color: #475569; }
+        
+        .is-today-annual { 
+            outline: 5px solid #10b981; 
+            outline-offset: -5px;
+            position: relative;
+            background-color: #d1fae5 !important;
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+            #annual-view { display: block !important; padding: 0 !important; }
+            body { background: white !important; padding: 0 !important; }
+            .max-w-\[95\%\] { max-width: 100% !important; border: none !important; }
+            table { font-size: 11px !important; }
+        }
     </style>
 </head>
 <body class="p-4 md:p-8">
     <div class="max-w-[95%] mx-auto bg-white rounded-[40px] shadow-2xl overflow-hidden border-8 border-white relative">
         
         <!-- CABECERA -->
-        <div class="bg-emerald-500 p-6 text-white relative overflow-hidden">
+        <div class="bg-emerald-500 p-6 text-white relative overflow-hidden no-print">
             <div class="absolute top-2 left-4 text-4xl opacity-50">🌿</div>
             <div class="text-center">
                 <h1 class="text-4xl md:text-5xl font-extrabold tracking-widest uppercase mb-2">School Timetable 2D</h1>
-                <p id="week-label" class="text-xl font-bold bg-white text-emerald-600 inline-block px-6 py-1 rounded-full uppercase shadow-sm tracking-tight">Cargando semana...</p>
+                <p id="week-label" class="text-xl font-bold bg-white text-emerald-600 inline-block px-6 py-1 rounded-full uppercase shadow-sm tracking-tight">Cargando...</p>
             </div>
-            <button onclick="toggleWeekView()" id="nav-btn" class="absolute top-6 right-6 bg-white text-emerald-600 hover:bg-emerald-50 font-bold py-2 px-6 rounded-2xl shadow-lg transition-all transform hover:scale-105 flex items-center gap-2 z-20 border-2 border-emerald-100">
-                <span id="btn-text">Ver Próxima Semana</span>
-                <span id="btn-icon">➡️</span>
-            </button>
+            
+            <div class="absolute top-6 right-6 flex gap-2 z-20">
+                <button onclick="toggleView('annual')" id="annual-btn" class="bg-white text-emerald-600 hover:bg-emerald-50 font-bold py-2 px-4 rounded-2xl shadow-lg transition-all transform hover:scale-105 border-2 border-emerald-100 flex items-center gap-2">
+                    <span>Calendario Anual</span>
+                    <span>📅</span>
+                </button>
+                <button onclick="toggleWeekView()" id="nav-btn" class="bg-white text-emerald-600 hover:bg-emerald-50 font-bold py-2 px-6 rounded-2xl shadow-lg transition-all transform hover:scale-105 flex items-center gap-2 border-2 border-emerald-100">
+                    <span id="btn-text">Ver Próxima Semana</span>
+                    <span id="btn-icon">➡️</span>
+                </button>
+            </div>
         </div>
 
-        <!-- CONTENEDOR PRINCIPAL -->
-        <div id="main-content" class="p-6 bg-emerald-50">
-            <div id="grid-container" class="grid grid-cols-1 md:grid-cols-5 gap-4 fade-in">
-                <!-- Inyectado por JS -->
+        <!-- VISTA SEMANAL -->
+        <div id="weekly-view" class="p-6 bg-emerald-50 no-print">
+            <div id="grid-container" class="grid grid-cols-1 md:grid-cols-5 gap-4 fade-in"></div>
+        </div>
+
+        <!-- VISTA ANUAL -->
+        <div id="annual-view" class="hidden p-6 bg-emerald-50 max-h-[85vh] overflow-y-auto">
+            <div class="bg-white rounded-3xl p-8 shadow-xl fade-in">
+                <div class="flex justify-between items-center mb-8 no-print">
+                    <h2 class="text-4xl font-black text-emerald-800 uppercase tracking-tighter">Cronograma Escolar 2026</h2>
+                    <div class="flex gap-3">
+                        <button onclick="window.print()" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:bg-blue-700 transition-all text-lg">Imprimir</button>
+                        <button onclick="toggleView('weekly')" class="bg-emerald-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:bg-emerald-700 transition-all text-lg">Cerrar</button>
+                    </div>
+                </div>
+                
+                <table class="w-full annual-table border-collapse">
+                    <thead>
+                        <tr class="text-center">
+                            <th class="bg-emerald-100 p-4 text-emerald-900 font-black uppercase text-xs">Semana</th>
+                            <th class="cycle-1 p-4 text-blue-900 text-sm uppercase font-black">Día 1</th>
+                            <th class="cycle-2 p-4 text-yellow-900 text-sm uppercase font-black">Día 2</th>
+                            <th class="cycle-3 p-4 text-pink-900 text-sm uppercase font-black">Día 3</th>
+                            <th class="cycle-4 p-4 text-sky-900 text-sm uppercase font-black">Día 4</th>
+                            <th class="cycle-5 p-4 text-orange-900 text-sm uppercase font-black">Día 5</th>
+                            <th class="cycle-6 p-4 text-purple-900 text-sm uppercase font-black">Día 6</th>
+                            <th class="weekend-col p-4 text-slate-700 text-xs uppercase font-black">Festivos / Fines de Semana</th>
+                        </tr>
+                    </thead>
+                    <tbody id="annual-body" class="text-gray-900"></tbody>
+                </table>
             </div>
         </div>
 
-        <!-- FOOTER MULTI-RECURSO -->
-        <div class="bg-white p-5 border-t-2 border-dashed border-gray-200 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- FOOTER -->
+        <div class="bg-white p-5 border-t-2 border-dashed border-gray-200 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 no-print">
             <div class="flex items-center gap-3">
                 <div class="bg-emerald-100 p-2 rounded-full text-2xl">🥳</div>
                 <div>
@@ -66,41 +126,34 @@
                     <p id="birthday-footer" class="text-[10px] text-gray-500 font-bold leading-tight text-emerald-700">Calculando...</p>
                 </div>
             </div>
-            
             <div class="flex items-center gap-3 md:border-l md:pl-6 border-gray-100">
                 <div class="bg-blue-100 p-2 rounded-full text-2xl">📚</div>
                 <div>
                     <p class="font-bold text-gray-800 text-xs uppercase">Práctica Español:</p>
-                    <a href="https://wordwall.net/es/resource/32706393" target="_blank" class="text-[10px] link-style font-bold">Sinónimos Wordwall</a>
+                    <a href="https://wordwall.net/es/resource/32706393" target="_blank" class="text-[10px] link-style font-bold">Sinónimos</a>
                 </div>
             </div>
-
             <div class="flex items-center gap-3 lg:border-l lg:pl-6 border-gray-100">
                 <div class="bg-purple-100 p-2 rounded-full text-2xl">🧠</div>
                 <div>
                     <p class="font-bold text-gray-800 text-xs uppercase">Microhabilidades:</p>
-                    <a href="https://gemini.google.com/share/33c59ed472e7" target="_blank" class="text-[10px] link-style font-bold text-purple-700">Juegos Mentales</a>
+                    <a href="https://gemini.google.com/share/33c59ed472e7" target="_blank" class="text-[10px] link-style font-bold">Juegos</a>
                 </div>
             </div>
-
             <div class="flex items-center gap-3 lg:border-l lg:pl-6 border-gray-100">
                 <div class="bg-red-100 p-2 rounded-full text-2xl">🔊</div>
                 <div>
-                    <p class="font-bold text-gray-800 text-xs uppercase">Práctica Phonics:</p>
-                    <div class="flex flex-col gap-1">
-                        <a href="https://www.youtube.com/watch?v=ChqnN3cKzXQ&t=1s" target="_blank" class="text-[9px] link-style font-bold text-red-600">Video 1: Sounds</a>
-                        <a href="https://www.youtube.com/watch?v=_mppVx-O4q8&list=RD_mppVx-O4q8&start_radio=1" target="_blank" class="text-[9px] link-style font-bold text-red-600">Video 2: Practice</a>
-                    </div>
+                    <p class="font-bold text-gray-800 text-xs uppercase">Phonics:</p>
+                    <a href="https://www.youtube.com/watch?v=ChqnN3cKzXQ" target="_blank" class="text-[9px] link-style font-bold">Video Sounds</a>
                 </div>
             </div>
-        </div>
-
-        <div class="bg-emerald-50 text-emerald-700 px-4 py-2 text-center text-[10px] font-bold border-t border-emerald-100 uppercase">
-            ⚙️ Calendario Dinámico | Horario Actualizado v2025-2026 | Aviso Salida 19-Feb
         </div>
     </div>
 
     <script>
+        // FECHA ACTUAL DE REFERENCIA
+        const REAL_TODAY = new Date(2026, 1, 19); 
+
         const BIRTHDAYS = [
             { name: "Luciana Rubio", month: 0, day: 5 },
             { name: "Martín Chacón", month: 1, day: 7 },
@@ -137,8 +190,8 @@
             "2026-11-16", "2026-12-08", "2026-12-25"
         ];
 
-        const CYCLE_ANCHOR_DATE = new Date(2026, 1, 16); 
-        const CYCLE_ANCHOR_DAY_NUM = 3; 
+        const CYCLE_ANCHOR_DATE = new Date(2026, 1, 4); 
+        const CYCLE_ANCHOR_DAY_NUM = 1; 
 
         const schedules = {
             1: "<li>• Psicomotricidad</li><li>• Math</li><li>• English</li><li>• STEM</li><li>• Español</li><li>• Danza</li>",
@@ -151,27 +204,17 @@
 
         const specialActivities = {
             "2026-02-19": {
-                html: `
-                    <div class="emergency-alert p-2 rounded-lg border border-red-300 mb-2">
-                        <p class="text-[9px] text-red-700 font-black uppercase">⚠️ CAMBIO DE HORARIO:</p>
-                        <p class="text-[10px] text-red-800 font-bold leading-tight">SALIDA TEMPRANA 2:00 P.M. por manifestaciones.</p>
-                    </div>
-                `,
-                reminder: "SALIDA TEMPRANA 2:00 PM - Manifestaciones en Bogotá"
+                html: `<div class="emergency-alert p-2 rounded-lg border border-red-300 mb-2"><p class="text-[9px] text-red-700 font-black uppercase">⚠️ AVISO IMPORTANTE:</p><p class="text-[10px] text-red-800 font-bold leading-tight">SALIDA TEMPRANA 2:00 P.M.</p></div>`,
+                reminder: "SALIDA TEMPRANA 2:00 PM"
             },
             "2026-02-27": {
-                html: `
-                    <div class="bg-purple-100 p-2 rounded-lg border border-purple-300 mb-2">
-                        <p class="text-[9px] text-purple-700 font-black uppercase">📂 SOCIOEMOCIONAL:</p>
-                        <p class="text-[10px] text-purple-800 font-bold leading-tight italic">Traer la carpeta con la portada impresa.</p>
-                    </div>
-                `,
-                reminder: "Socioemocional: Traer carpeta con portada impresa"
+                html: `<div class="bg-purple-100 p-2 rounded-lg border border-purple-300 mb-2"><p class="text-[9px] text-purple-700 font-black uppercase">📂 SOCIOEMOCIONAL:</p><p class="text-[10px] text-purple-800 font-bold leading-tight italic">Traer la carpeta con la portada impresa.</p></div>`,
+                reminder: "Socioemocional: Traer carpeta con portada"
             }
         };
 
         let viewOffset = 0; 
-        let startDayCalculated;
+        let currentActiveView = 'weekly';
 
         function isHoliday(date) {
             const iso = date.toISOString().split('T')[0];
@@ -180,23 +223,20 @@
 
         function isNonWorkingDay(date) {
             const day = date.getDay();
-            if (day === 0 || day === 6) return true;
-            return isHoliday(date);
+            return (day === 0 || day === 6) || isHoliday(date);
         }
 
         function getNextSchoolDay(date) {
             let check = new Date(date);
-            while (isNonWorkingDay(check)) {
-                check.setDate(check.getDate() + 1);
-            }
+            while (isNonWorkingDay(check)) { check.setDate(check.getDate() + 1); }
             return check;
         }
 
         function getCycleDay(targetDate) {
             if (isNonWorkingDay(targetDate)) return null;
-            
             const diffTime = targetDate - CYCLE_ANCHOR_DATE;
             const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
             let nonWorkingCount = 0;
             let tempDate = new Date(CYCLE_ANCHOR_DATE);
             let step = diffDays >= 0 ? 1 : -1;
@@ -206,7 +246,6 @@
                 tempDate.setDate(tempDate.getDate() + step);
                 if (isNonWorkingDay(tempDate)) nonWorkingCount += step;
             }
-            
             const schoolDaysDiff = diffDays - nonWorkingCount;
             let result = (CYCLE_ANCHOR_DAY_NUM + schoolDaysDiff) % 6;
             if (result <= 0) result += 6;
@@ -219,7 +258,7 @@
         }
 
         function getMondayOfCurrentWeek() {
-            const today = new Date();
+            const today = new Date(REAL_TODAY);
             const day = today.getDay();
             const diff = today.getDate() - day + (day === 0 ? -6 : 1);
             const monday = new Date(today.setDate(diff));
@@ -227,133 +266,138 @@
             return monday;
         }
 
-        function updateBirthdayFooter() {
-            const today = new Date();
-            today.setHours(0,0,0,0);
-            const currentYear = today.getFullYear();
-            const footer = document.getElementById('birthday-footer');
-
-            const upcoming = BIRTHDAYS.map(b => {
-                let bDate = new Date(currentYear, b.month, b.day);
-                if (bDate < today) bDate = new Date(currentYear + 1, b.month, b.day);
-                return { ...b, date: bDate };
-            }).sort((a, b) => a.date - b.date);
-
-            const startOfView = new Date(startDayCalculated);
-            const endOfView = new Date(startDayCalculated);
-            endOfView.setDate(startOfView.getDate() + 6);
-
-            const inView = BIRTHDAYS.find(b => {
-                const realDate = new Date(startOfView.getFullYear(), b.month, b.day);
-                const celebDate = getNextSchoolDay(realDate);
-                return (realDate >= startOfView && realDate <= endOfView) || 
-                       (celebDate >= startOfView && celebDate <= endOfView);
-            });
-
-            if (inView) {
-                const realDate = new Date(startOfView.getFullYear(), inView.month, inView.day);
-                const celebDate = getNextSchoolDay(realDate);
-                const isDeferred = realDate.getTime() !== celebDate.getTime();
-                footer.innerHTML = `<span class="text-emerald-600 animate-pulse">🎂 ¡CELEBRACIÓN!</span><br>${inView.name} ${isDeferred ? '(Postergado)' : ''}`;
-                return;
+        function toggleView(viewType) {
+            currentActiveView = viewType;
+            if (viewType === 'annual') {
+                document.getElementById('weekly-view').classList.add('hidden');
+                document.getElementById('nav-btn').classList.add('hidden');
+                document.getElementById('annual-view').classList.remove('hidden');
+                document.getElementById('week-label').innerText = "Cronograma Anual 2026";
+                renderAnnualCalendar();
+            } else {
+                document.getElementById('weekly-view').classList.remove('hidden');
+                document.getElementById('nav-btn').classList.remove('hidden');
+                document.getElementById('annual-view').classList.add('hidden');
+                renderCalendar();
             }
+        }
 
-            const nextB = upcoming[0];
-            footer.innerHTML = `<span class="text-gray-400 italic">Próximo:</span><br>${nextB.name} - ${nextB.date.toLocaleDateString('es-ES', {month:'long', day:'numeric'})}`;
+        function renderAnnualCalendar() {
+            const tbody = document.getElementById('annual-body');
+            tbody.innerHTML = '';
+            let checkDate = new Date(2026, 1, 4); 
+            const endDate = new Date(2026, 11, 31);
+            const todayISO = REAL_TODAY.toISOString().split('T')[0];
+            const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+            const dayNamesShort = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+            let weekNumber = 1;
+
+            while (checkDate <= endDate) {
+                let cycleRow = { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null };
+                let weekendItems = [];
+                let daysInCycle = 0;
+
+                while (daysInCycle < 6 && checkDate <= endDate) {
+                    const iso = checkDate.toISOString().split('T')[0];
+                    const bdays = BIRTHDAYS.filter(b => b.month === checkDate.getMonth() && b.day === checkDate.getDate());
+                    const dateLabel = `${dayNamesShort[checkDate.getDay()]}, ${checkDate.getDate()} ${monthNames[checkDate.getMonth()]}`;
+
+                    if (isNonWorkingDay(checkDate)) {
+                        let info = `<span class="font-bold">${dateLabel}</span>`;
+                        if (bdays.length > 0) {
+                            info += bdays.map(b => `<br><span class="text-blue-700 font-black">🎂 ${b.name}</span>`).join('');
+                        } else if (isHoliday(checkDate)) {
+                            info += `<br><span class="text-red-600 font-black uppercase text-[10px]">FESTIVO</span>`;
+                        }
+                        weekendItems.push(info);
+                    } else {
+                        const cycle = getCycleDay(checkDate);
+                        if (cycle) {
+                            let cellContent = `<p class="font-black text-gray-900 text-[11px] mb-0.5">${dateLabel}</p>`;
+                            cellContent += `<p class="text-[10px] font-bold text-emerald-700 leading-tight">${getUniformByCycle(cycle)}</p>`;
+                            if (bdays.length > 0) {
+                                cellContent += bdays.map(b => `<p class="text-blue-800 text-[10px] mt-1 leading-tight font-black">🎂 ${b.name}</p>`).join('');
+                            }
+                            cycleRow[cycle] = { 
+                                html: cellContent,
+                                isToday: iso === todayISO
+                            };
+                            daysInCycle++;
+                        }
+                    }
+                    checkDate.setDate(checkDate.getDate() + 1);
+                }
+
+                let rowHtml = `<tr class="border-b-2 border-emerald-50">
+                    <td class="bg-emerald-50 p-3 text-center font-black text-emerald-800 text-[11px] uppercase border-r border-emerald-100">S${weekNumber++}</td>`;
+                
+                for (let c = 1; c <= 6; c++) {
+                    const d = cycleRow[c];
+                    rowHtml += d ? `<td class="p-3 text-center cycle-${c} ${d.isToday ? 'is-today-annual' : ''}">
+                        ${d.html}
+                    </td>` : `<td class="p-3 bg-gray-50 opacity-10"></td>`;
+                }
+
+                rowHtml += `<td class="p-3 weekend-col text-[11px] leading-snug border-l border-emerald-100">
+                    ${weekendItems.length > 0 ? weekendItems.join('<div class="my-1 border-b border-gray-200"></div>') : '-'}
+                </td></tr>`;
+                
+                tbody.insertAdjacentHTML('beforeend', rowHtml);
+            }
         }
 
         function renderCalendar() {
+            if (currentActiveView === 'annual') return;
             const container = document.getElementById('grid-container');
             container.innerHTML = '';
-            const today = new Date();
-            today.setHours(0,0,0,0);
-
-            startDayCalculated = getMondayOfCurrentWeek();
-            startDayCalculated.setDate(startDayCalculated.getDate() + (viewOffset * 7));
-
-            const options = { month: 'short', day: 'numeric' };
-            const endDay = new Date(startDayCalculated);
-            endDay.setDate(endDay.getDate() + 4);
+            const todayISO = REAL_TODAY.toISOString().split('T')[0];
             
-            document.getElementById('week-label').innerText = 
-                `${viewOffset === 0 ? 'Semana Actual' : 'Próxima Semana'} (${startDayCalculated.toLocaleDateString('es-ES', options)} - ${endDay.toLocaleDateString('es-ES', options)})`;
-
+            let startDay = getMondayOfCurrentWeek();
+            startDay.setDate(startDay.getDate() + (viewOffset * 7));
+            
+            const endDay = new Date(startDay);
+            endDay.setDate(endDay.getDate() + 4);
+            document.getElementById('week-label').innerText = `${viewOffset === 0 ? 'Semana Actual' : 'Próxima Semana'} (${startDay.getDate()}/${startDay.getMonth()+1} - ${endDay.getDate()}/${endDay.getMonth()+1})`;
+            
             const dayNames = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
             const colors = ["bg-blue-500", "bg-yellow-400", "bg-pink-400", "bg-sky-400", "bg-orange-400"];
 
             for (let i = 0; i < 5; i++) {
-                const currentDate = new Date(startDayCalculated);
-                currentDate.setDate(startDayCalculated.getDate() + i);
-                const dateISO = currentDate.toISOString().split('T')[0];
-                const isToday = currentDate.getTime() === today.getTime();
-                const isPast = currentDate < today;
-                const itsHoliday = isHoliday(currentDate);
-                
-                const numDiaCiclo = getCycleDay(currentDate);
-                const uniformText = itsHoliday ? "N/A" : getUniformByCycle(numDiaCiclo);
-                
-                const bdayNotice = BIRTHDAYS.reduce((acc, b) => {
-                    const realDate = new Date(currentDate.getFullYear(), b.month, b.day);
-                    const celebDate = getNextSchoolDay(realDate);
-                    if (currentDate.getTime() === celebDate.getTime()) {
-                        const isDeferred = realDate.getTime() !== celebDate.getTime();
-                        acc.push({ name: b.name, deferred: isDeferred });
-                    }
-                    return acc;
-                }, []);
+                const curr = new Date(startDay);
+                curr.setDate(startDay.getDate() + i);
+                const iso = curr.toISOString().split('T')[0];
+                const isToday = iso === todayISO;
+                const isPast = curr < REAL_TODAY && !isToday;
+                const itsHoliday = isHoliday(curr);
+                const numDia = getCycleDay(curr);
+                const uniform = itsHoliday ? "N/A" : getUniformByCycle(numDia);
                 
                 let activityHtml = "";
-                bdayNotice.forEach(notice => {
-                    const label = notice.deferred ? "🎂 CELEBRACIÓN (Pasado):" : "🎂 CUMPLEAÑOS:";
-                    activityHtml += `<div class="bg-blue-100 p-2 rounded-lg border border-blue-200 mb-2"><p class="text-[9px] text-blue-800 font-black uppercase">${label}</p><p class="text-[10px] text-blue-700 font-bold">${notice.name}</p></div>`;
-                });
+                const bdays = BIRTHDAYS.reduce((acc, b) => {
+                    const realDate = new Date(curr.getFullYear(), b.month, b.day);
+                    if (curr.getTime() === getNextSchoolDay(realDate).getTime()) acc.push(b.name);
+                    return acc;
+                }, []);
+                bdays.forEach(name => activityHtml += `<div class="bg-blue-100 p-2 rounded-lg border border-blue-200 mb-2 text-[10px] text-blue-700 font-bold">🎂 Cumple: ${name}</div>`);
                 
-                const manualActivity = specialActivities[dateISO];
-                activityHtml += manualActivity ? manualActivity.html : "";
-                
-                if (activityHtml === "" && !itsHoliday) {
-                    activityHtml = `<p class="text-[9px] text-gray-400 italic font-semibold">Sin tareas especiales</p>`;
-                }
+                if (specialActivities[iso]) activityHtml += specialActivities[iso].html;
 
-                const cardHTML = `
-                    <div class="flex flex-col h-full ${isPast && !isToday ? 'past-day' : ''} ${isToday ? 'scale-105 z-10' : ''}">
-                        <div class="${itsHoliday ? 'bg-gray-400' : colors[i]} text-white p-3 text-center rounded-t-3xl font-bold uppercase text-lg shadow-inner">
-                            ${isToday ? '⭐️ ' : ''}${dayNames[i]} ${currentDate.getDate()}
+                container.insertAdjacentHTML('beforeend', `
+                    <div class="flex flex-col h-full ${isPast ? 'past-day' : ''} ${isToday ? 'scale-105 z-10' : ''}">
+                        <div class="${itsHoliday ? 'bg-gray-400' : colors[i]} text-white p-3 text-center rounded-t-3xl font-bold uppercase text-lg">
+                            ${isToday ? '⭐️ ' : ''}${dayNames[i]} ${curr.getDate()}
                         </div>
-                        <div class="bg-white p-4 flex-grow border-x-4 border-b-4 ${itsHoliday ? 'border-gray-200' : colors[i].replace('bg-', 'border-')} rounded-b-3xl card-shadow flex flex-col day-card-content ${isToday ? 'ring-4 ring-emerald-200' : ''}">
-                            <div class="mb-3 flex justify-between items-center">
-                                <span class="bg-gray-100 text-gray-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase">${itsHoliday ? 'FESTIVO' : 'Día ' + numDiaCiclo}</span>
-                                ${isToday ? '<span class="text-[9px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">HOY</span>' : ''}
-                            </div>
-                            
-                            ${itsHoliday ? `
-                                <div class="flex-grow flex flex-col items-center justify-center text-center p-4 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 my-4">
-                                    <span class="text-4xl mb-2">😴</span>
-                                    <p class="text-gray-500 font-black text-sm uppercase leading-tight">Día Festivo</p>
-                                    <p class="text-gray-400 font-bold text-[10px] uppercase">No hay clases</p>
-                                    <div class="mt-4 w-full">
-                                        ${activityHtml}
-                                    </div>
-                                </div>
-                            ` : `
-                                <div class="mb-4">
-                                    <p class="font-bold text-gray-700 text-xs mb-0.5">👔 Uniforme:</p>
-                                    <p class="${colors[i].replace('bg-', 'text-')} font-bold text-sm uppercase italic leading-tight">${uniformText}</p>
-                                </div>
-                                <div class="bg-orange-50 p-3 rounded-2xl border-2 border-orange-100 mb-4 min-h-[160px]">
-                                    <p class="font-bold text-orange-700 text-[9px] mb-1 uppercase tracking-tighter">🚀 Actividades / Tareas:</p>
-                                    ${activityHtml}
-                                </div>
-                                <div class="mb-3 flex-grow">
-                                    <p class="font-bold text-gray-400 text-[10px] uppercase mb-1 tracking-wider">📚 Horario</p>
-                                    <ul class="text-[11px] text-gray-700 space-y-1 font-medium">${schedules[numDiaCiclo] || '<li>No hay clases</li>'}</ul>
-                                </div>
-                                <button onclick="handleCalendar('${dateISO}', '${dayNames[i]}', '${uniformText}', '${encodeURIComponent(manualActivity?.reminder || 'Sin tareas')}')" class="calendar-btn mt-4 w-full bg-emerald-500 text-white py-3 rounded-xl text-[10px] font-black shadow-md uppercase tracking-widest border-b-4 border-emerald-700">📅 AGENDAR</button>
+                        <div class="bg-white p-4 flex-grow border-x-4 border-b-4 ${itsHoliday ? 'border-gray-200' : colors[i].replace('bg-', 'border-')} rounded-b-3xl day-card-content">
+                            <div class="mb-3 text-[10px] font-bold px-2 py-0.5 rounded bg-gray-100 uppercase">${itsHoliday ? 'FESTIVO' : 'Día ' + numDia}</div>
+                            ${itsHoliday ? '<p class="text-center py-20 text-gray-400">Descanso</p>' : `
+                                <div class="mb-4"><p class="text-xs font-bold text-gray-700">👔 Uniforme:</p><p class="text-sm font-black italic ${colors[i].replace('bg-', 'text-')}">${uniform}</p></div>
+                                <div class="bg-orange-50 p-3 rounded-2xl border-2 border-orange-100 mb-4 min-h-[140px]">${activityHtml || '<p class="text-[9px] text-gray-400 italic">Sin tareas especiales</p>'}</div>
+                                <div class="flex-grow"><ul class="text-[11px] text-gray-700 space-y-1">${schedules[numDia] || ''}</ul></div>
+                                <button onclick="handleCalendar('${iso}', '${dayNames[i]}', '${uniform}', '${encodeURIComponent(specialActivities[iso]?.reminder || 'Clase normal')}')" class="calendar-btn mt-4 w-full bg-emerald-500 text-white py-3 rounded-xl text-[10px] font-black uppercase">Agendar</button>
                             `}
                         </div>
                     </div>
-                `;
-                container.insertAdjacentHTML('beforeend', cardHTML);
+                `);
             }
             updateBirthdayFooter();
         }
@@ -364,27 +408,24 @@
             renderCalendar();
         }
 
-        window.handleCalendar = function(dateStr, dayName, uniform, activityText) {
-            const decodedActivity = decodeURIComponent(activityText);
-            // Título ajustado según solicitud
-            const title = encodeURIComponent(`Recordatorio Actividad Colegio: ${dayName}`);
-            const body = encodeURIComponent(`👔 UNIFORME: ${uniform}\n\n📝 TAREAS:\n${decodedActivity}`);
-            
-            // Formatear fecha base (YYYYMMDD)
-            const dateParts = dateStr.split('-');
-            const yearMonthDay = dateParts.join('');
-            
-            // Ponemos el evento a las 07:20 AM del día de la clase
-            const startTime = "072000"; 
-            const endTime = "082000"; 
-            
-            const dates = `${yearMonthDay}T${startTime}/${yearMonthDay}T${endTime}`;
+        function updateBirthdayFooter() {
+            const currentYear = REAL_TODAY.getFullYear();
+            const upcoming = BIRTHDAYS.map(b => {
+                let bDate = new Date(currentYear, b.month, b.day);
+                if (bDate < REAL_TODAY) bDate = new Date(currentYear + 1, b.month, b.day);
+                return { ...b, date: bDate };
+            }).sort((a, b) => a.date - b.date);
+            document.getElementById('birthday-footer').innerText = `${upcoming[0].name} (${upcoming[0].date.getDate()} ${upcoming[0].date.toLocaleDateString('es-ES', {month:'short'})})`;
+        }
 
-            // Abrir Google Calendar
-            window.open(`https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${body}&sf=true&output=xml`, '_blank');
+        window.handleCalendar = function(dateStr, day, uniform, act) {
+            const title = `Evergreen: ${day}`;
+            const details = `Uniforme: ${uniform}\nNotas: ${decodeURIComponent(act)}`;
+            const dateStrClean = dateStr.replace(/-/g, '');
+            window.open(`https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${dateStrClean}T070000/${dateStrClean}T080000&details=${encodeURIComponent(details)}`, '_blank');
         };
 
-        document.addEventListener('DOMContentLoaded', renderCalendar);
+        renderCalendar();
     </script>
 </body>
 </html>
