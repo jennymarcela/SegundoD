@@ -40,7 +40,7 @@
         /* CABECERA FIJA (Sticky) para el Calendario Anual */
         .annual-table thead th {
             position: sticky;
-            top: -1px; /* Compensa el borde superior */
+            top: -1px;
             z-index: 50;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
@@ -166,8 +166,9 @@
     </div>
 
     <script>
-        // FECHA ACTUAL DE REFERENCIA
-        const REAL_TODAY = new Date(2026, 1, 19); 
+        // FECHA ACTUAL DE REFERENCIA (Sincronizada con Bogotá)
+        const REAL_TODAY = new Date();
+        REAL_TODAY.setHours(REAL_TODAY.getHours() - 5); // Ajuste manual simple si el sistema no está en UTC-5
 
         const BIRTHDAYS = [
             { name: "Luciana Rubio", month: 0, day: 5 },
@@ -382,7 +383,14 @@
                 curr.setDate(startDay.getDate() + i);
                 const iso = curr.toISOString().split('T')[0];
                 const isToday = iso === todayISO;
-                const isPast = curr < REAL_TODAY && !isToday;
+                
+                // Normalizamos fechas para comparación de "pasado"
+                const tempToday = new Date(REAL_TODAY);
+                tempToday.setHours(0,0,0,0);
+                const tempCurr = new Date(curr);
+                tempCurr.setHours(0,0,0,0);
+                
+                const isPast = tempCurr < tempToday;
                 const itsHoliday = isHoliday(curr);
                 const numDia = getCycleDay(curr);
                 const uniform = itsHoliday ? "N/A" : getUniformByCycle(numDia);
@@ -390,7 +398,7 @@
                 let activityHtml = "";
                 const bdays = BIRTHDAYS.reduce((acc, b) => {
                     const realDate = new Date(curr.getFullYear(), b.month, b.day);
-                    if (curr.getTime() === getNextSchoolDay(realDate).getTime()) acc.push(b.name);
+                    if (curr.toDateString() === getNextSchoolDay(realDate).toDateString()) acc.push(b.name);
                     return acc;
                 }, []);
                 bdays.forEach(name => activityHtml += `<div class="bg-blue-100 p-2 rounded-lg border border-blue-200 mb-2 text-[10px] text-blue-700 font-bold">🎂 Cumple: ${name}</div>`);
@@ -402,13 +410,13 @@
                         <div class="${itsHoliday ? 'bg-gray-400' : colors[i]} text-white p-3 text-center rounded-t-3xl font-bold uppercase text-lg">
                             ${isToday ? '⭐️ ' : ''}${dayNames[i]} ${curr.getDate()}
                         </div>
-                        <div class="bg-white p-4 flex-grow border-x-4 border-b-4 ${itsHoliday ? 'border-gray-200' : colors[i].replace('bg-', 'border-')} rounded-b-3xl day-card-content">
-                            <div class="mb-3 text-[10px] font-bold px-2 py-0.5 rounded bg-gray-100 uppercase">${itsHoliday ? 'FESTIVO' : 'Día ' + numDia}</div>
-                            ${itsHoliday ? '<p class="text-center py-20 text-gray-400">Descanso</p>' : `
+                        <div class="bg-white p-4 flex-grow border-x-4 border-b-4 ${itsHoliday ? 'border-gray-200' : colors[i].replace('bg-', 'border-')} rounded-b-3xl day-card-content shadow-lg">
+                            <div class="mb-3 text-[10px] font-bold px-2 py-0.5 rounded bg-gray-100 uppercase inline-block">${itsHoliday ? 'FESTIVO' : 'Día ' + (numDia || '-')}</div>
+                            ${itsHoliday ? '<p class="text-center py-20 text-gray-400 font-bold">Descanso</p>' : `
                                 <div class="mb-4"><p class="text-xs font-bold text-gray-700">👔 Uniforme:</p><p class="text-sm font-black italic ${colors[i].replace('bg-', 'text-')}">${uniform}</p></div>
                                 <div class="bg-orange-50 p-3 rounded-2xl border-2 border-orange-100 mb-4 min-h-[140px]">${activityHtml || '<p class="text-[9px] text-gray-400 italic">Sin tareas especiales</p>'}</div>
-                                <div class="flex-grow"><ul class="text-[11px] text-gray-700 space-y-1">${schedules[numDia] || ''}</ul></div>
-                                <button onclick="handleCalendar('${iso}', '${dayNames[i]}', '${uniform}', '${encodeURIComponent(specialActivities[iso]?.reminder || 'Clase normal')}')" class="calendar-btn mt-4 w-full bg-emerald-500 text-white py-3 rounded-xl text-[10px] font-black uppercase">Agendar</button>
+                                <div class="flex-grow"><ul class="text-[11px] text-gray-700 space-y-1">${numDia ? (schedules[numDia] || '') : '<li>No hay clases</li>'}</ul></div>
+                                <button onclick="handleCalendar('${iso}', '${dayNames[i]}', '${uniform}', '${encodeURIComponent(specialActivities[iso]?.reminder || 'Clase normal')}')" class="calendar-btn mt-4 w-full bg-emerald-500 text-white py-3 rounded-xl text-[10px] font-black uppercase shadow-md">Agendar</button>
                             `}
                         </div>
                     </div>
@@ -440,7 +448,10 @@
             window.open(`https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${dateStrClean}T070000/${dateStrClean}T080000&details=${encodeURIComponent(details)}`, '_blank');
         };
 
-        renderCalendar();
+        // Iniciar aplicación
+        window.onload = function() {
+            renderCalendar();
+        };
     </script>
 </body>
 </html>
