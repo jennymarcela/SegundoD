@@ -173,11 +173,15 @@
         let viewOffset = 0; 
         let startDayCalculated;
 
+        function isHoliday(date) {
+            const iso = date.toISOString().split('T')[0];
+            return HOLIDAYS_2026.includes(iso);
+        }
+
         function isNonWorkingDay(date) {
             const day = date.getDay();
             if (day === 0 || day === 6) return true;
-            const iso = date.toISOString().split('T')[0];
-            return HOLIDAYS_2026.includes(iso);
+            return isHoliday(date);
         }
 
         function getNextSchoolDay(date) {
@@ -189,20 +193,22 @@
         }
 
         function getCycleDay(targetDate) {
-            const dayOfWeek = targetDate.getDay();
-            if (dayOfWeek === 0 || dayOfWeek === 6) return null;
+            if (isNonWorkingDay(targetDate)) return null;
+            
             const diffTime = targetDate - CYCLE_ANCHOR_DATE;
             const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-            let weekendDays = 0;
+            let nonWorkingCount = 0;
             let tempDate = new Date(CYCLE_ANCHOR_DATE);
             let step = diffDays >= 0 ? 1 : -1;
             let absoluteDiff = Math.abs(diffDays);
+            
             for (let i = 0; i < absoluteDiff; i++) {
                 tempDate.setDate(tempDate.getDate() + step);
-                if (tempDate.getDay() === 0 || tempDate.getDay() === 6) weekendDays += step;
+                if (isNonWorkingDay(tempDate)) nonWorkingCount += step;
             }
-            const businessDaysDiff = diffDays - weekendDays;
-            let result = (CYCLE_ANCHOR_DAY_NUM + businessDaysDiff) % 6;
+            
+            const schoolDaysDiff = diffDays - nonWorkingCount;
+            let result = (CYCLE_ANCHOR_DAY_NUM + schoolDaysDiff) % 6;
             if (result <= 0) result += 6;
             return result;
         }
@@ -281,9 +287,10 @@
                 const dateISO = currentDate.toISOString().split('T')[0];
                 const isToday = currentDate.getTime() === today.getTime();
                 const isPast = currentDate < today;
+                const itsHoliday = isHoliday(currentDate);
                 
                 const numDiaCiclo = getCycleDay(currentDate);
-                const uniformText = getUniformByCycle(numDiaCiclo);
+                const uniformText = itsHoliday ? "N/A" : getUniformByCycle(numDiaCiclo);
                 
                 const bdayNotice = BIRTHDAYS.reduce((acc, b) => {
                     const realDate = new Date(currentDate.getFullYear(), b.month, b.day);
@@ -304,33 +311,45 @@
                 const manualActivity = specialActivities[dateISO];
                 activityHtml += manualActivity ? manualActivity.html : "";
                 
-                if (activityHtml === "") {
+                if (activityHtml === "" && !itsHoliday) {
                     activityHtml = `<p class="text-[9px] text-gray-400 italic font-semibold">Sin tareas especiales</p>`;
                 }
 
                 const cardHTML = `
                     <div class="flex flex-col h-full ${isPast && !isToday ? 'past-day' : ''} ${isToday ? 'scale-105 z-10' : ''}">
-                        <div class="${colors[i]} text-white p-3 text-center rounded-t-3xl font-bold uppercase text-lg shadow-inner">
+                        <div class="${itsHoliday ? 'bg-gray-400' : colors[i]} text-white p-3 text-center rounded-t-3xl font-bold uppercase text-lg shadow-inner">
                             ${isToday ? '⭐️ ' : ''}${dayNames[i]} ${currentDate.getDate()}
                         </div>
-                        <div class="bg-white p-4 flex-grow border-x-4 border-b-4 ${colors[i].replace('bg-', 'border-')} rounded-b-3xl card-shadow flex flex-col day-card-content ${isToday ? 'ring-4 ring-emerald-200' : ''}">
+                        <div class="bg-white p-4 flex-grow border-x-4 border-b-4 ${itsHoliday ? 'border-gray-200' : colors[i].replace('bg-', 'border-')} rounded-b-3xl card-shadow flex flex-col day-card-content ${isToday ? 'ring-4 ring-emerald-200' : ''}">
                             <div class="mb-3 flex justify-between items-center">
-                                <span class="bg-gray-100 text-gray-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Día ${numDiaCiclo || 'N/A'}</span>
+                                <span class="bg-gray-100 text-gray-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase">${itsHoliday ? 'FESTIVO' : 'Día ' + numDiaCiclo}</span>
                                 ${isToday ? '<span class="text-[9px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">HOY</span>' : ''}
                             </div>
-                            <div class="mb-4">
-                                <p class="font-bold text-gray-700 text-xs mb-0.5">👔 Uniforme:</p>
-                                <p class="${colors[i].replace('bg-', 'text-')} font-bold text-sm uppercase italic leading-tight">${uniformText}</p>
-                            </div>
-                            <div class="bg-orange-50 p-3 rounded-2xl border-2 border-orange-100 mb-4 min-h-[180px]">
-                                <p class="font-bold text-orange-700 text-[9px] mb-1 uppercase tracking-tighter">🚀 Actividades / Tareas:</p>
-                                ${activityHtml}
-                            </div>
-                            <div class="mb-3 flex-grow">
-                                <p class="font-bold text-gray-400 text-[10px] uppercase mb-1 tracking-wider">📚 Horario</p>
-                                <ul class="text-[11px] text-gray-700 space-y-1 font-medium">${schedules[numDiaCiclo] || '<li>No hay clases</li>'}</ul>
-                            </div>
-                            <button onclick="handleCalendar('${dayNames[i]}', '${uniformText}', '${encodeURIComponent(manualActivity?.reminder || 'Sin tareas')}')" class="calendar-btn mt-4 w-full bg-emerald-500 text-white py-3 rounded-xl text-[10px] font-black shadow-md uppercase tracking-widest border-b-4 border-emerald-700">📅 AGENDAR</button>
+                            
+                            ${itsHoliday ? `
+                                <div class="flex-grow flex flex-col items-center justify-center text-center p-4 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 my-4">
+                                    <span class="text-4xl mb-2">😴</span>
+                                    <p class="text-gray-500 font-black text-sm uppercase leading-tight">Día Festivo</p>
+                                    <p class="text-gray-400 font-bold text-[10px] uppercase">No hay clases</p>
+                                    <div class="mt-4 w-full">
+                                        ${activityHtml}
+                                    </div>
+                                </div>
+                            ` : `
+                                <div class="mb-4">
+                                    <p class="font-bold text-gray-700 text-xs mb-0.5">👔 Uniforme:</p>
+                                    <p class="${colors[i].replace('bg-', 'text-')} font-bold text-sm uppercase italic leading-tight">${uniformText}</p>
+                                </div>
+                                <div class="bg-orange-50 p-3 rounded-2xl border-2 border-orange-100 mb-4 min-h-[160px]">
+                                    <p class="font-bold text-orange-700 text-[9px] mb-1 uppercase tracking-tighter">🚀 Actividades / Tareas:</p>
+                                    ${activityHtml}
+                                </div>
+                                <div class="mb-3 flex-grow">
+                                    <p class="font-bold text-gray-400 text-[10px] uppercase mb-1 tracking-wider">📚 Horario</p>
+                                    <ul class="text-[11px] text-gray-700 space-y-1 font-medium">${schedules[numDiaCiclo] || '<li>No hay clases</li>'}</ul>
+                                </div>
+                                <button onclick="handleCalendar('${dateISO}', '${dayNames[i]}', '${uniformText}', '${encodeURIComponent(manualActivity?.reminder || 'Sin tareas')}')" class="calendar-btn mt-4 w-full bg-emerald-500 text-white py-3 rounded-xl text-[10px] font-black shadow-md uppercase tracking-widest border-b-4 border-emerald-700">📅 AGENDAR</button>
+                            `}
                         </div>
                     </div>
                 `;
@@ -345,11 +364,19 @@
             renderCalendar();
         }
 
-        window.handleCalendar = function(dayName, uniform, activityText) {
+        window.handleCalendar = function(dateStr, dayName, uniform, activityText) {
             const decodedActivity = decodeURIComponent(activityText);
             const title = encodeURIComponent(`COLEGIO 2D: ${dayName}`);
             const body = encodeURIComponent(`👔 UNIFORME: ${uniform}\n\n📝 TAREAS:\n${decodedActivity}`);
-            window.open(`https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${body}`, '_blank');
+            
+            // Formatear fecha para Google Calendar (YYYYMMDD)
+            const dateParts = dateStr.split('-');
+            const formattedDate = dateParts.join('');
+            const endDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+            endDate.setDate(endDate.getDate() + 1);
+            const formattedEndDate = endDate.toISOString().split('T')[0].split('-').join('');
+
+            window.open(`https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${formattedDate}/${formattedEndDate}&details=${body}`, '_blank');
         };
 
         document.addEventListener('DOMContentLoaded', renderCalendar);
