@@ -228,8 +228,8 @@
             6: "<li>• Artes</li><li>• Español</li><li>• Socioemocional</li><li>• Math</li><li>• English</li><li>• Teatro</li>"
         };
 
-        // Actividades Especiales con los rangos solicitados
-        const granjaRange = ["2026-03-09", "2026-03-10", "2026-03-11", "2026-03-12", "2026-03-13"];
+        // Fechas específicas para Segundo Grado únicamente
+        const granjaSegundo = ["2026-03-10", "2026-05-26", "2026-07-28", "2026-09-08", "2026-11-04"];
         const salidaRange = ["2026-04-13", "2026-04-14", "2026-04-15", "2026-04-16", "2026-04-17"];
         const muestraRange = ["2026-04-27", "2026-04-28"];
 
@@ -239,19 +239,30 @@
             "2026-02-23": { html: `<div class="bg-orange-100 p-2 rounded-lg border border-orange-200 mb-2"><p class="text-[9px] text-orange-700 font-black uppercase">🗳️ PLAZO FINAL:</p><p class="text-[10px] text-orange-800 font-bold leading-tight">Entrega hoja de vida al tutor.</p></div>`, reminder: "Gobierno Escolar: Plazo entrega HV" },
             "2026-02-24": { html: `<div class="bg-emerald-50 p-2 rounded-lg border border-emerald-200 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🗳️ GOBIERNO ESCOLAR:</p><p class="text-[10px] text-emerald-800 font-bold leading-tight">Confirmación y aprobación de candidaturas.</p></div>`, reminder: "Gobierno Escolar: Aprobación candidaturas" },
             "2026-02-27": { html: `<div class="bg-purple-100 p-2 rounded-lg border border-purple-300 mb-2"><p class="text-[9px] text-purple-700 font-black uppercase">📂 SOCIOEMOCIONAL:</p><p class="text-[10px] text-purple-800 font-bold leading-tight italic">Traer la carpeta con la portada impresa.</p></div>`, reminder: "Socioemocional: Traer carpeta" },
-            
-            // Marzo - Gobierno Escolar Campaña y Elecciones
-            "2026-03-02": { html: `<div class="bg-yellow-100 p-2 rounded-lg border border-yellow-300 mb-2"><p class="text-[9px] text-yellow-700 font-black uppercase">📢 CAMPAÑA:</p><p class="text-[10px] text-yellow-800 font-bold leading-tight">Inicio socialización de propuestas.</p></div>`, reminder: "Gobierno Escolar: Socialización propuestas" },
+            "2026-03-02": { html: `<div class="bg-yellow-100 p-2 rounded-lg border border-yellow-300 mb-2"><p class="text-[9px] text-yellow-700 font-black uppercase">📢 CAMPAÑA:</p><p class="text-[10px] text-yellow-800 font-bold leading-tight">Socialización de propuestas del 2 al 6.</p></div>`, reminder: "Gobierno Escolar: Campaña" },
             "2026-03-09": { html: `<div class="bg-emerald-100 p-2 rounded-lg border border-emerald-300 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🗳️ ELECCIONES:</p><p class="text-[10px] text-emerald-800 font-bold leading-tight uppercase">Votaciones Gobierno Escolar.</p></div>`, reminder: "ELECCIONES GOBIERNO ESCOLAR" },
             "2026-03-13": { html: `<div class="bg-blue-100 p-2 rounded-lg border border-blue-300 mb-2"><p class="text-[9px] text-blue-700 font-black uppercase">📜 POSESIÓN:</p><p class="text-[10px] text-blue-800 font-bold leading-tight">Posesión oficial de representantes.</p></div>`, reminder: "Posesión Gobierno Escolar" }
         };
 
-        // Inyectar Rangos de Trimestre
-        granjaRange.forEach(date => {
+        // Inyectar ÚNICAMENTE las visitas confirmadas de Segundo Grado con sus detalles logísticos
+        granjaSegundo.forEach(date => {
             const current = specialActivities[date] ? specialActivities[date].html : "";
+            const logistics = `
+                <div class="bg-emerald-50 p-2 rounded-lg border-2 border-emerald-300 mb-2">
+                    <p class="text-[9px] text-emerald-700 font-black uppercase">🚜 VISITA GRANJA 2D:</p>
+                    <p class="text-[10px] text-emerald-800 font-bold mb-1 italic">¡Fecha de visita!</p>
+                    <div class="space-y-1 text-[9px] text-emerald-900 leading-tight">
+                        <p>⏰ 7:20 AM - Llegada Nexus</p>
+                        <p>🚌 8:00 AM - Salida Granja</p>
+                        <p>🥪 Merienda ligera y cómoda</p>
+                        <p>🎒 Maleta pequeña recomendada</p>
+                        <p>💵 Costo: $21.800 (sin ruta)</p>
+                    </div>
+                </div>
+            `;
             specialActivities[date] = { 
-                html: current + `<div class="bg-amber-100 p-2 rounded-lg border border-amber-300 mb-2"><p class="text-[9px] text-amber-700 font-black uppercase">🚜 GRANJA:</p><p class="text-[10px] text-amber-800 font-bold leading-tight italic">Pendiente asignar día exacto.</p></div>`,
-                reminder: "Visita Granja (Semana)"
+                html: current + logistics,
+                reminder: "Visita Granja 2D"
             };
         });
 
@@ -372,7 +383,10 @@
                             let cellContent = `<p class="font-black text-gray-900 annual-text-date mb-1">${dateLabel}</p>`;
                             cellContent += `<p class="annual-text-sub font-bold text-emerald-700 leading-tight">${getUniformByCycle(cycle)}</p>`;
                             if (bdays.length > 0) cellContent += bdays.map(b => `<p class="text-blue-800 annual-text-bday mt-1 leading-tight font-black">🎂 ${b.name}</p>`).join('');
-                            if (specialActivities[iso]) cellContent += `<p class="text-[9px] mt-1 text-orange-600 font-bold">⚠️ ${specialActivities[iso].reminder}</p>`;
+                            if (specialActivities[iso]) {
+                                const reminder = specialActivities[iso].reminder || "Evento";
+                                cellContent += `<p class="text-[9px] mt-1 text-orange-600 font-bold uppercase">⚠️ ${reminder}</p>`;
+                            }
                             cycleRow[cycle] = { html: cellContent, isToday: iso === todayISO };
                             daysInCycle++;
                         }
@@ -460,7 +474,7 @@
                 if (bDate < REAL_TODAY) bDate = new Date(currentYear + 1, b.month, b.day);
                 return { ...b, date: bDate };
             }).sort((a, b) => a.date - b.date);
-            document.getElementById('birthday-footer').innerText = `${upcoming[0].name} (${upcoming[0].date.getDate()} ${upcoming[0].date.toLocaleDateString('es-ES', {month:'short'})})`;
+            document.getElementById('birthday-footer').innerText = upcoming.length > 0 ? `${upcoming[0].name} (${upcoming[0].date.getDate()} ${upcoming[0].date.toLocaleDateString('es-ES', {month:'short'})})` : "Cargando...";
         }
 
         window.handleCalendar = function(dateStr, day, uniform, act) {
