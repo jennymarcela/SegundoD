@@ -145,7 +145,7 @@
         </div>
 
         <!-- FOOTER (RECURSOS FIJOS) -->
-        <div class="bg-white p-5 border-t-2 border-dashed border-gray-200 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 no-print">
+        <div class="bg-white p-5 border-t-2 border-dashed border-gray-200 grid grid-cols-1 md:grid-cols-3 gap-6 no-print">
             <div class="flex items-center gap-3">
                 <div class="bg-emerald-100 p-2 rounded-full text-2xl">🥳</div>
                 <div>
@@ -156,22 +156,19 @@
             <div class="flex items-center gap-3 md:border-l md:pl-6 border-gray-100">
                 <div class="bg-blue-100 p-2 rounded-full text-2xl">📚</div>
                 <div>
-                    <p class="font-bold text-gray-800 text-xs uppercase">Práctica Español:</p>
-                    <a href="https://wordwall.net/es/resource/32706393" target="_blank" class="text-[10px] link-style font-bold">Sinónimos y Antónimos</a>
+                    <p class="font-bold text-gray-800 text-xs uppercase">Recursos Académicos:</p>
+                    <div class="flex flex-wrap gap-x-3">
+                        <a href="https://wordwall.net/es/resource/32706393" target="_blank" class="text-[10px] link-style font-bold">Español</a>
+                        <a href="https://www.youtube.com/watch?v=ChqnN3cKzXQ" target="_blank" class="text-[10px] link-style font-bold">Phonics</a>
+                        <a href="https://www.myon.com/index.html" target="_blank" class="text-[10px] link-style font-bold">MyON</a>
+                    </div>
                 </div>
             </div>
             <div class="flex items-center gap-3 lg:border-l lg:pl-6 border-gray-100">
-                <div class="bg-purple-100 p-2 rounded-full text-2xl">🧠</div>
+                <div class="bg-indigo-100 p-2 rounded-full text-2xl">🧩</div>
                 <div>
                     <p class="font-bold text-gray-800 text-xs uppercase">Juegos Mentales:</p>
-                    <a href="https://www.cokitos.com/tag/juegos-de-atencion/" target="_blank" class="text-[10px] link-style font-bold">Entrena tu Atención</a>
-                </div>
-            </div>
-            <div class="flex items-center gap-3 lg:border-l lg:pl-6 border-gray-100">
-                <div class="bg-red-100 p-2 rounded-full text-2xl">🔊</div>
-                <div>
-                    <p class="font-bold text-gray-800 text-xs uppercase">Phonics Sounds:</p>
-                    <a href="https://www.youtube.com/watch?v=ChqnN3cKzXQ" target="_blank" class="text-[10px] link-style font-bold">Video: Pronunciation</a>
+                    <a href="https://wordwall.net/es/resource/25608825/juegos-mentales" target="_blank" class="text-[10px] link-style font-bold">Acceso a Juegos</a>
                 </div>
             </div>
         </div>
@@ -228,7 +225,6 @@
             6: "<li>• Artes</li><li>• Español</li><li>• Socioemocional</li><li>• Math</li><li>• English</li><li>• Teatro</li>"
         };
 
-        // Fechas específicas para Segundo Grado únicamente
         const granjaSegundo = ["2026-03-10", "2026-05-26", "2026-07-28", "2026-09-08", "2026-11-04"];
         const salidaRange = ["2026-04-13", "2026-04-14", "2026-04-15", "2026-04-16", "2026-04-17"];
         const muestraRange = ["2026-04-27", "2026-04-28"];
@@ -238,13 +234,12 @@
             "2026-02-19": { html: `<div class="emergency-alert p-2 rounded-lg border border-red-300 mb-2"><p class="text-[9px] text-red-700 font-black uppercase">⚠️ AVISO:</p><p class="text-[10px] text-red-800 font-bold leading-tight uppercase">Salida Temprana 2:00 P.M.</p></div>`, reminder: "SALIDA TEMPRANA 2:00 PM" },
             "2026-02-23": { html: `<div class="bg-orange-100 p-2 rounded-lg border border-orange-200 mb-2"><p class="text-[9px] text-orange-700 font-black uppercase">🗳️ PLAZO FINAL:</p><p class="text-[10px] text-orange-800 font-bold leading-tight">Entrega hoja de vida al tutor.</p></div>`, reminder: "Gobierno Escolar: Plazo entrega HV" },
             "2026-02-24": { html: `<div class="bg-emerald-50 p-2 rounded-lg border border-emerald-200 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🗳️ GOBIERNO ESCOLAR:</p><p class="text-[10px] text-emerald-800 font-bold leading-tight">Confirmación y aprobación de candidaturas.</p></div>`, reminder: "Gobierno Escolar: Aprobación candidaturas" },
-            "2026-02-27": { html: `<div class="bg-purple-100 p-2 rounded-lg border border-purple-300 mb-2"><p class="text-[9px] text-purple-700 font-black uppercase">📂 SOCIOEMOCIONAL:</p><p class="text-[10px] text-purple-800 font-bold leading-tight italic">Traer la carpeta con la portada impresa.</p></div>`, reminder: "Socioemocional: Traer carpeta" },
+            "2026-02-27": { html: `<div class="bg-pink-100 p-2 rounded-lg border border-pink-300 mb-2"><p class="text-[9px] text-pink-700 font-black uppercase">🎂 CELEBRACIÓN:</p><p class="text-[10px] text-pink-800 font-bold leading-tight uppercase">Cumpleaños Ada (En el Salón)</p></div><div class="bg-purple-100 p-2 rounded-lg border border-purple-300 mb-2"><p class="text-[9px] text-purple-700 font-black uppercase">📂 SOCIOEMOCIONAL:</p><p class="text-[10px] text-purple-800 font-bold leading-tight italic">Traer la carpeta con la portada impresa.</p></div>`, reminder: "Cumple Ada + Socioemocional" },
             "2026-03-02": { html: `<div class="bg-yellow-100 p-2 rounded-lg border border-yellow-300 mb-2"><p class="text-[9px] text-yellow-700 font-black uppercase">📢 CAMPAÑA:</p><p class="text-[10px] text-yellow-800 font-bold leading-tight">Socialización de propuestas del 2 al 6.</p></div>`, reminder: "Gobierno Escolar: Campaña" },
             "2026-03-09": { html: `<div class="bg-emerald-100 p-2 rounded-lg border border-emerald-300 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🗳️ ELECCIONES:</p><p class="text-[10px] text-emerald-800 font-bold leading-tight uppercase">Votaciones Gobierno Escolar.</p></div>`, reminder: "ELECCIONES GOBIERNO ESCOLAR" },
             "2026-03-13": { html: `<div class="bg-blue-100 p-2 rounded-lg border border-blue-300 mb-2"><p class="text-[9px] text-blue-700 font-black uppercase">📜 POSESIÓN:</p><p class="text-[10px] text-blue-800 font-bold leading-tight">Posesión oficial de representantes.</p></div>`, reminder: "Posesión Gobierno Escolar" }
         };
 
-        // Inyectar ÚNICAMENTE las visitas confirmadas de Segundo Grado con sus detalles logísticos
         granjaSegundo.forEach(date => {
             const current = specialActivities[date] ? specialActivities[date].html : "";
             const logistics = `
