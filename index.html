@@ -207,12 +207,14 @@
         ];
 
         const HOLIDAYS_2026 = [
-            "2026-01-01", "2026-01-12", "2026-03-23", "2026-04-02", "2026-04-03",
+            "2026-01-01", "2026-01-12", "2026-03-23", 
+            "2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-03", // Semana Santa
             "2026-05-01", "2026-05-18", "2026-06-08", "2026-06-15", "2026-06-29",
             "2026-07-20", "2026-08-07", "2026-08-17", "2026-10-12", "2026-11-02",
             "2026-11-16", "2026-12-08", "2026-12-25"
         ];
 
+        // Ancla ajustada para que el Lunes 6 de Abril sea Día 2 (teniendo en cuenta el salto de Semana Santa)
         const CYCLE_ANCHOR_DATE = new Date(2026, 1, 4); 
         const CYCLE_ANCHOR_DAY_NUM = 1; 
 
@@ -273,7 +275,8 @@
                 reminder: "Jean Day + Bombas de la Calma" 
             },
             "2026-03-27": { html: `<div class="bg-yellow-50 p-2 rounded-lg border-2 border-yellow-300 mb-2"><p class="text-[9px] text-yellow-700 font-black uppercase">📖 ANUARIO 2026:</p><p class="text-[10px] text-yellow-900 font-bold">Fecha límite para reservar.</p><p class="text-[11px] text-yellow-800 font-black">Precio: $195.000</p></div>`, reminder: "Límite Reserva Anuario" },
-            "2026-04-10": { html: `<div class="bg-emerald-100 p-2 rounded-lg border-2 border-emerald-400 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🏆 DEPORTES:</p><p class="text-[10px] text-emerald-900 font-bold leading-tight uppercase">Inauguración de Juegos Deportivos.</p></div>`, reminder: "Inauguración Juegos Deportivos" },
+            // Inauguración de Juegos Deportivos
+            "2026-04-10": { html: `<div class="bg-emerald-100 p-2 rounded-lg border-2 border-emerald-400 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🏆 DEPORTES:</p><p class="text-[10px] text-emerald-900 font-bold leading-tight uppercase text-center">Inauguración de Juegos Deportivos</p></div>`, reminder: "Inauguración de juegos deportivos" },
             "2026-12-03": { html: `<div class="bg-emerald-50 p-2 rounded-lg border-2 border-emerald-300 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🎁 ANUARIO 2026:</p><p class="text-[10px] text-emerald-900 font-bold">Fecha de Entrega Oficial.</p></div>`, reminder: "Entrega de Anuario" }
         };
 
@@ -407,7 +410,11 @@
                     if (isNonWorkingDay(checkDate)) {
                         let info = `<span class="font-bold annual-text-date">${dateLabel}</span>`;
                         if (bdays.length > 0) info += bdays.map(b => `<br><span class="text-blue-700 font-black annual-text-bday">🎂 ${b.name}</span>`).join('');
-                        else if (isHoliday(checkDate)) info += `<br><span class="text-red-600 font-black uppercase annual-text-sub">FESTIVO</span>`;
+                        else if (isHoliday(checkDate)) {
+                            // Detectar si es Semana Santa para el texto específico
+                            const isHolyWeek = checkDate >= new Date(2026, 2, 30) && checkDate <= new Date(2026, 3, 3);
+                            info += `<br><span class="text-red-600 font-black uppercase annual-text-sub">${isHolyWeek ? 'S. SANTA' : 'FESTIVO'}</span>`;
+                        }
                         weekendItems.push(info);
                     } else {
                         const cycle = getCycleDay(checkDate);
@@ -460,6 +467,11 @@
                 const iso = curr.toISOString().split('T')[0];
                 const isToday = iso === todayISO;
                 const itsHoliday = isHoliday(curr);
+                
+                // Texto especial para Semana Santa
+                const isHolyWeek = curr >= new Date(2026, 2, 30) && curr <= new Date(2026, 3, 3);
+                const holidayText = isHolyWeek ? 'S. SANTA' : 'FESTIVO';
+
                 const numDia = getCycleDay(curr);
                 const uniform = itsHoliday ? "N/A" : getUniformByCycle(numDia);
                 
@@ -478,7 +490,7 @@
                             ${isToday ? '⭐️ ' : ''}${dayNames[i]} ${curr.getDate()}
                         </div>
                         <div class="bg-white p-4 flex-grow border-x-4 border-b-4 ${itsHoliday ? 'border-gray-200' : colors[i].replace('bg-', 'border-')} rounded-b-3xl day-card-content shadow-lg">
-                            <div class="mb-3 text-[10px] font-bold px-2 py-0.5 rounded bg-gray-100 uppercase inline-block">${itsHoliday ? 'FESTIVO' : 'Día ' + (numDia || '-')}</div>
+                            <div class="mb-3 text-[10px] font-bold px-2 py-0.5 rounded bg-gray-100 uppercase inline-block">${itsHoliday ? holidayText : 'Día ' + (numDia || '-')}</div>
                             ${itsHoliday ? '<p class="text-center py-20 text-gray-400 font-bold">Descanso</p>' : `
                                 <div class="mb-4"><p class="text-xs font-bold text-gray-700">👔 Uniforme:</p><p class="text-sm font-black italic ${colors[i].replace('bg-', 'text-')}">${uniform}</p></div>
                                 <div class="bg-orange-50 p-3 rounded-2xl border-2 border-orange-100 mb-4 min-h-[140px]">${activityHtml || '<p class="text-[9px] text-gray-400 italic">Sin tareas especiales</p>'}</div>
