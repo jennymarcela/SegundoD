@@ -214,21 +214,20 @@
             "2026-11-16", "2026-12-08", "2026-12-25"
         ];
 
-        // Ancla ajustada para que el Lunes 6 de Abril sea Día 2 (teniendo en cuenta el salto de Semana Santa)
         const CYCLE_ANCHOR_DATE = new Date(2026, 1, 4); 
         const CYCLE_ANCHOR_DAY_NUM = 1; 
 
         const schedules = {
             1: "<li>• Psicomotricidad</li><li>• Math</li><li>• English</li><li>• STEM</li><li>• Español</li><li>• Danza</li>",
-            2: "<li>• English</li><li>• Música</li><li>• Español</li><li>• Social Science</li><li>• Science</li><li>• Math</li>",
-            3: "<li>• Science</li><li>• Español</li><li>• English</li><li>• Phonics</li><li>• Math</li><li><li>• Psicomotricidad</li>",
-            4: "<li>• English</li><li>• Español</li><li>• Perfil Evergreenista</li><li>• Artes</li><li>• Science</li><li>• Math</li>",
+            2: "<li>• English</li><li>• Música</li><li>• Español</li><li>• Social Science</li><li>• Natural Sciences and Technology (STEM)</li><li>• Math</li>",
+            3: "<li>• Natural Sciences and Technology (STEM)</li><li>• Español</li><li>• English</li><li>• Phonics</li><li>• Math</li><li>• Psicomotricidad</li>",
+            4: "<li>• English</li><li>• Español</li><li>• Perfil Evergreenista</li><li>• Artes</li><li>• Natural Sciences and Technology (STEM)</li><li>• Math</li>",
             5: "<li>• English</li><li>• Phonics</li><li>• Psicomotricidad</li><li>• Español</li><li>• Social Science</li><li>• Math</li>",
             6: "<li>• Artes</li><li>• Español</li><li>• Socioemocional</li><li>• Math</li><li>• English</li><li>• Teatro</li>"
         };
 
         const granjaSegundo = ["2026-03-10", "2026-05-26", "2026-07-28", "2026-09-08", "2026-11-04"];
-        const salidaRange = ["2026-04-13", "2026-04-14", "2026-04-15", "2026-04-16", "2026-04-17"];
+        const salidaRange = ["2026-04-13", "2026-04-15", "2026-04-16", "2026-04-17"]; 
         const muestraRange = ["2026-04-27", "2026-04-28"];
 
         const specialActivities = {
@@ -275,10 +274,76 @@
                 reminder: "Jean Day + Bombas de la Calma" 
             },
             "2026-03-27": { html: `<div class="bg-yellow-50 p-2 rounded-lg border-2 border-yellow-300 mb-2"><p class="text-[9px] text-yellow-700 font-black uppercase">📖 ANUARIO 2026:</p><p class="text-[10px] text-yellow-900 font-bold">Fecha límite para reservar.</p><p class="text-[11px] text-yellow-800 font-black">Precio: $195.000</p></div>`, reminder: "Límite Reserva Anuario" },
-            // Inauguración de Juegos Deportivos
+            "2026-04-06": { 
+                html: `
+                    <div class="bg-red-50 p-2 rounded-lg border-2 border-red-200 mb-2">
+                        <p class="text-[9px] text-red-700 font-black uppercase">📝 ÚLTIMO PLAZO:</p>
+                        <p class="text-[10px] text-red-900 font-bold leading-tight">Firmar autorización salida pedagógica.</p>
+                    </div>
+                    <div class="bg-sky-50 p-2 rounded-lg border-2 border-sky-300 mb-2">
+                        <p class="text-[9px] text-sky-700 font-black uppercase">🧪 MATERIALES SCIENCE:</p>
+                        <div class="text-[9px] text-sky-900 leading-tight space-y-1">
+                            <li>Enviar 1/8 de cartulina (cualquier color).</li>
+                            <li>Realizar actividad plataforma: "Exploration 4: States of Matter—Liquids".</li>
+                        </div>
+                    </div>
+                    <div class="bg-emerald-50 p-2 rounded-lg border-2 border-emerald-300 mb-2">
+                        <p class="text-[9px] text-emerald-700 font-black uppercase">⚙️ MATERIALES STEM:</p>
+                        <div class="text-[9px] text-emerald-900 leading-tight space-y-0.5">
+                            <li>1/8 de cartulina</li>
+                            <li>Botella plástico vacía (máx 500ml)</li>
+                            <li>Plastilina</li>
+                            <li>Cuadrado papel aluminio</li>
+                            <li>Pegante y Tijeras</li>
+                        </div>
+                    </div>
+                `, 
+                reminder: "Materiales Science/STEM + Plazo Salida" 
+            },
             "2026-04-10": { html: `<div class="bg-emerald-100 p-2 rounded-lg border-2 border-emerald-400 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🏆 DEPORTES:</p><p class="text-[10px] text-emerald-900 font-bold leading-tight uppercase text-center">Inauguración de Juegos Deportivos</p></div>`, reminder: "Inauguración de juegos deportivos" },
+            "2026-04-14": { 
+                html: `
+                    <div class="bg-emerald-100 p-2 rounded-lg border-2 border-emerald-400 mb-2">
+                        <p class="text-[9px] text-emerald-700 font-black uppercase">🌱 SALIDA PEDAGÓGICA:</p>
+                        <p class="text-[10px] text-emerald-900 font-bold leading-tight">Huerta Jacana Aula Ambiental</p>
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSe068UgOxlRWPZN6D7MSUFDyNLXPYe7KaKMH0XY15OJOxFxTA/viewform" target="_blank" class="text-[9px] text-blue-600 underline font-bold mt-1 block">Ver Formulario Autorización</a>
+                    </div>
+                `, 
+                reminder: "Salida Huerta Jacana" 
+            },
             "2026-12-03": { html: `<div class="bg-emerald-50 p-2 rounded-lg border-2 border-emerald-300 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🎁 ANUARIO 2026:</p><p class="text-[10px] text-emerald-900 font-bold">Fecha de Entrega Oficial.</p></div>`, reminder: "Entrega de Anuario" }
         };
+
+        function injectScienceReminders() {
+            const startDate = new Date(2026, 0, 1); 
+            const endDate = new Date(2026, 11, 31); 
+            let current = new Date(startDate);
+
+            while (current <= endDate) {
+                const iso = current.toISOString().split('T')[0];
+                const cycleDay = getCycleDay(current);
+                
+                // Nueva lógica: Verificar si el día del ciclo tiene "Social Science" en su horario
+                if (cycleDay && schedules[cycleDay] && schedules[cycleDay].includes("Social Science")) {
+                    if (!specialActivities[iso]) specialActivities[iso] = { html: "", reminder: "" };
+                    
+                    const bataHtml = `
+                        <div class="bg-blue-50 p-2 rounded-lg border border-blue-200 mb-2">
+                            <p class="text-[9px] text-blue-700 font-black uppercase">🥼 SCIENCE REMINDER:</p>
+                            <p class="text-[10px] text-blue-800 font-bold leading-tight">Traer bata de laboratorio.</p>
+                        </div>
+                    `;
+                    // Evitar duplicados si ya se ejecutó antes o existen entradas manuales
+                    if (!specialActivities[iso].html.includes("SCIENCE REMINDER")) {
+                        specialActivities[iso].html = bataHtml + specialActivities[iso].html;
+                        if (!specialActivities[iso].reminder.includes("Bata")) {
+                            specialActivities[iso].reminder = "Traer Bata Science " + specialActivities[iso].reminder;
+                        }
+                    }
+                }
+                current.setDate(current.getDate() + 1);
+            }
+        }
 
         granjaSegundo.forEach(date => {
             const current = specialActivities[date] ? specialActivities[date].html : "";
@@ -411,7 +476,6 @@
                         let info = `<span class="font-bold annual-text-date">${dateLabel}</span>`;
                         if (bdays.length > 0) info += bdays.map(b => `<br><span class="text-blue-700 font-black annual-text-bday">🎂 ${b.name}</span>`).join('');
                         else if (isHoliday(checkDate)) {
-                            // Detectar si es Semana Santa para el texto específico
                             const isHolyWeek = checkDate >= new Date(2026, 2, 30) && checkDate <= new Date(2026, 3, 3);
                             info += `<br><span class="text-red-600 font-black uppercase annual-text-sub">${isHolyWeek ? 'S. SANTA' : 'FESTIVO'}</span>`;
                         }
@@ -468,7 +532,6 @@
                 const isToday = iso === todayISO;
                 const itsHoliday = isHoliday(curr);
                 
-                // Texto especial para Semana Santa
                 const isHolyWeek = curr >= new Date(2026, 2, 30) && curr <= new Date(2026, 3, 3);
                 const holidayText = isHolyWeek ? 'S. SANTA' : 'FESTIVO';
 
@@ -493,7 +556,7 @@
                             <div class="mb-3 text-[10px] font-bold px-2 py-0.5 rounded bg-gray-100 uppercase inline-block">${itsHoliday ? holidayText : 'Día ' + (numDia || '-')}</div>
                             ${itsHoliday ? '<p class="text-center py-20 text-gray-400 font-bold">Descanso</p>' : `
                                 <div class="mb-4"><p class="text-xs font-bold text-gray-700">👔 Uniforme:</p><p class="text-sm font-black italic ${colors[i].replace('bg-', 'text-')}">${uniform}</p></div>
-                                <div class="bg-orange-50 p-3 rounded-2xl border-2 border-orange-100 mb-4 min-h-[140px]">${activityHtml || '<p class="text-[9px] text-gray-400 italic">Sin tareas especiales</p>'}</div>
+                                <div class="bg-orange-50 p-3 rounded-2xl border-2 border-orange-100 mb-4 min-h-[140px] overflow-y-auto max-h-[300px]">${activityHtml || '<p class="text-[9px] text-gray-400 italic">Sin tareas especiales</p>'}</div>
                                 <div class="flex-grow"><ul class="text-[11px] text-gray-700 space-y-1">${numDia ? (schedules[numDia] || '') : '<li>No hay clases</li>'}</ul></div>
                                 <button onclick="handleCalendar('${iso}', '${dayNames[i]}', '${uniform}', '${encodeURIComponent(specialActivities[iso]?.reminder || 'Clase normal')}')" class="calendar-btn mt-4 w-full bg-emerald-500 text-white py-3 rounded-xl text-[10px] font-black uppercase shadow-md">Agendar</button>
                             `}
@@ -528,7 +591,10 @@
             window.open(`https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${dateStrClean}T070000/${dateStrClean}T080000&details=${encodeURIComponent(details)}`, '_blank');
         };
 
-        window.onload = function() { renderCalendar(); };
+        window.onload = function() { 
+            injectScienceReminders();
+            renderCalendar(); 
+        };
     </script>
 </body>
 </html>
