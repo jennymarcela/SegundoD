@@ -252,7 +252,7 @@
                 `, 
                 reminder: "Día de la Felicidad (Gafas Reutilizadas)" 
             },
-            "2026-03-24": { html: `<div class="bg-indigo-50 p-2 rounded-lg border border-indigo-300 mb-2"><p class="text-[9px] text-indigo-700 font-black uppercase">🌍 CULTURA:</p><p class="text-[10px] text-indigo-800 font-bold leading-tight">Traer camiseta o colores del país correspondiente (España/Qatar).</p></div><div class="bg-purple-100 p-2 rounded-lg border border-purple-300 mb-2"><p class="text-[9px] text-purple-700 font-black uppercase">🍪 PREVENTA GALLETAS:</p><p class="text-[10px] text-purple-800 font-bold leading-tight">Informar al tutor y dejar pago el producto ($4.000). Sabores: Chocochip, Oreo, M&M.</p></div>`, reminder: "Cultura + Preventa Galletas" },
+            "2026-03-24": { html: `<div class="bg-indigo-50 p-2 rounded-lg border border-indigo-300 mb-2"><p class="text-[9px] text-indigo-700 font-black uppercase">Traer camiseta o colores del país correspondiente (España/Qatar).</p></div><div class="bg-purple-100 p-2 rounded-lg border border-purple-300 mb-2"><p class="text-[9px] text-purple-700 font-black uppercase">🍪 PREVENTA GALLETAS:</p><p class="text-[10px] text-purple-800 font-bold leading-tight">Informar al tutor y dejar pago el producto ($4.000). Sabores: Chocochip, Oreo, M&M.</p></div>`, reminder: "Cultura + Preventa Galletas" },
             "2026-03-25": { html: `<div class="bg-blue-100 p-2 rounded-lg border border-blue-300 mb-2"><p class="text-[9px] text-blue-700 font-black uppercase">🌋 SOCIAL SCIENCE:</p><p class="text-[10px] text-blue-800 font-bold leading-tight">Traer plastilina para actividad de Montañas y Valles.</p></div>`, reminder: "Social Science: Plastilina" },
             "2026-03-26": { 
                 html: `
@@ -300,7 +300,19 @@
                 `, 
                 reminder: "Materiales Science/STEM + Plazo Salida" 
             },
-            "2026-04-10": { html: `<div class="bg-emerald-100 p-2 rounded-lg border-2 border-emerald-400 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🏆 DEPORTES:</p><p class="text-[10px] text-emerald-900 font-bold leading-tight uppercase text-center">Inauguración de Juegos Deportivos</p></div>`, reminder: "Inauguración de juegos deportivos" },
+            "2026-04-10": { 
+                html: `
+                    <div class="bg-emerald-100 p-2 rounded-lg border-2 border-emerald-400 mb-2">
+                        <p class="text-[9px] text-emerald-700 font-black uppercase">🏆 DEPORTES:</p>
+                        <p class="text-[10px] text-emerald-900 font-bold leading-tight uppercase text-center">Inauguración de Juegos Deportivos</p>
+                    </div>
+                    <div class="bg-pink-100 p-2 rounded-lg border-2 border-pink-300 mb-2">
+                        <p class="text-[9px] text-pink-700 font-black uppercase">🎂 CELEBRACIÓN:</p>
+                        <p class="text-[10px] text-pink-800 font-bold leading-tight uppercase">Cumpleaños 8 años Hanna</p>
+                    </div>
+                `, 
+                reminder: "Inauguración Juegos + Cumple Hanna" 
+            },
             "2026-04-14": { 
                 html: `
                     <div class="bg-emerald-100 p-2 rounded-lg border-2 border-emerald-400 mb-2">
@@ -323,7 +335,6 @@
                 const iso = current.toISOString().split('T')[0];
                 const cycleDay = getCycleDay(current);
                 
-                // Nueva lógica: Verificar si el día del ciclo tiene "Social Science" en su horario
                 if (cycleDay && schedules[cycleDay] && schedules[cycleDay].includes("Social Science")) {
                     if (!specialActivities[iso]) specialActivities[iso] = { html: "", reminder: "" };
                     
@@ -333,7 +344,6 @@
                             <p class="text-[10px] text-blue-800 font-bold leading-tight">Traer bata de laboratorio.</p>
                         </div>
                     `;
-                    // Evitar duplicados si ya se ejecutó antes o existen entradas manuales
                     if (!specialActivities[iso].html.includes("SCIENCE REMINDER")) {
                         specialActivities[iso].html = bataHtml + specialActivities[iso].html;
                         if (!specialActivities[iso].reminder.includes("Bata")) {
