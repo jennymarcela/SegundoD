@@ -352,7 +352,8 @@
                 const iso = current.toISOString().split('T')[0];
                 const cycleDay = getCycleDay(current);
                 
-                if (cycleDay && schedules[cycleDay] && (schedules[cycleDay].includes("Social Science") || schedules[cycleDay].includes("Natural Sciences and Technology") || schedules[cycleDay].includes("STEM"))) {
+                // CAMBIO: Ahora solo se inyecta si el horario contiene específicamente "Natural Sciences and Technology"
+                if (cycleDay && schedules[cycleDay] && schedules[cycleDay].includes("Natural Sciences and Technology")) {
                     if (!specialActivities[iso]) specialActivities[iso] = { html: "", reminder: "" };
                     
                     const bataHtml = `
