@@ -219,15 +219,14 @@
 
         const schedules = {
             1: "<li>• Psicomotricidad</li><li>• Math</li><li>• English</li><li>• STEM</li><li>• Español</li><li>• Danza</li>",
-            2: "<li>• English</li><li>• Música</li><li>• Español</li><li>• Social Science</li><li>• Natural Sciences and Technology (STEM)</li><li>• Math</li>",
-            3: "<li>• Natural Sciences and Technology (STEM)</li><li>• Español</li><li>• English</li><li>• Phonics</li><li>• Math</li><li>• Psicomotricidad</li>",
-            4: "<li>• English</li><li>• Español</li><li>• Perfil Evergreenista</li><li>• Artes</li><li>• Natural Sciences and Technology (STEM)</li><li>• Math</li>",
+            2: "<li>• English</li><li>• Música</li><li>• Español</li><li>• Social Science</li><li>• Natural Sciences and Technology</li><li>• Math</li>",
+            3: "<li>• Natural Sciences and Technology</li><li>• Español</li><li>• English</li><li>• Phonics</li><li>• Math</li><li>• Psicomotricidad</li>",
+            4: "<li>• English</li><li>• Español</li><li>• Perfil Evergreenista</li><li>• Artes</li><li>• Natural Sciences and Technology</li><li>• Math</li>",
             5: "<li>• English</li><li>• Phonics</li><li>• Psicomotricidad</li><li>• Español</li><li>• Social Science</li><li>• Math</li>",
             6: "<li>• Artes</li><li>• Español</li><li>• Socioemocional</li><li>• Math</li><li>• English</li><li>• Teatro</li>"
         };
 
         const granjaSegundo = ["2026-03-10", "2026-05-26", "2026-07-28", "2026-09-08", "2026-11-04"];
-        const salidaRange = ["2026-04-13", "2026-04-15", "2026-04-16", "2026-04-17"]; 
         const muestraRange = ["2026-04-27", "2026-04-28"];
 
         const specialActivities = {
@@ -287,8 +286,26 @@
                             <li>Realizar actividad plataforma: "Exploration 4: States of Matter—Liquids".</li>
                         </div>
                     </div>
+                `, 
+                reminder: "Materiales Science + Plazo Salida" 
+            },
+            "2026-04-10": { 
+                html: `
+                    <div class="bg-emerald-100 p-2 rounded-lg border-2 border-emerald-400 mb-2">
+                        <p class="text-[9px] text-emerald-700 font-black uppercase">🏆 DEPORTES:</p>
+                        <p class="text-[10px] text-emerald-900 font-bold leading-tight uppercase text-center">Inauguración de Juegos Deportivos</p>
+                    </div>
+                `, 
+                reminder: "Inauguración Juegos Deportivos" 
+            },
+            "2026-04-13": { 
+                html: `
+                    <div class="bg-pink-100 p-2 rounded-lg border-2 border-pink-300 mb-2">
+                        <p class="text-[9px] text-pink-700 font-black uppercase">🎂 CELEBRACIÓN:</p>
+                        <p class="text-[10px] text-pink-800 font-bold leading-tight uppercase">Cumpleaños 8 años Hanna</p>
+                    </div>
                     <div class="bg-emerald-50 p-2 rounded-lg border-2 border-emerald-300 mb-2">
-                        <p class="text-[9px] text-emerald-700 font-black uppercase">⚙️ MATERIALES STEM:</p>
+                        <p class="text-[9px] text-emerald-700 font-black uppercase">⚙️ MATERIALES SCIENCE:</p>
                         <div class="text-[9px] text-emerald-900 leading-tight space-y-0.5">
                             <li>1/8 de cartulina</li>
                             <li>Botella plástico vacía (máx 500ml)</li>
@@ -298,20 +315,7 @@
                         </div>
                     </div>
                 `, 
-                reminder: "Materiales Science/STEM + Plazo Salida" 
-            },
-            "2026-04-10": { 
-                html: `
-                    <div class="bg-emerald-100 p-2 rounded-lg border-2 border-emerald-400 mb-2">
-                        <p class="text-[9px] text-emerald-700 font-black uppercase">🏆 DEPORTES:</p>
-                        <p class="text-[10px] text-emerald-900 font-bold leading-tight uppercase text-center">Inauguración de Juegos Deportivos</p>
-                    </div>
-                    <div class="bg-pink-100 p-2 rounded-lg border-2 border-pink-300 mb-2">
-                        <p class="text-[9px] text-pink-700 font-black uppercase">🎂 CELEBRACIÓN:</p>
-                        <p class="text-[10px] text-pink-800 font-bold leading-tight uppercase">Cumpleaños 8 años Hanna</p>
-                    </div>
-                `, 
-                reminder: "Inauguración Juegos + Cumple Hanna" 
+                reminder: "Cumple Hanna (8 años) + Materiales Science" 
             },
             "2026-04-14": { 
                 html: `
@@ -320,8 +324,21 @@
                         <p class="text-[10px] text-emerald-900 font-bold leading-tight">Huerta Jacana Aula Ambiental</p>
                         <a href="https://docs.google.com/forms/d/e/1FAIpQLSe068UgOxlRWPZN6D7MSUFDyNLXPYe7KaKMH0XY15OJOxFxTA/viewform" target="_blank" class="text-[9px] text-blue-600 underline font-bold mt-1 block">Ver Formulario Autorización</a>
                     </div>
+                    <div class="bg-pink-100 p-2 rounded-lg border-2 border-pink-300 mb-2">
+                        <p class="text-[9px] text-pink-700 font-black uppercase">🎂 CELEBRACIÓN:</p>
+                        <p class="text-[10px] text-pink-800 font-bold leading-tight uppercase">Cumpleaños 8 años Aisu W.</p>
+                    </div>
                 `, 
-                reminder: "Salida Huerta Jacana" 
+                reminder: "Salida Huerta + Cumple Aisu" 
+            },
+            "2026-04-15": { 
+                html: `
+                    <div class="bg-pink-100 p-2 rounded-lg border-2 border-pink-300 mb-2">
+                        <p class="text-[9px] text-pink-700 font-black uppercase">🎂 CELEBRACIÓN:</p>
+                        <p class="text-[10px] text-pink-800 font-bold leading-tight uppercase">Cumpleaños 8 años Matías P.</p>
+                    </div>
+                `, 
+                reminder: "Cumple Matías P. (8 años)" 
             },
             "2026-12-03": { html: `<div class="bg-emerald-50 p-2 rounded-lg border-2 border-emerald-300 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🎁 ANUARIO 2026:</p><p class="text-[10px] text-emerald-900 font-bold">Fecha de Entrega Oficial.</p></div>`, reminder: "Entrega de Anuario" }
         };
@@ -335,7 +352,7 @@
                 const iso = current.toISOString().split('T')[0];
                 const cycleDay = getCycleDay(current);
                 
-                if (cycleDay && schedules[cycleDay] && schedules[cycleDay].includes("Social Science")) {
+                if (cycleDay && schedules[cycleDay] && (schedules[cycleDay].includes("Social Science") || schedules[cycleDay].includes("Natural Sciences and Technology") || schedules[cycleDay].includes("STEM"))) {
                     if (!specialActivities[iso]) specialActivities[iso] = { html: "", reminder: "" };
                     
                     const bataHtml = `
@@ -373,14 +390,6 @@
             specialActivities[date] = { 
                 html: current + logistics,
                 reminder: "Visita Granja 2D"
-            };
-        });
-
-        salidaRange.forEach(date => {
-            const current = specialActivities[date] ? specialActivities[date].html : "";
-            specialActivities[date] = { 
-                html: current + `<div class="bg-cyan-100 p-2 rounded-lg border border-cyan-300 mb-2"><p class="text-[9px] text-cyan-700 font-black uppercase">🚌 SALIDA:</p><p class="text-[10px] text-cyan-800 font-bold leading-tight italic">Pendiente asignar día exacto.</p></div>`,
-                reminder: "Salida Proyectos (Semana)"
             };
         });
 
