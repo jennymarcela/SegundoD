@@ -218,10 +218,19 @@
     </div>
 
     <script>
-        // VARIABLES GLOBALES (Corregido el error de ReferenceError)
+        // VARIABLES GLOBALES
         const REAL_TODAY = new Date();
         let currentActiveView = 'weekly';
         let viewOffset = 0; 
+
+        // Función para obtener la fecha ISO en formato local YYYY-MM-DD
+        // Esto soluciona el problema de las 5 horas de desfase de UTC
+        function getLocalISODate(date) {
+            const yyyy = date.getFullYear();
+            const mm = String(date.getMonth() + 1).padStart(2, '0');
+            const dd = String(date.getDate()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd}`;
+        }
 
         const BIRTHDAYS = [
             { name: "Luciana Rubio", month: 0, day: 5 },
@@ -275,7 +284,6 @@
         const granjaSegundo = ["2026-03-10", "2026-05-26", "2026-07-28", "2026-09-08", "2026-11-04"];
         const muestraRange = ["2026-04-27", "2026-04-28"];
 
-        // BASE DE DATOS RESTAURADA COMPLETAMENTE
         const specialActivities = {
             "2026-02-16": { html: `<div class="bg-blue-50 p-2 rounded-lg border border-blue-200 mb-2"><p class="text-[9px] text-blue-700 font-black uppercase">🗳️ GOBIERNO ESCOLAR:</p><p class="text-[10px] text-blue-800 font-bold leading-tight">Socialización de funciones y requisitos.</p></div>`, reminder: "Gobierno Escolar: Socialización" },
             "2026-02-19": { html: `<div class="emergency-alert p-2 rounded-lg border border-red-300 mb-2"><p class="text-[9px] text-red-700 font-black uppercase">⚠️ AVISO:</p><p class="text-[10px] text-red-800 font-bold leading-tight uppercase">Salida Temprana 2:00 P.M.</p></div>`, reminder: "SALIDA TEMPRANA 2:00 PM" },
@@ -287,99 +295,16 @@
             "2026-03-09": { html: `<div class="bg-emerald-100 p-2 rounded-lg border border-emerald-300 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🗳️ ELECCIONES:</p><p class="text-[10px] text-emerald-800 font-bold leading-tight uppercase">Votaciones Gobierno Escolar.</p></div>`, reminder: "ELECCIONES GOBIERNO ESCOLAR" },
             "2026-03-13": { html: `<div class="bg-blue-100 p-2 rounded-lg border border-blue-300 mb-2"><p class="text-[9px] text-blue-700 font-black uppercase">📜 POSESIÓN:</p><p class="text-[10px] text-blue-800 font-bold leading-tight">Posesión oficial de representantes.</p></div>`, reminder: "Posesión Gobierno Escolar" },
             "2026-03-16": { html: `<div class="bg-yellow-100 p-2 rounded-lg border-2 border-yellow-400 mb-2"><p class="text-[9px] text-yellow-700 font-black uppercase">🎨 PROYECTO TRIMESTRAL:</p><p class="text-[10px] text-yellow-900 font-bold leading-tight">Español e Inglés</p><div class="text-[9px] text-yellow-800 mt-1 space-y-0.5 font-medium"><li>📸 1 foto familiar</li><li>🖍️ Plumones (en estuche)</li><li>📄 1 pliego cartulina blanca</li><li>📜 1 pliego papel craft</li><li>📑 3 octavos cartulina iris</li><li>🧶 1 pliego papel seda</li></div></div>`, reminder: "Proyecto Trimestral Español/Inglés" },
-            "2026-03-20": { 
-                html: `
-                    <div class="bg-yellow-100 p-2 rounded-lg border-2 border-yellow-400 mb-2">
-                        <p class="text-[9px] text-yellow-700 font-black uppercase">😊 DÍA DE LA FELICIDAD:</p>
-                        <p class="text-[10px] text-yellow-900 font-bold leading-tight">Actividad: "Gafas de la Felicidad"</p>
-                        <p class="text-[9px] text-yellow-800 mt-1">🕶️ Traer unas gafas reutilizadas (solo monturas que ya no usen).</p>
-                        <p class="text-[9px] text-yellow-800 mt-1 font-bold">👕 Opcional: Camisa o accesorio de color amarillo.</p>
-                    </div>
-                `, 
-                reminder: "Día de la Felicidad (Gafas Reutilizadas)" 
-            },
+            "2026-03-20": { html: `<div class="bg-yellow-100 p-2 rounded-lg border-2 border-yellow-400 mb-2"><p class="text-[9px] text-yellow-700 font-black uppercase">😊 DÍA DE LA FELICIDAD:</p><p class="text-[10px] text-yellow-900 font-bold leading-tight">Actividad: "Gafas de la Felicidad"</p><p class="text-[9px] text-yellow-800 mt-1">🕶️ Traer unas gafas reutilizadas (solo monturas que ya no usen).</p><p class="text-[9px] text-yellow-800 mt-1 font-bold">👕 Opcional: Camisa o accesorio de color amarillo.</p></div>`, reminder: "Día de la Felicidad (Gafas Reutilizadas)" },
             "2026-03-24": { html: `<div class="bg-indigo-50 p-2 rounded-lg border border-indigo-300 mb-2"><p class="text-[9px] text-indigo-700 font-black uppercase">Traer camiseta o colores del país correspondiente (España/Qatar).</p></div><div class="bg-purple-100 p-2 rounded-lg border border-purple-300 mb-2"><p class="text-[9px] text-purple-700 font-black uppercase">🍪 PREVENTA GALLETAS:</p><p class="text-[10px] text-purple-800 font-bold leading-tight">Informar al tutor y dejar pago el producto ($4.000). Sabores: Chocochip, Oreo, M&M.</p></div>`, reminder: "Cultura + Preventa Galletas" },
             "2026-03-25": { html: `<div class="bg-blue-100 p-2 rounded-lg border border-blue-300 mb-2"><p class="text-[9px] text-blue-700 font-black uppercase">🌋 SOCIAL SCIENCE:</p><p class="text-[10px] text-blue-800 font-bold leading-tight">Traer plastilina para actividad de Montañas y Valles.</p></div>`, reminder: "Social Science: Plastilina" },
-            "2026-03-26": { 
-                html: `
-                    <div class="bg-pink-100 p-2 rounded-lg border border-pink-300 mb-2">
-                        <p class="text-[9px] text-pink-700 font-black uppercase">👖 JEAN DAY - WOMEN'S DAY:</p>
-                        <p class="text-[10px] text-pink-800 font-bold leading-tight uppercase">Costo: $2.000</p>
-                        <p class="text-[9px] mt-1 font-bold">Colores: Verde, Rosado, Morado</p>
-                    </div>
-                    <div class="bg-purple-100 p-2 rounded-lg border border-purple-300 mb-2">
-                        <p class="text-[9px] text-purple-700 font-black uppercase">📂 SOCIOEMOCIONAL:</p>
-                        <p class="text-[10px] text-purple-800 font-bold leading-tight">Materiales para "Bomba de la calma":</p>
-                        <div class="text-[9px] mt-1 max-h-32 overflow-y-auto pr-1 space-y-1">
-                            <p><b>🎈 2 Bombas:</b> Sara A., Matías A., Antonio A., Hanna B., Ivanna B., Maria Jose C., Guadalupe C., Martin C., Pablo G., Samantha H., Alejandro H., Manuela L., Alejandro M.</p>
-                            <p><b>👀 Ojos Locos:</b> Federico M., Matías P., Emiliano R., Isabela R., Nicolas R., Alana R., Ada R., Luciana R., Zaida V., Isabella V.</p>
-                            <p><b>🌾 Harina:</b> Aisu W., Mateo Z.</p>
-                        </div>
-                    </div>
-                `, 
-                reminder: "Jean Day + Bombas de la Calma" 
-            },
+            "2026-03-26": { html: `<div class="bg-pink-100 p-2 rounded-lg border border-pink-300 mb-2"><p class="text-[9px] text-pink-700 font-black uppercase">👖 JEAN DAY - WOMEN'S DAY:</p><p class="text-[10px] text-pink-800 font-bold leading-tight uppercase">Costo: $2.000</p><p class="text-[9px] mt-1 font-bold">Colores: Verde, Rosado, Morado</p></div><div class="bg-purple-100 p-2 rounded-lg border border-purple-300 mb-2"><p class="text-[9px] text-purple-700 font-black uppercase">📂 SOCIOEMOCIONAL:</p><p class="text-[10px] text-purple-800 font-bold leading-tight">Materiales para "Bomba de la calma":</p><div class="text-[9px] mt-1 max-h-32 overflow-y-auto pr-1 space-y-1"><p><b>🎈 2 Bombas:</b> Sara A., Matías A., Antonio A., Hanna B., Ivanna B., Maria Jose C., Guadalupe C., Martin C., Pablo G., Samantha H., Alejandro H., Manuela L., Alejandro M.</p><p><b>👀 Ojos Locos:</b> Federico M., Matías P., Emiliano R., Isabela R., Nicolas R., Alana R., Ada R., Luciana R., Zaida V., Isabella V.</p><p><b>🌾 Harina:</b> Aisu W., Mateo Z.</p></div></div>`, reminder: "Jean Day + Bombas de la Calma" },
             "2026-03-27": { html: `<div class="bg-yellow-50 p-2 rounded-lg border-2 border-yellow-300 mb-2"><p class="text-[9px] text-yellow-700 font-black uppercase">📖 ANUARIO 2026:</p><p class="text-[10px] text-yellow-900 font-bold">Fecha límite para reservar.</p><p class="text-[11px] text-yellow-800 font-black">Precio: $195.000</p></div>`, reminder: "Límite Reserva Anuario" },
-            "2026-04-06": { 
-                html: `
-                    <div class="bg-red-50 p-2 rounded-lg border-2 border-red-200 mb-2">
-                        <p class="text-[9px] text-red-700 font-black uppercase">📝 ÚLTIMO PLAZO:</p>
-                        <p class="text-[10px] text-red-900 font-bold leading-tight">Firmar autorización salida pedagógica.</p>
-                    </div>
-                `, 
-                reminder: "Plazo Autorización Salida" 
-            },
-            "2026-04-10": { 
-                html: `
-                    <div class="bg-emerald-100 p-2 rounded-lg border-2 border-emerald-400 mb-2">
-                        <p class="text-[9px] text-emerald-700 font-black uppercase">🏆 DEPORTES:</p>
-                        <p class="text-[10px] text-emerald-900 font-bold leading-tight uppercase text-center">Inauguración de Juegos Deportivos</p>
-                    </div>
-                `, 
-                reminder: "Inauguración Juegos Deportivos" 
-            },
-            "2026-04-13": { 
-                html: `
-                    <div class="bg-pink-100 p-2 rounded-lg border-2 border-pink-300 mb-2">
-                        <p class="text-[9px] text-pink-700 font-black uppercase">🎂 CELEBRACIÓN:</p>
-                        <p class="text-[10px] text-pink-800 font-bold leading-tight uppercase">Cumpleaños 8 años Hanna</p>
-                    </div>
-                    <div class="bg-emerald-50 p-2 rounded-lg border-2 border-emerald-300 mb-2">
-                        <p class="text-[9px] text-emerald-700 font-black uppercase">⚙️ MATERIALES SCIENCE:</p>
-                        <div class="text-[9px] text-emerald-900 leading-tight space-y-0.5">
-                            <li>1/8 de cartulina</li>
-                            <li>Botella plástico vacía (máx 500ml)</li>
-                            <li>Plastilina</li>
-                            <li>Cuadrado papel aluminio</li>
-                            <li>Pegante y Tijeras</li>
-                        </div>
-                    </div>
-                `, 
-                reminder: "Cumple Hanna (8 años) + Materiales Science" 
-            },
-            "2026-04-14": { 
-                html: `
-                    <div class="bg-emerald-100 p-2 rounded-lg border-2 border-emerald-400 mb-2">
-                        <p class="text-[9px] text-emerald-700 font-black uppercase">🌱 SALIDA PEDAGÓGICA:</p>
-                        <p class="text-[10px] text-emerald-900 font-bold leading-tight">Huerta Jacana Aula Ambiental</p>
-                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSe068UgOxlRWPZN6D7MSUFDyNLXPYe7KaKMH0XY15OJOxFxTA/viewform" target="_blank" class="text-[9px] text-blue-600 underline font-bold mt-1 block">Ver Formulario Autorización</a>
-                    </div>
-                    <div class="bg-pink-100 p-2 rounded-lg border-2 border-pink-300 mb-2">
-                        <p class="text-[9px] text-pink-700 font-black uppercase">🎂 CELEBRACIÓN:</p>
-                        <p class="text-[10px] text-pink-800 font-bold leading-tight uppercase">Cumpleaños 8 años Aisu W.</p>
-                    </div>
-                `, 
-                reminder: "Salida Huerta + Cumple Aisu" 
-            },
-            "2026-04-15": { 
-                html: `
-                    <div class="bg-pink-100 p-2 rounded-lg border-2 border-pink-300 mb-2">
-                        <p class="text-[9px] text-pink-700 font-black uppercase">🎂 CELEBRACIÓN:</p>
-                        <p class="text-[10px] text-pink-800 font-bold leading-tight uppercase">Cumpleaños 8 años Matías P.</p>
-                    </div>
-                `, 
-                reminder: "Cumple Matías P. (8 años)" 
-            },
+            "2026-04-06": { html: `<div class="bg-red-50 p-2 rounded-lg border-2 border-red-200 mb-2"><p class="text-[9px] text-red-700 font-black uppercase">📝 ÚLTIMO PLAZO:</p><p class="text-[10px] text-red-900 font-bold leading-tight">Firmar autorización salida pedagógica.</p></div>`, reminder: "Plazo Autorización Salida" },
+            "2026-04-10": { html: `<div class="bg-emerald-100 p-2 rounded-lg border-2 border-emerald-400 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🏆 DEPORTES:</p><p class="text-[10px] text-emerald-900 font-bold leading-tight uppercase text-center">Inauguración de Juegos Deportivos</p></div>`, reminder: "Inauguración Juegos Deportivos" },
+            "2026-04-13": { html: `<div class="bg-pink-100 p-2 rounded-lg border-2 border-pink-300 mb-2"><p class="text-[9px] text-pink-700 font-black uppercase">🎂 CELEBRACIÓN:</p><p class="text-[10px] text-pink-800 font-bold leading-tight uppercase">Cumpleaños 8 años Hanna</p></div><div class="bg-emerald-50 p-2 rounded-lg border-2 border-emerald-300 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">⚙️ MATERIALES SCIENCE:</p><div class="text-[9px] text-emerald-900 leading-tight space-y-0.5"><li>1/8 de cartulina</li><li>Botella plástico vacía (máx 500ml)</li><li>Plastilina</li><li>Cuadrado papel aluminio</li><li>Pegante y Tijeras</li></div></div>`, reminder: "Cumple Hanna (8 años) + Materiales Science" },
+            "2026-04-14": { html: `<div class="bg-emerald-100 p-2 rounded-lg border-2 border-emerald-400 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🌱 SALIDA PEDAGÓGICA:</p><p class="text-[10px] text-emerald-900 font-bold leading-tight">Huerta Jacana Aula Ambiental</p><a href="https://docs.google.com/forms/d/e/1FAIpQLSe068UgOxlRWPZN6D7MSUFDyNLXPYe7KaKMH0XY15OJOxFxTA/viewform" target="_blank" class="text-[9px] text-blue-600 underline font-bold mt-1 block">Ver Formulario Autorización</a></div><div class="bg-pink-100 p-2 rounded-lg border-2 border-pink-300 mb-2"><p class="text-[9px] text-pink-700 font-black uppercase">🎂 CELEBRACIÓN:</p><p class="text-[10px] text-pink-800 font-bold leading-tight uppercase">Cumpleaños 8 años Aisu W.</p></div>`, reminder: "Salida Huerta + Cumple Aisu" },
+            "2026-04-15": { html: `<div class="bg-pink-100 p-2 rounded-lg border-2 border-pink-300 mb-2"><p class="text-[9px] text-pink-700 font-black uppercase">🎂 CELEBRACIÓN:</p><p class="text-[10px] text-pink-800 font-bold leading-tight uppercase">Cumpleaños 8 años Matías P.</p></div>`, reminder: "Cumple Matías P. (8 años)" },
             "2026-12-03": { html: `<div class="bg-emerald-50 p-2 rounded-lg border-2 border-emerald-300 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🎁 ANUARIO 2026:</p><p class="text-[10px] text-emerald-900 font-bold">Fecha de Entrega Oficial.</p></div>`, reminder: "Entrega de Anuario" }
         };
 
@@ -389,10 +314,9 @@
             let current = new Date(startDate);
 
             while (current <= endDate) {
-                const iso = current.toISOString().split('T')[0];
+                const iso = getLocalISODate(current);
                 const cycleDay = getCycleDay(current);
                 
-                // Lógica de inyección exclusiva para la clase de Natural Sciences
                 if (cycleDay && schedules[cycleDay] && schedules[cycleDay].includes("Natural Sciences and Technology")) {
                     if (!specialActivities[iso]) specialActivities[iso] = { html: "", reminder: "" };
                     
@@ -415,35 +339,17 @@
 
         granjaSegundo.forEach(date => {
             const current = specialActivities[date] ? specialActivities[date].html : "";
-            const logistics = `
-                <div class="bg-emerald-50 p-2 rounded-lg border-2 border-emerald-300 mb-2">
-                    <p class="text-[9px] text-emerald-700 font-black uppercase">🚜 VISITA GRANJA 2D:</p>
-                    <p class="text-[10px] text-emerald-800 font-bold mb-1 italic">¡Fecha de visita!</p>
-                    <div class="space-y-1 text-[9px] text-emerald-900 leading-tight">
-                        <p>⏰ 7:20 AM - Llegada Nexus</p>
-                        <p>🚌 8:00 AM - Salida Granja</p>
-                        <p>🥪 Merienda ligera y cómoda</p>
-                        <p>🎒 Maleta pequeña recomendada</p>
-                        <p>💵 Costo: $21.800 (sin ruta)</p>
-                    </div>
-                </div>
-            `;
-            specialActivities[date] = { 
-                html: current + logistics,
-                reminder: "Visita Granja 2D"
-            };
+            const logistics = `<div class="bg-emerald-50 p-2 rounded-lg border-2 border-emerald-300 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🚜 VISITA GRANJA 2D:</p><p class="text-[10px] text-emerald-800 font-bold mb-1 italic">¡Fecha de visita!</p><div class="space-y-1 text-[9px] text-emerald-900 leading-tight"><p>⏰ 7:20 AM - Llegada Nexus</p><p>🚌 8:00 AM - Salida Granja</p><p>🥪 Merienda ligera y cómoda</p><p>🎒 Maleta pequeña recomendada</p><p>💵 Costo: $21.800 (sin ruta)</p></div></div>`;
+            specialActivities[date] = { html: current + logistics, reminder: "Visita Granja 2D" };
         });
 
         muestraRange.forEach(date => {
             const current = specialActivities[date] ? specialActivities[date].html : "";
-            specialActivities[date] = { 
-                html: current + `<div class="bg-indigo-100 p-2 rounded-lg border border-indigo-300 mb-2"><p class="text-[9px] text-indigo-700 font-black uppercase">🎭 MUESTRA:</p><p class="text-[10px] text-indigo-800 font-bold leading-tight italic">Pendiente asignar día exacto.</p></div>`,
-                reminder: "Muestra Proyectos"
-            };
+            specialActivities[date] = { html: current + `<div class="bg-indigo-100 p-2 rounded-lg border border-indigo-300 mb-2"><p class="text-[9px] text-indigo-700 font-black uppercase">🎭 MUESTRA:</p><p class="text-[10px] text-indigo-800 font-bold leading-tight italic">Pendiente asignar día exacto.</p></div>`, reminder: "Muestra Proyectos" };
         });
 
         function isHoliday(date) {
-            const iso = date.toISOString().split('T')[0];
+            const iso = getLocalISODate(date);
             return HOLIDAYS_2026.includes(iso);
         }
 
@@ -513,7 +419,7 @@
             tbody.innerHTML = '';
             let checkDate = new Date(2026, 1, 4); 
             const endDate = new Date(2026, 11, 31);
-            const todayISO = REAL_TODAY.toISOString().split('T')[0];
+            const todayISO = getLocalISODate(REAL_TODAY);
             const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
             const dayNamesShort = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
             let weekNumber = 1;
@@ -526,7 +432,7 @@
                 let isTodayInWeekend = false;
 
                 while (daysInCycle < 6 && checkDate <= endDate) {
-                    const iso = checkDate.toISOString().split('T')[0];
+                    const iso = getLocalISODate(checkDate);
                     const bdays = BIRTHDAYS.filter(b => b.month === checkDate.getMonth() && b.day === checkDate.getDate());
                     const dateLabel = `${dayNamesShort[checkDate.getDay()]}, ${checkDate.getDate()} ${monthNames[checkDate.getMonth()]}`;
                     const isTodayLocal = (iso === todayISO);
@@ -571,16 +477,13 @@
             }
         }
 
-        // Lógica corregida para encontrar y centrar la fila de HOY
         function scrollToToday() {
             const todayElement = document.querySelector('.is-today-marker');
             if (todayElement) {
                 const row = todayElement.closest('tr');
-                
                 row.classList.remove('highlight-row'); 
                 void row.offsetWidth; 
                 row.classList.add('highlight-row');
-                
                 todayElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
             } else {
                 const view = document.getElementById('annual-view');
@@ -592,7 +495,7 @@
             if (currentActiveView === 'annual') return;
             const container = document.getElementById('grid-container');
             container.innerHTML = '';
-            const todayISO = REAL_TODAY.toISOString().split('T')[0];
+            const todayISO = getLocalISODate(REAL_TODAY);
             
             let startDay = getMondayOfCurrentWeek();
             startDay.setDate(startDay.getDate() + (viewOffset * 7));
@@ -606,7 +509,7 @@
             for (let i = 0; i < 5; i++) {
                 const curr = new Date(startDay);
                 curr.setDate(startDay.getDate() + i);
-                const iso = curr.toISOString().split('T')[0];
+                const iso = getLocalISODate(curr);
                 const isToday = iso === todayISO;
                 const itsHoliday = isHoliday(curr);
                 
