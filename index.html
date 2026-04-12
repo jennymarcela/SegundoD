@@ -35,11 +35,14 @@
         }
 
         .annual-table th, .annual-table td { border: 2px solid #ecfdf5; }
+        
+        /* Ajuste de cabecera de tabla anual para que quede debajo de los botones */
         .annual-table thead th {
             position: sticky;
-            top: -1px;
-            z-index: 50;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            top: 64px; 
+            z-index: 40;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            background-color: white;
         }
 
         .cycle-1 { background-color: #eff6ff; }
@@ -50,25 +53,41 @@
         .cycle-6 { background-color: #faf5ff; }
         .weekend-col { background-color: #f8fafc; color: #475569; }
         
-        .is-today-annual { 
-            outline: 5px solid #10b981; 
-            outline-offset: -5px;
-            position: relative;
+        /* Marcador de hoy en la vista anual */
+        .is-today-marker { 
+            outline: 4px solid #10b981; 
+            outline-offset: -4px;
             background-color: #d1fae5 !important;
+        }
+
+        /* Efecto de iluminación de fila al buscar hoy */
+        .highlight-row {
+            animation: pulse-highlight 2.5s ease-out;
+        }
+        @keyframes pulse-highlight {
+            0% { background-color: rgba(16, 185, 129, 0.4); }
+            100% { background-color: transparent; }
         }
 
         .annual-text-date { font-size: 1.1rem; }
         .annual-text-sub { font-size: 0.95rem; }
         .annual-text-bday { font-size: 0.9rem; }
 
-        .sticky-nav-annual {
+        /* Barra horizontal de botones superior en vista anual */
+        .top-nav-annual {
             position: sticky;
-            top: 80px;
-            float: right;
-            z-index: 60;
-            margin-right: -20px;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: #ecfdf5;
+            z-index: 100;
             display: flex;
+            justify-content: center;
             gap: 12px;
+            padding: 12px;
+            border-bottom: 2px solid #d1fae5;
+            border-top-left-radius: 1.5rem;
+            border-top-right-radius: 1.5rem;
         }
 
         @media print {
@@ -110,37 +129,61 @@
         </div>
 
         <!-- VISTA ANUAL -->
-        <div id="annual-view" class="hidden p-6 bg-emerald-50 max-h-[85vh] overflow-y-auto relative">
-            <div class="bg-white rounded-3xl p-8 shadow-xl fade-in relative">
+        <div id="annual-view" class="hidden p-6 bg-emerald-50 max-h-[85vh] overflow-y-auto relative scroll-smooth">
+            <div class="bg-white rounded-3xl shadow-xl fade-in relative flex flex-col">
                 
-                <div class="sticky-nav-annual no-print">
-                    <button onclick="window.print()" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-xl shadow-2xl hover:bg-blue-700 transition-all border-2 border-white flex items-center gap-2">
-                        <span>🖨️ Imprimir</span>
+                <!-- Navegación Fija Superior Horizontal -->
+                <div class="top-nav-annual no-print">
+                    <button onclick="scrollToToday()" class="bg-emerald-500 text-white font-bold py-2 px-6 rounded-xl shadow-md hover:bg-emerald-600 transition-all flex items-center gap-2 border-2 border-emerald-400">
+                        <span>📍 IR A HOY</span>
                     </button>
-                    <button onclick="toggleView('weekly')" class="bg-emerald-600 text-white font-bold py-3 px-6 rounded-xl shadow-2xl hover:bg-emerald-700 transition-all border-2 border-white flex items-center gap-2">
-                        <span>⬅️ Volver</span>
+                    <button onclick="window.print()" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-xl shadow-md hover:bg-blue-700 transition-all flex items-center gap-2 border-2 border-blue-400">
+                        <span>🖨️ IMPRIMIR</span>
+                    </button>
+                    <button onclick="toggleView('weekly')" class="bg-emerald-600 text-white font-bold py-2 px-6 rounded-xl shadow-md hover:bg-emerald-700 transition-all flex items-center gap-2 border-2 border-emerald-500">
+                        <span>⬅️ VOLVER</span>
                     </button>
                 </div>
 
-                <div class="mb-8 no-print">
-                    <h2 class="text-4xl font-black text-emerald-800 uppercase tracking-tighter">Cronograma Escolar 2026</h2>
+                <div class="p-8">
+                    <div class="mb-8 no-print text-center">
+                        <h2 class="text-4xl font-black text-emerald-800 uppercase tracking-tighter">Cronograma Escolar 2026</h2>
+                    </div>
+                    
+                    <table class="w-full annual-table border-collapse">
+                        <thead>
+                            <tr class="text-center">
+                                <th class="bg-emerald-100 p-4 text-emerald-900 font-black uppercase text-sm">Semana</th>
+                                <th class="cycle-1 p-3 text-blue-900 text-base uppercase font-black">
+                                    <div>Día 1</div>
+                                    <div class="text-[10px] text-blue-600 font-bold mt-1">👟 Sudadera</div>
+                                </th>
+                                <th class="cycle-2 p-3 text-yellow-900 text-base uppercase font-black">
+                                    <div>Día 2</div>
+                                    <div class="text-[10px] text-yellow-600 font-bold mt-1">👞 Diario</div>
+                                </th>
+                                <th class="cycle-3 p-3 text-pink-900 text-base uppercase font-black">
+                                    <div>Día 3</div>
+                                    <div class="text-[10px] text-pink-600 font-bold mt-1">👟 Sudadera</div>
+                                </th>
+                                <th class="cycle-4 p-3 text-sky-900 text-base uppercase font-black">
+                                    <div>Día 4</div>
+                                    <div class="text-[10px] text-sky-600 font-bold mt-1">👞 Diario</div>
+                                </th>
+                                <th class="cycle-5 p-3 text-orange-900 text-base uppercase font-black">
+                                    <div>Día 5</div>
+                                    <div class="text-[10px] text-orange-600 font-bold mt-1">👟 Sudadera</div>
+                                </th>
+                                <th class="cycle-6 p-3 text-purple-900 text-base uppercase font-black">
+                                    <div>Día 6</div>
+                                    <div class="text-[10px] text-purple-600 font-bold mt-1">👞 Diario</div>
+                                </th>
+                                <th class="weekend-col p-4 text-slate-700 text-sm uppercase font-black">Fines de Semana</th>
+                            </tr>
+                        </thead>
+                        <tbody id="annual-body" class="text-gray-900"></tbody>
+                    </table>
                 </div>
-                
-                <table class="w-full annual-table border-collapse">
-                    <thead>
-                        <tr class="text-center">
-                            <th class="bg-emerald-100 p-4 text-emerald-900 font-black uppercase text-sm">Semana</th>
-                            <th class="cycle-1 p-4 text-blue-900 text-base uppercase font-black">Día 1</th>
-                            <th class="cycle-2 p-4 text-yellow-900 text-base uppercase font-black">Día 2</th>
-                            <th class="cycle-3 p-4 text-pink-900 text-base uppercase font-black">Día 3</th>
-                            <th class="cycle-4 p-4 text-sky-900 text-base uppercase font-black">Día 4</th>
-                            <th class="cycle-5 p-4 text-orange-900 text-base uppercase font-black">Día 5</th>
-                            <th class="cycle-6 p-4 text-purple-900 text-base uppercase font-black">Día 6</th>
-                            <th class="weekend-col p-4 text-slate-700 text-sm uppercase font-black">Festivos / Fines de Semana</th>
-                        </tr>
-                    </thead>
-                    <tbody id="annual-body" class="text-gray-900"></tbody>
-                </table>
             </div>
         </div>
 
@@ -175,7 +218,10 @@
     </div>
 
     <script>
+        // VARIABLES GLOBALES (Corregido el error de ReferenceError)
         const REAL_TODAY = new Date();
+        let currentActiveView = 'weekly';
+        let viewOffset = 0; 
 
         const BIRTHDAYS = [
             { name: "Luciana Rubio", month: 0, day: 5 },
@@ -229,6 +275,7 @@
         const granjaSegundo = ["2026-03-10", "2026-05-26", "2026-07-28", "2026-09-08", "2026-11-04"];
         const muestraRange = ["2026-04-27", "2026-04-28"];
 
+        // BASE DE DATOS RESTAURADA COMPLETAMENTE
         const specialActivities = {
             "2026-02-16": { html: `<div class="bg-blue-50 p-2 rounded-lg border border-blue-200 mb-2"><p class="text-[9px] text-blue-700 font-black uppercase">🗳️ GOBIERNO ESCOLAR:</p><p class="text-[10px] text-blue-800 font-bold leading-tight">Socialización de funciones y requisitos.</p></div>`, reminder: "Gobierno Escolar: Socialización" },
             "2026-02-19": { html: `<div class="emergency-alert p-2 rounded-lg border border-red-300 mb-2"><p class="text-[9px] text-red-700 font-black uppercase">⚠️ AVISO:</p><p class="text-[10px] text-red-800 font-bold leading-tight uppercase">Salida Temprana 2:00 P.M.</p></div>`, reminder: "SALIDA TEMPRANA 2:00 PM" },
@@ -279,15 +326,8 @@
                         <p class="text-[9px] text-red-700 font-black uppercase">📝 ÚLTIMO PLAZO:</p>
                         <p class="text-[10px] text-red-900 font-bold leading-tight">Firmar autorización salida pedagógica.</p>
                     </div>
-                    <div class="bg-sky-50 p-2 rounded-lg border-2 border-sky-300 mb-2">
-                        <p class="text-[9px] text-sky-700 font-black uppercase">🧪 MATERIALES SCIENCE:</p>
-                        <div class="text-[9px] text-sky-900 leading-tight space-y-1">
-                            <li>Enviar 1/8 de cartulina (cualquier color).</li>
-                            <li>Realizar actividad plataforma: "Exploration 4: States of Matter—Liquids".</li>
-                        </div>
-                    </div>
                 `, 
-                reminder: "Materiales Science + Plazo Salida" 
+                reminder: "Plazo Autorización Salida" 
             },
             "2026-04-10": { 
                 html: `
@@ -352,7 +392,7 @@
                 const iso = current.toISOString().split('T')[0];
                 const cycleDay = getCycleDay(current);
                 
-                // CAMBIO: Ahora solo se inyecta si el horario contiene específicamente "Natural Sciences and Technology"
+                // Lógica de inyección exclusiva para la clase de Natural Sciences
                 if (cycleDay && schedules[cycleDay] && schedules[cycleDay].includes("Natural Sciences and Technology")) {
                     if (!specialActivities[iso]) specialActivities[iso] = { html: "", reminder: "" };
                     
@@ -401,9 +441,6 @@
                 reminder: "Muestra Proyectos"
             };
         });
-
-        let viewOffset = 0; 
-        let currentActiveView = 'weekly';
 
         function isHoliday(date) {
             const iso = date.toISOString().split('T')[0];
@@ -463,7 +500,6 @@
                 document.getElementById('annual-view').classList.remove('hidden');
                 document.getElementById('week-label').innerText = "Cronograma Anual 2026";
                 renderAnnualCalendar();
-                document.getElementById('annual-view').scrollTop = 0;
             } else {
                 document.getElementById('weekly-view').classList.remove('hidden');
                 document.getElementById('nav-btn').classList.remove('hidden');
@@ -486,47 +522,69 @@
                 let cycleRow = { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null };
                 let weekendItems = [];
                 let daysInCycle = 0;
+                let hasToday = false;
+                let isTodayInWeekend = false;
 
                 while (daysInCycle < 6 && checkDate <= endDate) {
                     const iso = checkDate.toISOString().split('T')[0];
                     const bdays = BIRTHDAYS.filter(b => b.month === checkDate.getMonth() && b.day === checkDate.getDate());
                     const dateLabel = `${dayNamesShort[checkDate.getDay()]}, ${checkDate.getDate()} ${monthNames[checkDate.getMonth()]}`;
+                    const isTodayLocal = (iso === todayISO);
 
                     if (isNonWorkingDay(checkDate)) {
-                        let info = `<span class="font-bold annual-text-date">${dateLabel}</span>`;
+                        let info = `<div class="${isTodayLocal ? 'is-today-marker rounded px-1' : ''}"><span class="font-bold annual-text-date">${dateLabel}</span>`;
                         if (bdays.length > 0) info += bdays.map(b => `<br><span class="text-blue-700 font-black annual-text-bday">🎂 ${b.name}</span>`).join('');
                         else if (isHoliday(checkDate)) {
                             const isHolyWeek = checkDate >= new Date(2026, 2, 30) && checkDate <= new Date(2026, 3, 3);
                             info += `<br><span class="text-red-600 font-black uppercase annual-text-sub">${isHolyWeek ? 'S. SANTA' : 'FESTIVO'}</span>`;
                         }
+                        info += `</div>`;
                         weekendItems.push(info);
+                        if (isTodayLocal) { hasToday = true; isTodayInWeekend = true; }
                     } else {
                         const cycle = getCycleDay(checkDate);
                         if (cycle) {
                             let cellContent = `<p class="font-black text-gray-900 annual-text-date mb-1">${dateLabel}</p>`;
-                            cellContent += `<p class="annual-text-sub font-bold text-emerald-700 leading-tight">${getUniformByCycle(cycle)}</p>`;
                             if (bdays.length > 0) cellContent += bdays.map(b => `<p class="text-blue-800 annual-text-bday mt-1 leading-tight font-black">🎂 ${b.name}</p>`).join('');
                             if (specialActivities[iso]) {
                                 const reminder = specialActivities[iso].reminder || "Evento";
                                 cellContent += `<p class="text-[9px] mt-1 text-orange-600 font-bold uppercase">⚠️ ${reminder}</p>`;
                             }
-                            cycleRow[cycle] = { html: cellContent, isToday: iso === todayISO };
+                            cycleRow[cycle] = { html: cellContent, isToday: isTodayLocal };
+                            if (isTodayLocal) hasToday = true;
                             daysInCycle++;
                         }
                     }
                     checkDate.setDate(checkDate.getDate() + 1);
                 }
 
-                let rowHtml = `<tr class="border-b-2 border-emerald-50">
+                let rowHtml = `<tr class="border-b-2 border-emerald-50 ${hasToday ? 'row-contains-today' : ''}">
                     <td class="bg-emerald-50 p-4 text-center font-black text-emerald-800 text-sm uppercase border-r border-emerald-100">S${weekNumber++}</td>`;
                 for (let c = 1; c <= 6; c++) {
                     const d = cycleRow[c];
-                    rowHtml += d ? `<td class="p-4 text-center cycle-${c} ${d.isToday ? 'is-today-annual' : ''}">${d.html}</td>` : `<td class="p-4 bg-gray-50 opacity-10"></td>`;
+                    rowHtml += d ? `<td class="p-4 text-center cycle-${c} ${d.isToday ? 'is-today-marker' : ''}">${d.html}</td>` : `<td class="p-4 bg-gray-50 opacity-10"></td>`;
                 }
-                rowHtml += `<td class="p-4 weekend-col annual-text-sub leading-relaxed border-l border-emerald-100">
+                rowHtml += `<td class="p-4 weekend-col annual-text-sub leading-relaxed border-l border-emerald-100 ${isTodayInWeekend ? 'is-today-marker' : ''}">
                     ${weekendItems.length > 0 ? weekendItems.join('<div class="my-2 border-b border-gray-200"></div>') : '-'}
                 </td></tr>`;
                 tbody.insertAdjacentHTML('beforeend', rowHtml);
+            }
+        }
+
+        // Lógica corregida para encontrar y centrar la fila de HOY
+        function scrollToToday() {
+            const todayElement = document.querySelector('.is-today-marker');
+            if (todayElement) {
+                const row = todayElement.closest('tr');
+                
+                row.classList.remove('highlight-row'); 
+                void row.offsetWidth; 
+                row.classList.add('highlight-row');
+                
+                todayElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                const view = document.getElementById('annual-view');
+                if(view) view.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
 
