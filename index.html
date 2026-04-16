@@ -36,7 +36,6 @@
 
         .annual-table th, .annual-table td { border: 2px solid #ecfdf5; }
         
-        /* Ajuste de cabecera de tabla anual para que quede debajo de los botones */
         .annual-table thead th {
             position: sticky;
             top: 64px; 
@@ -53,14 +52,12 @@
         .cycle-6 { background-color: #faf5ff; }
         .weekend-col { background-color: #f8fafc; color: #475569; }
         
-        /* Marcador de hoy en la vista anual */
         .is-today-marker { 
             outline: 4px solid #10b981; 
             outline-offset: -4px;
             background-color: #d1fae5 !important;
         }
 
-        /* Efecto de iluminación de fila al buscar hoy */
         .highlight-row {
             animation: pulse-highlight 2.5s ease-out;
         }
@@ -73,7 +70,6 @@
         .annual-text-sub { font-size: 0.95rem; }
         .annual-text-bday { font-size: 0.9rem; }
 
-        /* Barra horizontal de botones superior en vista anual */
         .top-nav-annual {
             position: sticky;
             top: 0;
@@ -103,7 +99,6 @@
 <body class="p-4 md:p-8">
     <div class="max-w-[95%] mx-auto bg-white rounded-[40px] shadow-2xl overflow-hidden border-8 border-white relative">
         
-        <!-- CABECERA -->
         <div class="bg-emerald-500 p-6 text-white relative overflow-hidden no-print">
             <div class="absolute top-2 left-4 text-4xl opacity-50">🌿</div>
             <div class="text-center relative z-10">
@@ -123,16 +118,12 @@
             </div>
         </div>
 
-        <!-- VISTA SEMANAL -->
         <div id="weekly-view" class="p-6 bg-emerald-50 no-print">
             <div id="grid-container" class="grid grid-cols-1 md:grid-cols-5 gap-4 fade-in"></div>
         </div>
 
-        <!-- VISTA ANUAL -->
         <div id="annual-view" class="hidden p-6 bg-emerald-50 max-h-[85vh] overflow-y-auto relative scroll-smooth">
             <div class="bg-white rounded-3xl shadow-xl fade-in relative flex flex-col">
-                
-                <!-- Navegación Fija Superior Horizontal -->
                 <div class="top-nav-annual no-print">
                     <button onclick="scrollToToday()" class="bg-emerald-500 text-white font-bold py-2 px-6 rounded-xl shadow-md hover:bg-emerald-600 transition-all flex items-center gap-2 border-2 border-emerald-400">
                         <span>📍 IR A HOY</span>
@@ -187,7 +178,6 @@
             </div>
         </div>
 
-        <!-- FOOTER (RECURSOS FIJOS) -->
         <div class="bg-white p-5 border-t-2 border-dashed border-gray-200 grid grid-cols-1 md:grid-cols-3 gap-6 no-print">
             <div class="flex items-center gap-3">
                 <div class="bg-emerald-100 p-2 rounded-full text-2xl">🥳</div>
@@ -218,13 +208,10 @@
     </div>
 
     <script>
-        // VARIABLES GLOBALES
         const REAL_TODAY = new Date();
         let currentActiveView = 'weekly';
         let viewOffset = 0; 
 
-        // Función para obtener la fecha ISO en formato local YYYY-MM-DD
-        // Esto soluciona el problema de las 5 horas de desfase de UTC
         function getLocalISODate(date) {
             const yyyy = date.getFullYear();
             const mm = String(date.getMonth() + 1).padStart(2, '0');
@@ -261,12 +248,19 @@
             { name: "Pablo Galeano", month: 11, day: 27 }
         ];
 
+        // Se integran fechas de vacaciones y receso a la lista de festivos para que el ciclo se detenga
         const HOLIDAYS_2026 = [
             "2026-01-01", "2026-01-12", "2026-03-23", 
-            "2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-03", // Semana Santa
-            "2026-05-01", "2026-05-18", "2026-06-08", "2026-06-15", "2026-06-29",
-            "2026-07-20", "2026-08-07", "2026-08-17", "2026-10-12", "2026-11-02",
-            "2026-11-16", "2026-12-08", "2026-12-25"
+            "2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-03",
+            "2026-05-01", "2026-05-18", "2026-06-08", "2026-06-15",
+            // Vacaciones Mitad de Año: 22 Jun a 13 Jul
+            "2026-06-22", "2026-06-23", "2026-06-24", "2026-06-25", "2026-06-26", "2026-06-29",
+            "2026-06-30", "2026-07-01", "2026-07-02", "2026-07-03", "2026-07-06", "2026-07-07",
+            "2026-07-08", "2026-07-09", "2026-07-10", "2026-07-13",
+            "2026-07-20", "2026-08-07", "2026-08-17", 
+            // Semana de receso: 5 Oct a 9 Oct
+            "2026-10-05", "2026-10-06", "2026-10-07", "2026-10-08", "2026-10-09",
+            "2026-10-12", "2026-11-02", "2026-11-16", "2026-12-08", "2026-12-25"
         ];
 
         const CYCLE_ANCHOR_DATE = new Date(2026, 1, 4); 
@@ -292,7 +286,7 @@
             "2026-02-27": { html: `<div class="bg-pink-100 p-2 rounded-lg border border-pink-300 mb-2"><p class="text-[9px] text-pink-700 font-black uppercase">🎂 CELEBRACIÓN:</p><p class="text-[10px] text-pink-800 font-bold leading-tight uppercase">Cumpleaños Ada (En el Salón)</p></div><div class="bg-purple-100 p-2 rounded-lg border border-purple-300 mb-2"><p class="text-[9px] text-purple-700 font-black uppercase">📂 SOCIOEMOCIONAL:</p><p class="text-[10px] text-purple-800 font-bold leading-tight italic">Traer la carpeta con la portada impresa.</p></div>`, reminder: "Cumple Ada + Socioemocional" },
             "2026-03-04": { html: `<div class="bg-yellow-100 p-2 rounded-lg border border-yellow-300 mb-2"><p class="text-[9px] text-yellow-700 font-black uppercase">📢 CAMPAÑA:</p><p class="text-[10px] text-yellow-800 font-bold leading-tight">Socialización de propuestas - Día Oficial.</p></div>`, reminder: "Gobierno Escolar: Campaña" },
             "2026-03-05": { html: `<div class="bg-indigo-100 p-2 rounded-lg border border-indigo-300 mb-2"><p class="text-[9px] text-indigo-700 font-black uppercase">🤝 TALLER PADRES:</p><p class="text-[10px] text-indigo-800 font-bold leading-tight">Construyendo una Cultura KiVa</p><p class="text-[9px] mt-1">⏰ 6:00 PM - 8:00 PM</p><a href="https://stream.meet.google.com/stream/4860e49e-6afa-4aef-ac15-2f5ae1bb1e21" target="_blank" class="text-[9px] text-blue-600 underline font-bold">Unirse a la sesión</a></div>`, reminder: "Cultura KiVa (6PM-8PM)" },
-            "2026-03-09": { html: `<div class="bg-emerald-100 p-2 rounded-lg border border-emerald-300 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🗳️ ELECCIONES:</p><p class="text-[10px] text-emerald-800 font-bold leading-tight uppercase">Votaciones Gobierno Escolar.</p></div>`, reminder: "ELECCIONES GOBIERNO ESCOLAR" },
+            "2026-03-09": { html: `<div class="bg-emerald-100 p-2 rounded-lg border border-emerald-300 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🗳️ ELECCIONES:</p><p class="text-[10px] text-emerald-800 font-bold leading-tight uppercase">Votaciones Gobierno Escolar.</p></div>`, reminder: "ELECCIONES GOBIERGO ESCOLAR" },
             "2026-03-13": { html: `<div class="bg-blue-100 p-2 rounded-lg border border-blue-300 mb-2"><p class="text-[9px] text-blue-700 font-black uppercase">📜 POSESIÓN:</p><p class="text-[10px] text-blue-800 font-bold leading-tight">Posesión oficial de representantes.</p></div>`, reminder: "Posesión Gobierno Escolar" },
             "2026-03-16": { html: `<div class="bg-yellow-100 p-2 rounded-lg border-2 border-yellow-400 mb-2"><p class="text-[9px] text-yellow-700 font-black uppercase">🎨 PROYECTO TRIMESTRAL:</p><p class="text-[10px] text-yellow-900 font-bold leading-tight">Español e Inglés</p><div class="text-[9px] text-yellow-800 mt-1 space-y-0.5 font-medium"><li>📸 1 foto familiar</li><li>🖍️ Plumones (en estuche)</li><li>📄 1 pliego cartulina blanca</li><li>📜 1 pliego papel craft</li><li>📑 3 octavos cartulina iris</li><li>🧶 1 pliego papel seda</li></div></div>`, reminder: "Proyecto Trimestral Español/Inglés" },
             "2026-03-20": { html: `<div class="bg-yellow-100 p-2 rounded-lg border-2 border-yellow-400 mb-2"><p class="text-[9px] text-yellow-700 font-black uppercase">😊 DÍA DE LA FELICIDAD:</p><p class="text-[10px] text-yellow-900 font-bold leading-tight">Actividad: "Gafas de la Felicidad"</p><p class="text-[9px] text-yellow-800 mt-1">🕶️ Traer unas gafas reutilizadas (solo monturas que ya no usen).</p><p class="text-[9px] text-yellow-800 mt-1 font-bold">👕 Opcional: Camisa o accesorio de color amarillo.</p></div>`, reminder: "Día de la Felicidad (Gafas Reutilizadas)" },
@@ -305,6 +299,8 @@
             "2026-04-13": { html: `<div class="bg-pink-100 p-2 rounded-lg border-2 border-pink-300 mb-2"><p class="text-[9px] text-pink-700 font-black uppercase">🎂 CELEBRACIÓN:</p><p class="text-[10px] text-pink-800 font-bold leading-tight uppercase">Cumpleaños 8 años Hanna</p></div><div class="bg-emerald-50 p-2 rounded-lg border-2 border-emerald-300 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">⚙️ MATERIALES SCIENCE:</p><div class="text-[9px] text-emerald-900 leading-tight space-y-0.5"><li>1/8 de cartulina</li><li>Botella plástico vacía (máx 500ml)</li><li>Plastilina</li><li>Cuadrado papel aluminio</li><li>Pegante y Tijeras</li></div></div>`, reminder: "Cumple Hanna (8 años) + Materiales Science" },
             "2026-04-14": { html: `<div class="bg-emerald-100 p-2 rounded-lg border-2 border-emerald-400 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🌱 SALIDA PEDAGÓGICA:</p><p class="text-[10px] text-emerald-900 font-bold leading-tight">Huerta Jacana Aula Ambiental</p><a href="https://docs.google.com/forms/d/e/1FAIpQLSe068UgOxlRWPZN6D7MSUFDyNLXPYe7KaKMH0XY15OJOxFxTA/viewform" target="_blank" class="text-[9px] text-blue-600 underline font-bold mt-1 block">Ver Formulario Autorización</a></div><div class="bg-pink-100 p-2 rounded-lg border-2 border-pink-300 mb-2"><p class="text-[9px] text-pink-700 font-black uppercase">🎂 CELEBRACIÓN:</p><p class="text-[10px] text-pink-800 font-bold leading-tight uppercase">Cumpleaños 8 años Aisu W.</p></div>`, reminder: "Salida Huerta + Cumple Aisu" },
             "2026-04-15": { html: `<div class="bg-pink-100 p-2 rounded-lg border-2 border-pink-300 mb-2"><p class="text-[9px] text-pink-700 font-black uppercase">🎂 CELEBRACIÓN:</p><p class="text-[10px] text-pink-800 font-bold leading-tight uppercase">Cumpleaños 8 años Matías P.</p></div>`, reminder: "Cumple Matías P. (8 años)" },
+            "2026-04-20": { html: `<div class="bg-blue-50 p-2 rounded-lg border-2 border-blue-300 mb-2"><p class="text-[9px] text-blue-700 font-black uppercase">📸 PROYECTO FAMILIA:</p><p class="text-[10px] text-blue-900 font-bold leading-tight">"Mi familia es una poesía"</p><div class="text-[9px] text-blue-800 mt-1 space-y-1"><p>• Traer aprox. 10 fotos individuales.</p><p>• Tamaño: 7 x 7 cm.</p><p>• Entregar en sobre o bolsa Ziploc.</p></div></div>`, reminder: "Fotos Familia (7x7 cm)" },
+            "2026-04-24": { html: `<div class="bg-purple-50 p-2 rounded-lg border-2 border-purple-200 mb-2"><p class="text-[9px] text-purple-700 font-black uppercase">🎨 ARTES:</p><p class="text-[10px] text-purple-900 font-bold leading-tight">Obra de Kandinsky</p><p class="text-[9px] text-purple-800 mt-1 italic">Reproducción elaborada por los niños. Material libre (pintura, plastilina, arcilla, etc.)</p></div>`, reminder: "Obra Kandinsky (Artes)" },
             "2026-12-03": { html: `<div class="bg-emerald-50 p-2 rounded-lg border-2 border-emerald-300 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🎁 ANUARIO 2026:</p><p class="text-[10px] text-emerald-900 font-bold">Fecha de Entrega Oficial.</p></div>`, reminder: "Entrega de Anuario" }
         };
 
@@ -329,7 +325,7 @@
                     if (!specialActivities[iso].html.includes("SCIENCE REMINDER")) {
                         specialActivities[iso].html = bataHtml + specialActivities[iso].html;
                         if (!specialActivities[iso].reminder.includes("Bata")) {
-                            specialActivities[iso].reminder = "Traer Bata Science " + specialActivities[iso].reminder;
+                            specialActivities[iso].reminder = "Traer Bata Science " + (specialActivities[iso].reminder ? "+ " + specialActivities[iso].reminder : "");
                         }
                     }
                 }
@@ -441,8 +437,17 @@
                         let info = `<div class="${isTodayLocal ? 'is-today-marker rounded px-1' : ''}"><span class="font-bold annual-text-date">${dateLabel}</span>`;
                         if (bdays.length > 0) info += bdays.map(b => `<br><span class="text-blue-700 font-black annual-text-bday">🎂 ${b.name}</span>`).join('');
                         else if (isHoliday(checkDate)) {
+                            // Detectar si es Semana Santa o Vacaciones/Receso basado en fechas
                             const isHolyWeek = checkDate >= new Date(2026, 2, 30) && checkDate <= new Date(2026, 3, 3);
-                            info += `<br><span class="text-red-600 font-black uppercase annual-text-sub">${isHolyWeek ? 'S. SANTA' : 'FESTIVO'}</span>`;
+                            const isMidYear = checkDate >= new Date(2026, 5, 22) && checkDate <= new Date(2026, 6, 13);
+                            const isRecess = checkDate >= new Date(2026, 9, 5) && checkDate <= new Date(2026, 9, 9);
+                            
+                            let label = 'FESTIVO';
+                            if (isHolyWeek) label = 'S. SANTA';
+                            else if (isMidYear) label = 'VACACIONES';
+                            else if (isRecess) label = 'RECESO';
+
+                            info += `<br><span class="text-red-600 font-black uppercase annual-text-sub">${label}</span>`;
                         }
                         info += `</div>`;
                         weekendItems.push(info);
@@ -513,8 +518,15 @@
                 const isToday = iso === todayISO;
                 const itsHoliday = isHoliday(curr);
                 
+                // Etiquetas de descanso personalizadas
                 const isHolyWeek = curr >= new Date(2026, 2, 30) && curr <= new Date(2026, 3, 3);
-                const holidayText = isHolyWeek ? 'S. SANTA' : 'FESTIVO';
+                const isMidYear = curr >= new Date(2026, 5, 22) && curr <= new Date(2026, 6, 13);
+                const isRecess = curr >= new Date(2026, 9, 5) && curr <= new Date(2026, 9, 9);
+                
+                let holidayText = 'FESTIVO';
+                if (isHolyWeek) holidayText = 'S. SANTA';
+                else if (isMidYear) holidayText = 'VACACIONES';
+                else if (isRecess) holidayText = 'RECESO';
 
                 const numDia = getCycleDay(curr);
                 const uniform = itsHoliday ? "N/A" : getUniformByCycle(numDia);
