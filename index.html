@@ -248,17 +248,14 @@
             { name: "Pablo Galeano", month: 11, day: 27 }
         ];
 
-        // Se integran fechas de vacaciones y receso a la lista de festivos para que el ciclo se detenga
         const HOLIDAYS_2026 = [
             "2026-01-01", "2026-01-12", "2026-03-23", 
             "2026-03-30", "2026-03-31", "2026-04-01", "2026-04-02", "2026-04-03",
             "2026-05-01", "2026-05-18", "2026-06-08", "2026-06-15",
-            // Vacaciones Mitad de Año: 22 Jun a 13 Jul
             "2026-06-22", "2026-06-23", "2026-06-24", "2026-06-25", "2026-06-26", "2026-06-29",
             "2026-06-30", "2026-07-01", "2026-07-02", "2026-07-03", "2026-07-06", "2026-07-07",
             "2026-07-08", "2026-07-09", "2026-07-10", "2026-07-13",
             "2026-07-20", "2026-08-07", "2026-08-17", 
-            // Semana de receso: 5 Oct a 9 Oct
             "2026-10-05", "2026-10-06", "2026-10-07", "2026-10-08", "2026-10-09",
             "2026-10-12", "2026-11-02", "2026-11-16", "2026-12-08", "2026-12-25"
         ];
@@ -300,6 +297,18 @@
             "2026-04-14": { html: `<div class="bg-emerald-100 p-2 rounded-lg border-2 border-emerald-400 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🌱 SALIDA PEDAGÓGICA:</p><p class="text-[10px] text-emerald-900 font-bold leading-tight">Huerta Jacana Aula Ambiental</p><a href="https://docs.google.com/forms/d/e/1FAIpQLSe068UgOxlRWPZN6D7MSUFDyNLXPYe7KaKMH0XY15OJOxFxTA/viewform" target="_blank" class="text-[9px] text-blue-600 underline font-bold mt-1 block">Ver Formulario Autorización</a></div><div class="bg-pink-100 p-2 rounded-lg border-2 border-pink-300 mb-2"><p class="text-[9px] text-pink-700 font-black uppercase">🎂 CELEBRACIÓN:</p><p class="text-[10px] text-pink-800 font-bold leading-tight uppercase">Cumpleaños 8 años Aisu W.</p></div>`, reminder: "Salida Huerta + Cumple Aisu" },
             "2026-04-15": { html: `<div class="bg-pink-100 p-2 rounded-lg border-2 border-pink-300 mb-2"><p class="text-[9px] text-pink-700 font-black uppercase">🎂 CELEBRACIÓN:</p><p class="text-[10px] text-pink-800 font-bold leading-tight uppercase">Cumpleaños 8 años Matías P.</p></div>`, reminder: "Cumple Matías P. (8 años)" },
             "2026-04-20": { html: `<div class="bg-blue-50 p-2 rounded-lg border-2 border-blue-300 mb-2"><p class="text-[9px] text-blue-700 font-black uppercase">📸 PROYECTO FAMILIA:</p><p class="text-[10px] text-blue-900 font-bold leading-tight">"Mi familia es una poesía"</p><div class="text-[9px] text-blue-800 mt-1 space-y-1"><p>• Traer aprox. 10 fotos individuales.</p><p>• Tamaño: 7 x 7 cm.</p><p>• Entregar en sobre o bolsa Ziploc.</p></div></div>`, reminder: "Fotos Familia (7x7 cm)" },
+            "2026-04-23": { 
+                html: `<div class="bg-indigo-50 p-2 rounded-lg border-2 border-indigo-200 mb-2">
+                    <p class="text-[9px] text-indigo-700 font-black uppercase">📖 RECITAL DE POESÍA:</p>
+                    <p class="text-[10px] text-indigo-900 font-bold leading-tight">"Mi familia es un poema"</p>
+                    <p class="text-[9px] text-indigo-800 mt-1">⏰ 11:00 AM</p>
+                </div>
+                <div class="bg-blue-50 p-2 rounded-lg border border-blue-200 mb-2">
+                    <p class="text-[9px] text-blue-700 font-black uppercase">📚 PHONICS:</p>
+                    <p class="text-[10px] text-blue-800 font-bold leading-tight">Completar actividad en plataforma MyOn.</p>
+                </div>`,
+                reminder: "Recital Poesía (11AM) + Phonics MyOn"
+            },
             "2026-04-24": { html: `<div class="bg-purple-50 p-2 rounded-lg border-2 border-purple-200 mb-2"><p class="text-[9px] text-purple-700 font-black uppercase">🎨 ARTES:</p><p class="text-[10px] text-purple-900 font-bold leading-tight">Obra de Kandinsky</p><p class="text-[9px] text-purple-800 mt-1 italic">Reproducción elaborada por los niños. Material libre (pintura, plastilina, arcilla, etc.)</p></div>`, reminder: "Obra Kandinsky (Artes)" },
             "2026-12-03": { html: `<div class="bg-emerald-50 p-2 rounded-lg border-2 border-emerald-300 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🎁 ANUARIO 2026:</p><p class="text-[10px] text-emerald-900 font-bold">Fecha de Entrega Oficial.</p></div>`, reminder: "Entrega de Anuario" }
         };
@@ -437,7 +446,6 @@
                         let info = `<div class="${isTodayLocal ? 'is-today-marker rounded px-1' : ''}"><span class="font-bold annual-text-date">${dateLabel}</span>`;
                         if (bdays.length > 0) info += bdays.map(b => `<br><span class="text-blue-700 font-black annual-text-bday">🎂 ${b.name}</span>`).join('');
                         else if (isHoliday(checkDate)) {
-                            // Detectar si es Semana Santa o Vacaciones/Receso basado en fechas
                             const isHolyWeek = checkDate >= new Date(2026, 2, 30) && checkDate <= new Date(2026, 3, 3);
                             const isMidYear = checkDate >= new Date(2026, 5, 22) && checkDate <= new Date(2026, 6, 13);
                             const isRecess = checkDate >= new Date(2026, 9, 5) && checkDate <= new Date(2026, 9, 9);
@@ -518,7 +526,6 @@
                 const isToday = iso === todayISO;
                 const itsHoliday = isHoliday(curr);
                 
-                // Etiquetas de descanso personalizadas
                 const isHolyWeek = curr >= new Date(2026, 2, 30) && curr <= new Date(2026, 3, 3);
                 const isMidYear = curr >= new Date(2026, 5, 22) && curr <= new Date(2026, 6, 13);
                 const isRecess = curr >= new Date(2026, 9, 5) && curr <= new Date(2026, 9, 9);
