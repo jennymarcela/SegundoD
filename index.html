@@ -273,7 +273,7 @@
         };
 
         const granjaSegundo = ["2026-03-10", "2026-05-26", "2026-07-28", "2026-09-08", "2026-11-04"];
-        const muestraRange = ["2026-04-27"];
+        const muestraRange = []; 
 
         const specialActivities = {
             "2026-02-16": { html: `<div class="bg-blue-50 p-2 rounded-lg border border-blue-200 mb-2"><p class="text-[9px] text-blue-700 font-black uppercase">🗳️ GOBIERNO ESCOLAR:</p><p class="text-[10px] text-blue-800 font-bold leading-tight">Socialización de funciones y requisitos.</p></div>`, reminder: "Gobierno Escolar: Socialización" },
@@ -326,18 +326,45 @@
                 html: `<div class="bg-emerald-100 p-2 rounded-lg border-2 border-emerald-400 mb-2">
                     <p class="text-[9px] text-emerald-700 font-black uppercase">🧪 MATH & SCIENCE:</p>
                     <p class="text-[10px] text-emerald-900 font-bold leading-tight">PROYECTO MUESTRA DE ALIMENTOS</p>
-                    <div class="text-[9px] text-emerald-800 mt-1 space-y-0.5">
+                    
+                    <div class="mt-2 bg-white/40 p-2 rounded-lg text-[8px] text-emerald-900 space-y-1">
+                        <p class="font-bold border-b border-emerald-200">ASPECTOS A TENER EN CUENTA:</p>
+                        <li>• Almuerzo normal en colegio: muestra pequeña.</li>
                         <li>• Traer plato preparado de casa (en vinipel).</li>
-                        <li>• Traer plato por estudiante (ej: grupo 5 = 5 platos).</li>
-                        <li>• Muestras pequeñas (almuerzo normal).</li>
+                        <li>• Traer plato por cada niño del grupo (ej. G=5, traer 5 platos).</li>
+                        <li>• No es para compartir con visitantes, solo para el grupo.</li>
                         <li>• Finalizar poster y practicar presentación.</li>
                     </div>
-                    <div class="mt-2 pt-1 border-t border-emerald-200">
-                        <p class="text-[8px] font-bold text-emerald-600">GRUPOS ASIGNADOS:</p>
-                        <p class="text-[8px] leading-tight">G1: Magic Cereal | G2: Watermelon Lollipop | G3: Sweet Blueberries | G4: Healthy Snack | G5: Magic Cookies</p>
+
+                    <div class="text-[9px] text-emerald-800 mt-2 space-y-1.5">
+                        <div class="bg-white/60 p-2 rounded-lg">
+                            <p class="font-bold border-b border-emerald-200 mb-1">G1: Magic Cereal</p>
+                            <p class="text-[8px]">👥 Aisu, Alejo M, Hanna, Luci R, Martín Ch.</p>
+                            <p class="text-[8px] italic">🥕 Cereal, Yogurt, Banano.</p>
+                        </div>
+                        <div class="bg-white/60 p-2 rounded-lg">
+                            <p class="font-bold border-b border-emerald-200 mb-1">G2: Watermelon Lollipop</p>
+                            <p class="text-[8px]">👥 Alana, Alejo H, Emiliano, Ivanna B, Sara A.</p>
+                            <p class="text-[8px] italic">🥕 Sandía, Uvas, Palitos helado.</p>
+                        </div>
+                        <div class="bg-white/60 p-2 rounded-lg">
+                            <p class="font-bold border-b border-emerald-200 mb-1">G3: Sweet Blueberries</p>
+                            <p class="text-[8px]">👥 Antonio, Fede, Guada, Manuela, Matías A.</p>
+                            <p class="text-[8px] italic">🥕 Arándanos, Yogurt griego, Miel.</p>
+                        </div>
+                        <div class="bg-white/60 p-2 rounded-lg">
+                            <p class="font-bold border-b border-emerald-200 mb-1">G4: Healthy Snack</p>
+                            <p class="text-[8px]">👥 Isabella V, Isabella R, Mateo, Nico, Matías P.</p>
+                            <p class="text-[8px] italic">🥕 Manzana, Maní, Granola.</p>
+                        </div>
+                        <div class="bg-white/60 p-2 rounded-lg">
+                            <p class="font-bold border-b border-emerald-200 mb-1">G5: Magic Cookies</p>
+                            <p class="text-[8px]">👥 Ada, Emiliano R, Pablo, Samantha, Zaida V.</p>
+                            <p class="text-[8px] italic">🥕 Galletas avena, Choco, Fresas.</p>
+                        </div>
                     </div>
                 </div>`, 
-                reminder: "Proyecto Math & Science" 
+                reminder: "PROYECTO MATH & SCIENCE: Muestra de Alimentos. RECUERDA: Almuerzo normal en colegio (muestra pequeña). Traer plato preparado en vinipel (uno por estudiante del grupo). No compartir con visitantes. G1: Magic Cereal (Aisu, Alejo M, Hanna, Luci, Martín) - Cereal, Yogurt, Banano. G2: Watermelon Lollipop (Alana, Alejo H, Emi, Ivanna, Sara) - Sandía, Uvas. G3: Sweet Blueberries (Antonio, Fede, Guada, Manuela, Matías) - Arándanos, Yogurt. G4: Healthy Snack (Isa V, Isa R, Mateo, Nico, Matías P) - Manzana, Maní. G5: Magic Cookies (Ada, Emi R, Pablo, Samy, Zaida) - Galletas, Choco, Fresas."
             },
             "2026-12-03": { html: `<div class="bg-emerald-50 p-2 rounded-lg border-2 border-emerald-300 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🎁 ANUARIO 2026:</p><p class="text-[10px] text-emerald-900 font-bold">Fecha de Entrega Oficial.</p></div>`, reminder: "Entrega de Anuario" }
         };
@@ -379,7 +406,7 @@
 
         muestraRange.forEach(date => {
             const current = specialActivities[date] ? specialActivities[date].html : "";
-            specialActivities[date] = { html: current + `<div class="bg-indigo-100 p-2 rounded-lg border border-indigo-300 mb-2"><p class="text-[9px] text-indigo-700 font-black uppercase">🎭 MUESTRA:</p><p class="text-[10px] text-indigo-800 font-bold leading-tight italic">Muestra de proyectos - Día 1.</p></div>`, reminder: "Muestra Proyectos" };
+            specialActivities[date] = { html: current + `<div class="bg-indigo-100 p-2 rounded-lg border border-indigo-300 mb-2"><p class="text-[9px] text-indigo-700 font-black uppercase">🎭 MUESTRA:</p><p class="text-[10px] text-indigo-800 font-bold leading-tight italic">Muestra de proyectos.</p></div>`, reminder: "Muestra Proyectos" };
         });
 
         function isHoliday(date) {
