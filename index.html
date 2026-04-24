@@ -273,7 +273,7 @@
         };
 
         const granjaSegundo = ["2026-03-10", "2026-05-26", "2026-07-28", "2026-09-08", "2026-11-04"];
-        const muestraRange = ["2026-04-27", "2026-04-28"];
+        const muestraRange = ["2026-04-27"];
 
         const specialActivities = {
             "2026-02-16": { html: `<div class="bg-blue-50 p-2 rounded-lg border border-blue-200 mb-2"><p class="text-[9px] text-blue-700 font-black uppercase">🗳️ GOBIERNO ESCOLAR:</p><p class="text-[10px] text-blue-800 font-bold leading-tight">Socialización de funciones y requisitos.</p></div>`, reminder: "Gobierno Escolar: Socialización" },
@@ -322,6 +322,23 @@
                 </div>`, 
                 reminder: "Artes Kandinsky + Día del Niño" 
             },
+            "2026-04-28": { 
+                html: `<div class="bg-emerald-100 p-2 rounded-lg border-2 border-emerald-400 mb-2">
+                    <p class="text-[9px] text-emerald-700 font-black uppercase">🧪 MATH & SCIENCE:</p>
+                    <p class="text-[10px] text-emerald-900 font-bold leading-tight">PROYECTO MUESTRA DE ALIMENTOS</p>
+                    <div class="text-[9px] text-emerald-800 mt-1 space-y-0.5">
+                        <li>• Traer plato preparado de casa (en vinipel).</li>
+                        <li>• Traer plato por estudiante (ej: grupo 5 = 5 platos).</li>
+                        <li>• Muestras pequeñas (almuerzo normal).</li>
+                        <li>• Finalizar poster y practicar presentación.</li>
+                    </div>
+                    <div class="mt-2 pt-1 border-t border-emerald-200">
+                        <p class="text-[8px] font-bold text-emerald-600">GRUPOS ASIGNADOS:</p>
+                        <p class="text-[8px] leading-tight">G1: Magic Cereal | G2: Watermelon Lollipop | G3: Sweet Blueberries | G4: Healthy Snack | G5: Magic Cookies</p>
+                    </div>
+                </div>`, 
+                reminder: "Proyecto Math & Science" 
+            },
             "2026-12-03": { html: `<div class="bg-emerald-50 p-2 rounded-lg border-2 border-emerald-300 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🎁 ANUARIO 2026:</p><p class="text-[10px] text-emerald-900 font-bold">Fecha de Entrega Oficial.</p></div>`, reminder: "Entrega de Anuario" }
         };
 
@@ -362,7 +379,7 @@
 
         muestraRange.forEach(date => {
             const current = specialActivities[date] ? specialActivities[date].html : "";
-            specialActivities[date] = { html: current + `<div class="bg-indigo-100 p-2 rounded-lg border border-indigo-300 mb-2"><p class="text-[9px] text-indigo-700 font-black uppercase">🎭 MUESTRA:</p><p class="text-[10px] text-indigo-800 font-bold leading-tight italic">Pendiente asignar día exacto.</p></div>`, reminder: "Muestra Proyectos" };
+            specialActivities[date] = { html: current + `<div class="bg-indigo-100 p-2 rounded-lg border border-indigo-300 mb-2"><p class="text-[9px] text-indigo-700 font-black uppercase">🎭 MUESTRA:</p><p class="text-[10px] text-indigo-800 font-bold leading-tight italic">Muestra de proyectos - Día 1.</p></div>`, reminder: "Muestra Proyectos" };
         });
 
         function isHoliday(date) {
