@@ -99,6 +99,7 @@
 <body class="p-4 md:p-8">
     <div class="max-w-[95%] mx-auto bg-white rounded-[40px] shadow-2xl overflow-hidden border-8 border-white relative">
         
+        <!-- Header -->
         <div class="bg-emerald-500 p-6 text-white relative overflow-hidden no-print">
             <div class="absolute top-2 left-4 text-4xl opacity-50">🌿</div>
             <div class="text-center relative z-10">
@@ -118,10 +119,12 @@
             </div>
         </div>
 
+        <!-- Weekly View -->
         <div id="weekly-view" class="p-6 bg-emerald-50 no-print">
             <div id="grid-container" class="grid grid-cols-1 md:grid-cols-5 gap-4 fade-in"></div>
         </div>
 
+        <!-- Annual View -->
         <div id="annual-view" class="hidden p-6 bg-emerald-50 max-h-[85vh] overflow-y-auto relative scroll-smooth">
             <div class="bg-white rounded-3xl shadow-xl fade-in relative flex flex-col">
                 <div class="top-nav-annual no-print">
@@ -178,6 +181,7 @@
             </div>
         </div>
 
+        <!-- Footer -->
         <div class="bg-white p-5 border-t-2 border-dashed border-gray-200 grid grid-cols-1 md:grid-cols-3 gap-6 no-print">
             <div class="flex items-center gap-3">
                 <div class="bg-emerald-100 p-2 rounded-full text-2xl">🥳</div>
@@ -257,14 +261,28 @@
             "2026-07-08", "2026-07-09", "2026-07-10", "2026-07-13",
             "2026-07-20", "2026-08-07", "2026-08-17", 
             "2026-10-05", "2026-10-06", "2026-10-07", "2026-10-08", "2026-10-09",
-            "2026-10-12", "2026-11-02", "2026-11-16", "2026-12-08", "2026-12-25"
+            "2026-10-12", "2026-11-02", "2026-11-16", "2026-12-08", "2026-12-25",
+            "2026-05-08" // Jornada pedagógica
         ];
 
-        const CYCLE_ANCHOR_DATE = new Date(2026, 1, 4); 
-        const CYCLE_ANCHOR_DAY_NUM = 1; 
+        // LÓGICA DE PERIODOS ACADÉMICOS
+        const ACADEMIC_PERIODS = [
+            { 
+                name: "I Trimestre", 
+                start: new Date(2026, 1, 4), // 4 de Feb
+                anchorDay: 1, 
+                end: new Date(2026, 4, 3)    // 3 de Mayo
+            },
+            { 
+                name: "II Trimestre", 
+                start: new Date(2026, 4, 4), // 4 de Mayo (REINICIO DÍA 1)
+                anchorDay: 1, 
+                end: new Date(2026, 11, 31) 
+            }
+        ];
 
         const schedules = {
-            1: "<li>• Psicomotricidad</li><li>• Math</li><li>• English</li><li>• STEM</li><li>• Español</li><li>• Danza</li>",
+            1: "<li>• Psicomotricidad</li><li>• Math</li><li><li>• English</li><li>• STEM</li><li>• Español</li><li>• Danza</li>",
             2: "<li>• English</li><li>• Música</li><li>• Español</li><li>• Social Science</li><li>• Natural Sciences and Technology</li><li>• Math</li>",
             3: "<li>• Natural Sciences and Technology</li><li>• Español</li><li>• English</li><li>• Phonics</li><li>• Math</li><li>• Psicomotricidad</li>",
             4: "<li>• English</li><li>• Español</li><li>• Perfil Evergreenista</li><li>• Artes</li><li>• Natural Sciences and Technology</li><li>• Math</li>",
@@ -272,8 +290,7 @@
             6: "<li>• Artes</li><li>• Español</li><li>• Socioemocional</li><li>• Math</li><li>• English</li><li>• Teatro</li>"
         };
 
-        const granjaSegundo = ["2026-03-10", "2026-05-26", "2026-07-28", "2026-09-08", "2026-11-04"];
-        const muestraRange = []; 
+        const granjaSegundo = ["2026-03-10", "2026-07-28", "2026-09-08", "2026-11-04"];
 
         const specialActivities = {
             "2026-02-16": { html: `<div class="bg-blue-50 p-2 rounded-lg border border-blue-200 mb-2"><p class="text-[9px] text-blue-700 font-black uppercase">🗳️ GOBIERNO ESCOLAR:</p><p class="text-[10px] text-blue-800 font-bold leading-tight">Socialización de funciones y requisitos.</p></div>`, reminder: "Gobierno Escolar: Socialización" },
@@ -285,87 +302,34 @@
             "2026-03-05": { html: `<div class="bg-indigo-100 p-2 rounded-lg border border-indigo-300 mb-2"><p class="text-[9px] text-indigo-700 font-black uppercase">🤝 TALLER PADRES:</p><p class="text-[10px] text-indigo-800 font-bold leading-tight">Construyendo una Cultura KiVa</p><p class="text-[9px] mt-1">⏰ 6:00 PM - 8:00 PM</p><a href="https://stream.meet.google.com/stream/4860e49e-6afa-4aef-ac15-2f5ae1bb1e21" target="_blank" class="text-[9px] text-blue-600 underline font-bold">Unirse a la sesión</a></div>`, reminder: "Cultura KiVa (6PM-8PM)" },
             "2026-03-09": { html: `<div class="bg-emerald-100 p-2 rounded-lg border border-emerald-300 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🗳️ ELECCIONES:</p><p class="text-[10px] text-emerald-800 font-bold leading-tight uppercase">Votaciones Gobierno Escolar.</p></div>`, reminder: "ELECCIONES GOBIERGO ESCOLAR" },
             "2026-03-13": { html: `<div class="bg-blue-100 p-2 rounded-lg border border-blue-300 mb-2"><p class="text-[9px] text-blue-700 font-black uppercase">📜 POSESIÓN:</p><p class="text-[10px] text-blue-800 font-bold leading-tight">Posesión oficial de representantes.</p></div>`, reminder: "Posesión Gobierno Escolar" },
-            "2026-03-16": { html: `<div class="bg-yellow-100 p-2 rounded-lg border-2 border-yellow-400 mb-2"><p class="text-[9px] text-yellow-700 font-black uppercase">🎨 PROYECTO TRIMESTRAL:</p><p class="text-[10px] text-yellow-900 font-bold leading-tight">Español e Inglés</p><div class="text-[9px] text-yellow-800 mt-1 space-y-0.5 font-medium"><li>📸 1 foto familiar</li><li>🖍️ Plumones (en estuche)</li><li>📄 1 pliego cartulina blanca</li><li>📜 1 pliego papel craft</li><li>📑 3 octavos cartulina iris</li><li>🧶 1 pliego papel seda</li></div></div>`, reminder: "Proyecto Trimestral Español/Inglés" },
-            "2026-03-20": { html: `<div class="bg-yellow-100 p-2 rounded-lg border-2 border-yellow-400 mb-2"><p class="text-[9px] text-yellow-700 font-black uppercase">😊 DÍA DE LA FELICIDAD:</p><p class="text-[10px] text-yellow-900 font-bold leading-tight">Actividad: "Gafas de la Felicidad"</p><p class="text-[9px] text-yellow-800 mt-1">🕶️ Traer unas gafas reutilizadas (solo monturas que ya no usen).</p><p class="text-[9px] text-yellow-800 mt-1 font-bold">👕 Opcional: Camisa o accesorio de color amarillo.</p></div>`, reminder: "Día de la Felicidad (Gafas Reutilizadas)" },
-            "2026-03-24": { html: `<div class="bg-indigo-50 p-2 rounded-lg border border-indigo-300 mb-2"><p class="text-[9px] text-indigo-700 font-black uppercase">Traer camiseta o colores del país correspondiente (España/Qatar).</p></div><div class="bg-purple-100 p-2 rounded-lg border border-purple-300 mb-2"><p class="text-[9px] text-purple-700 font-black uppercase">🍪 PREVENTA GALLETAS:</p><p class="text-[10px] text-purple-800 font-bold leading-tight">Informar al tutor y dejar pago el producto ($4.000). Sabores: Chocochip, Oreo, M&M.</p></div>`, reminder: "Cultura + Preventa Galletas" },
-            "2026-03-25": { html: `<div class="bg-blue-100 p-2 rounded-lg border border-blue-300 mb-2"><p class="text-[9px] text-blue-700 font-black uppercase">🌋 SOCIAL SCIENCE:</p><p class="text-[10px] text-blue-800 font-bold leading-tight">Traer plastilina para actividad de Montañas y Valles.</p></div>`, reminder: "Social Science: Plastilina" },
-            "2026-03-26": { html: `<div class="bg-pink-100 p-2 rounded-lg border border-pink-300 mb-2"><p class="text-[9px] text-pink-700 font-black uppercase">👖 JEAN DAY - WOMEN'S DAY:</p><p class="text-[10px] text-pink-800 font-bold leading-tight uppercase">Costo: $2.000</p><p class="text-[9px] mt-1 font-bold">Colores: Verde, Rosado, Morado</p></div><div class="bg-purple-100 p-2 rounded-lg border border-purple-300 mb-2"><p class="text-[9px] text-purple-700 font-black uppercase">📂 SOCIOEMOCIONAL:</p><p class="text-[10px] text-purple-800 font-bold leading-tight">Materiales para "Bomba de la calma":</p><div class="text-[9px] mt-1 max-h-32 overflow-y-auto pr-1 space-y-1"><p><b>🎈 2 Bombas:</b> Sara A., Matías A., Antonio A., Hanna B., Ivanna B., Maria Jose C., Guadalupe C., Martin C., Pablo G., Samantha H., Alejandro H., Manuela L., Alejandro M.</p><p><b>👀 Ojos Locos:</b> Federico M., Matías P., Emiliano R., Isabela R., Nicolas R., Alana R., Ada R., Luciana R., Zaida V., Isabella V.</p><p><b>🌾 Harina:</b> Aisu W., Mateo Z.</p></div></div>`, reminder: "Jean Day + Bombas de la Calma" },
-            "2026-03-27": { html: `<div class="bg-yellow-50 p-2 rounded-lg border-2 border-yellow-300 mb-2"><p class="text-[9px] text-yellow-700 font-black uppercase">📖 ANUARIO 2026:</p><p class="text-[10px] text-yellow-900 font-bold">Fecha límite para reservar.</p><p class="text-[11px] text-yellow-800 font-black">Precio: $195.000</p></div>`, reminder: "Límite Reserva Anuario" },
-            "2026-04-06": { html: `<div class="bg-red-50 p-2 rounded-lg border-2 border-red-200 mb-2"><p class="text-[9px] text-red-700 font-black uppercase">📝 ÚLTIMO PLAZO:</p><p class="text-[10px] text-red-900 font-bold leading-tight">Firmar autorización salida pedagógica.</p></div>`, reminder: "Plazo Autorización Salida" },
-            "2026-04-10": { html: `<div class="bg-emerald-100 p-2 rounded-lg border-2 border-emerald-400 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🏆 DEPORTES:</p><p class="text-[10px] text-emerald-900 font-bold leading-tight uppercase text-center">Inauguración de Juegos Deportivos</p></div>`, reminder: "Inauguración Juegos Deportivos" },
-            "2026-04-13": { html: `<div class="bg-pink-100 p-2 rounded-lg border-2 border-pink-300 mb-2"><p class="text-[9px] text-pink-700 font-black uppercase">🎂 CELEBRACIÓN:</p><p class="text-[10px] text-pink-800 font-bold leading-tight uppercase">Cumpleaños 8 años Hanna</p></div><div class="bg-emerald-50 p-2 rounded-lg border-2 border-emerald-300 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">⚙️ MATERIALES SCIENCE:</p><div class="text-[9px] text-emerald-900 leading-tight space-y-0.5"><li>1/8 de cartulina</li><li>Botella plástico vacía (máx 500ml)</li><li>Plastilina</li><li>Cuadrado papel aluminio</li><li>Pegante y Tijeras</li></div></div>`, reminder: "Cumple Hanna (8 años) + Materiales Science" },
-            "2026-04-14": { html: `<div class="bg-emerald-100 p-2 rounded-lg border-2 border-emerald-400 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🌱 SALIDA PEDAGÓGICA:</p><p class="text-[10px] text-emerald-900 font-bold leading-tight">Huerta Jacana Aula Ambiental</p><a href="https://docs.google.com/forms/d/e/1FAIpQLSe068UgOxlRWPZN6D7MSUFDyNLXPYe7KaKMH0XY15OJOxFxTA/viewform" target="_blank" class="text-[9px] text-blue-600 underline font-bold mt-1 block">Ver Formulario Autorización</a></div><div class="bg-pink-100 p-2 rounded-lg border-2 border-pink-300 mb-2"><p class="text-[9px] text-pink-700 font-black uppercase">🎂 CELEBRACIÓN:</p><p class="text-[10px] text-pink-800 font-bold leading-tight uppercase">Cumpleaños 8 años Aisu W.</p></div>`, reminder: "Salida Huerta + Cumple Aisu" },
-            "2026-04-15": { html: `<div class="bg-pink-100 p-2 rounded-lg border-2 border-pink-300 mb-2"><p class="text-[9px] text-pink-700 font-black uppercase">🎂 CELEBRACIÓN:</p><p class="text-[10px] text-pink-800 font-bold leading-tight uppercase">Cumpleaños 8 años Matías P.</p></div>`, reminder: "Cumple Matías P. (8 años)" },
-            "2026-04-20": { html: `<div class="bg-blue-50 p-2 rounded-lg border-2 border-blue-300 mb-2"><p class="text-[9px] text-blue-700 font-black uppercase">📸 PROYECTO FAMILIA:</p><p class="text-[10px] text-blue-900 font-bold leading-tight">"Mi familia es una poesía"</p><div class="text-[9px] text-blue-800 mt-1 space-y-1"><p>• Traer aprox. 10 fotos individuales.</p><p>• Tamaño: 7 x 7 cm.</p><p>• Entregar en sobre o bolsa Ziploc.</p></div></div>`, reminder: "Fotos Familia (7x7 cm)" },
-            "2026-04-23": { 
-                html: `<div class="bg-indigo-50 p-2 rounded-lg border-2 border-indigo-200 mb-2">
-                    <p class="text-[9px] text-indigo-700 font-black uppercase">📖 RECITAL DE POESÍA:</p>
-                    <p class="text-[10px] text-indigo-900 font-bold leading-tight">"Mi familia es un poema"</p>
-                    <p class="text-[9px] text-indigo-800 mt-1">⏰ 11:00 AM</p>
-                </div>
-                <div class="bg-blue-50 p-2 rounded-lg border border-blue-200 mb-2">
-                    <p class="text-[9px] text-blue-700 font-black uppercase">📚 PHONICS:</p>
-                    <p class="text-[10px] text-blue-800 font-bold leading-tight">Completar actividad en plataforma MyOn.</p>
-                </div>`,
-                reminder: "Recital Poesía (11AM) + Phonics MyOn"
-            },
-            "2026-04-24": { 
-                html: `<div class="bg-purple-50 p-2 rounded-lg border-2 border-purple-200 mb-2">
-                    <p class="text-[9px] text-purple-700 font-black uppercase">🎨 ARTES:</p>
-                    <p class="text-[10px] text-purple-900 font-bold leading-tight">Obra de Kandinsky</p>
-                    <p class="text-[9px] text-purple-800 mt-1 italic">Reproducción elaborada por los niños. Material libre (pintura, plastilina, arcilla, etc.)</p>
-                </div>
-                <div class="bg-yellow-50 p-2 rounded-lg border-2 border-yellow-300 mb-2">
-                    <p class="text-[9px] text-yellow-700 font-black uppercase">🎈 DÍA DEL NIÑO:</p>
-                    <p class="text-[10px] text-yellow-900 font-bold leading-tight uppercase text-center">Explorando nuestras emociones</p>
-                    <p class="text-[9px] text-yellow-800 mt-1">Ven representando una emoción con un color de ropa, un accesorio o detalle creativo.</p>
-                </div>`, 
-                reminder: "Artes Kandinsky + Día del Niño" 
-            },
+            "2026-03-16": { html: `<div class="bg-yellow-100 p-2 rounded-lg border-2 border-yellow-400 mb-2"><p class="text-[9px] text-yellow-700 font-black uppercase">🎨 PROYECTO TRIMESTRAL:</p><p class="text-[10px] text-yellow-900 font-bold leading-tight">Español e Inglés</p></div>`, reminder: "Proyecto Trimestral" },
             "2026-04-28": { 
                 html: `<div class="bg-emerald-100 p-2 rounded-lg border-2 border-emerald-400 mb-2">
                     <p class="text-[9px] text-emerald-700 font-black uppercase">🧪 MATH & SCIENCE:</p>
                     <p class="text-[10px] text-emerald-900 font-bold leading-tight">PROYECTO MUESTRA DE ALIMENTOS</p>
-                    
                     <div class="mt-2 bg-white/40 p-2 rounded-lg text-[8px] text-emerald-900 space-y-1">
                         <p class="font-bold border-b border-emerald-200">ASPECTOS A TENER EN CUENTA:</p>
                         <li>• Almuerzo normal en colegio: muestra pequeña.</li>
                         <li>• Traer plato preparado de casa (en vinipel).</li>
                         <li>• Traer plato por cada niño del grupo (ej. G=5, traer 5 platos).</li>
-                        <li>• No es para compartir con visitantes, solo para el grupo.</li>
-                        <li>• Finalizar poster y practicar presentación.</li>
                     </div>
-
                     <div class="text-[9px] text-emerald-800 mt-2 space-y-1.5">
-                        <div class="bg-white/60 p-2 rounded-lg">
-                            <p class="font-bold border-b border-emerald-200 mb-1">G1: Magic Cereal</p>
-                            <p class="text-[8px]">👥 Alejo M, Matías A., Isabella R, Manuela L, Pablo G.</p>
-                            <p class="text-[8px] italic">🥕 Cereal, Leche, Banano.</p>
-                        </div>
-                        <div class="bg-white/60 p-2 rounded-lg">
-                            <p class="font-bold border-b border-emerald-200 mb-1">G2: Watermelon Lollipop</p>
-                            <p class="text-[8px]">👥 Mateo Z, Isabella V, Federico M, Maria Jose C, Antonio A.</p>
-                            <p class="text-[8px] italic">🥕 Sandía, Chips, Yogurt Griego.</p>
-                        </div>
-                        <div class="bg-white/60 p-2 rounded-lg">
-                            <p class="font-bold border-b border-emerald-200 mb-1">G3: Sweet Blueberries</p>
-                            <p class="text-[8px]">👥 Ada R, Zaida V, Aisu W, Samantha H, Martín C.</p>
-                            <p class="text-[8px] italic">🥕 Arándanos, Honey, Bread, Milk.</p>
-                        </div>
-                        <div class="bg-white/60 p-2 rounded-lg">
-                            <p class="font-bold border-b border-emerald-200 mb-1">G4: Healthy Snack</p>
-                            <p class="text-[8px]">👥 Alana C, Guadalupe C, Nico R, Emi R, Hannah B.</p>
-                            <p class="text-[8px] italic">🥕 Banana, Cereal, Yogurt.</p>
-                        </div>
-                        <div class="bg-white/60 p-2 rounded-lg">
-                            <p class="font-bold border-b border-emerald-200 mb-1">G5: Magic Cookies</p>
-                            <p class="text-[8px]">👥 Ivanna B, Sara A, Alejandro H, Matías P, Luciana R.</p>
-                            <p class="text-[8px] italic">🥕 Galletas, Kiwi, Leche, Chocolate.</p>
-                        </div>
+                        <div class="bg-white/60 p-2 rounded-lg"><p class="font-bold border-b border-emerald-200 mb-1">G1: Magic Cereal</p><p class="text-[8px]">👥 Alejo M, Matías A., Isabella R, Manuela L, Pablo G.</p></div>
+                        <div class="bg-white/60 p-2 rounded-lg"><p class="font-bold border-b border-emerald-200 mb-1">G2: Watermelon Lollipop</p><p class="text-[8px]">👥 Mateo Z, Isabella V, Federico M, Maria Jose C, Antonio A.</p></div>
+                        <div class="bg-white/60 p-2 rounded-lg"><p class="font-bold border-b border-emerald-200 mb-1">G3: Sweet Blueberries</p><p class="text-[8px]">👥 Ada R, Zaida V, Aisu W, Samantha H, Martín C.</p></div>
+                        <div class="bg-white/60 p-2 rounded-lg"><p class="font-bold border-b border-emerald-200 mb-1">G4: Healthy Snack</p><p class="text-[8px]">👥 Alana C, Guadalupe C, Nico R, Emi R, Hannah B.</p></div>
+                        <div class="bg-white/60 p-2 rounded-lg"><p class="font-bold border-b border-emerald-200 mb-1">G5: Magic Cookies</p><p class="text-[8px]">👥 Ivanna B, Sara A, Alejandro H, Matías P, Luciana R.</p></div>
                     </div>
                 </div>`, 
-                reminder: "PROYECTO MATH & SCIENCE. RECUERDA: Almuerzo normal en colegio (muestra pequeña). Traer plato preparado en vinipel (uno por estudiante del grupo). No compartir con visitantes. G1: Magic Cereal (Alejo M, Matías A., Isabella R, Manuela L, Pablo G.) - Cereal, Leche, Banano. G2: Watermelon Lollipop (Mateo Z, Isabella V, Fede M, Maria Jose C, Antonio A.) - Sandía, Chips, Yogurt Griego. G3: Sweet Blueberries (Ada R, Zaida V, Aisu W, Samantha H, Martín C.) - Arándanos, Honey, Bread, Milk. G4: Healthy Snack (Alana C, Guada C, Nico R, Emi R, Hannah B.) - Banana, Cereal, Yogurt. G5: Magic Cookies (Ivanna B, Sara A, Alejandro H, Matías P, Luci R.) - Galletas, Kiwi, Leche, Chocolate."
+                reminder: "Proyecto Math & Science"
             },
+            // EVENTOS MAYO
+            "2026-05-04": { html: `<div class="bg-emerald-50 p-2 rounded-lg border-2 border-emerald-300 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">📈 ACADÉMICO:</p><p class="text-[10px] text-emerald-900 font-bold leading-tight uppercase">Inicio del II Trimestre</p><p class="text-[8px] text-emerald-600 font-black mt-1">REINICIO DÍA 1</p></div>`, reminder: "Inicio II Trimestre (Día 1)" },
+            "2026-05-07": { html: `<div class="bg-pink-50 p-2 rounded-lg border-2 border-pink-300 mb-2"><p class="text-[9px] text-pink-700 font-black uppercase">🌸 DÍA DE LA MADRE:</p><p class="text-[10px] text-pink-900 font-bold leading-tight uppercase text-center">Encuentro Remoto</p><p class="text-[8px] mt-1 italic text-center">Acompáñanos entre 10:00 AM y 11:30 AM</p></div>`, reminder: "Día de la Madre (Virtual 10:00-11:30 AM)" },
+            "2026-05-08": { html: `<div class="emergency-alert p-2 rounded-lg border border-red-300 mb-2"><p class="text-[9px] text-red-700 font-black uppercase">⚠️ JORNADA PEDAGÓGICA:</p><p class="text-[10px] text-red-800 font-bold leading-tight uppercase text-center">No hay clases</p></div>`, reminder: "Jornada Pedagógica (Sin asistencia)" },
+            "2026-05-14": { html: `<div class="bg-indigo-50 p-2 rounded-lg border-2 border-indigo-200 mb-2"><p class="text-[9px] text-indigo-700 font-black uppercase">🎖️ RECONOCIMIENTOS:</p><p class="text-[10px] text-indigo-900 font-bold leading-tight uppercase text-center">Perfil Evergreenista</p></div>`, reminder: "Reconocimientos Perfil Evergreenista" },
+            "2026-05-15": { html: `<div class="bg-yellow-50 p-2 rounded-lg border-2 border-yellow-300 mb-2"><p class="text-[9px] text-yellow-700 font-black uppercase">🍎 DÍA DEL MAESTRO:</p><p class="text-[10px] text-yellow-900 font-bold leading-tight uppercase text-center">Salida al medio día</p></div>`, reminder: "Día del Maestro (Salida 12:00 PM)" },
+            "2026-05-23": { html: `<div class="bg-blue-50 p-2 rounded-lg border-2 border-blue-300 mb-2"><p class="text-[9px] text-blue-700 font-black uppercase">📋 INFORMES:</p><p class="text-[10px] text-blue-900 font-bold leading-tight uppercase text-center">Entrega presencial</p></div>`, reminder: "Entrega informes I Trimestre" },
             "2026-12-03": { html: `<div class="bg-emerald-50 p-2 rounded-lg border-2 border-emerald-300 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🎁 ANUARIO 2026:</p><p class="text-[10px] text-emerald-900 font-bold">Fecha de Entrega Oficial.</p></div>`, reminder: "Entrega de Anuario" }
         };
 
@@ -373,20 +337,12 @@
             const startDate = new Date(2026, 0, 1); 
             const endDate = new Date(2026, 11, 31); 
             let current = new Date(startDate);
-
             while (current <= endDate) {
                 const iso = getLocalISODate(current);
                 const cycleDay = getCycleDay(current);
-                
                 if (cycleDay && schedules[cycleDay] && schedules[cycleDay].includes("Natural Sciences and Technology")) {
                     if (!specialActivities[iso]) specialActivities[iso] = { html: "", reminder: "" };
-                    
-                    const bataHtml = `
-                        <div class="bg-blue-50 p-2 rounded-lg border border-blue-200 mb-2">
-                            <p class="text-[9px] text-blue-700 font-black uppercase">🥼 SCIENCE REMINDER:</p>
-                            <p class="text-[10px] text-blue-800 font-bold leading-tight">Traer bata de laboratorio.</p>
-                        </div>
-                    `;
+                    const bataHtml = `<div class="bg-blue-50 p-2 rounded-lg border border-blue-200 mb-2"><p class="text-[9px] text-blue-700 font-black uppercase">🥼 SCIENCE REMINDER:</p><p class="text-[10px] text-blue-800 font-bold leading-tight">Traer bata de laboratorio.</p></div>`;
                     if (!specialActivities[iso].html.includes("SCIENCE REMINDER")) {
                         specialActivities[iso].html = bataHtml + specialActivities[iso].html;
                         if (!specialActivities[iso].reminder.includes("Bata")) {
@@ -397,17 +353,6 @@
                 current.setDate(current.getDate() + 1);
             }
         }
-
-        granjaSegundo.forEach(date => {
-            const current = specialActivities[date] ? specialActivities[date].html : "";
-            const logistics = `<div class="bg-emerald-50 p-2 rounded-lg border-2 border-emerald-300 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🚜 VISITA GRANJA 2D:</p><p class="text-[10px] text-emerald-800 font-bold mb-1 italic">¡Fecha de visita!</p><div class="space-y-1 text-[9px] text-emerald-900 leading-tight"><p>⏰ 7:20 AM - Llegada Nexus</p><p>🚌 8:00 AM - Salida Granja</p><p>🥪 Merienda ligera y cómoda</p><p>🎒 Maleta pequeña recomendada</p><p>💵 Costo: $21.800 (sin ruta)</p></div></div>`;
-            specialActivities[date] = { html: current + logistics, reminder: "Visita Granja 2D" };
-        });
-
-        muestraRange.forEach(date => {
-            const current = specialActivities[date] ? specialActivities[date].html : "";
-            specialActivities[date] = { html: current + `<div class="bg-indigo-100 p-2 rounded-lg border border-indigo-300 mb-2"><p class="text-[9px] text-indigo-700 font-black uppercase">🎭 MUESTRA:</p><p class="text-[10px] text-indigo-800 font-bold leading-tight italic">Muestra de proyectos.</p></div>`, reminder: "Muestra Proyectos" };
-        });
 
         function isHoliday(date) {
             const iso = getLocalISODate(date);
@@ -425,13 +370,19 @@
             return check;
         }
 
+        // FUNCIÓN CLAVE: Soporta múltiples periodos (reinicio de ancla)
         function getCycleDay(targetDate) {
             if (isNonWorkingDay(targetDate)) return null;
-            const diffTime = targetDate - CYCLE_ANCHOR_DATE;
+            
+            // Buscar en qué periodo está la fecha (en reversa para agarrar el más reciente)
+            const currentPeriod = [...ACADEMIC_PERIODS].reverse().find(p => targetDate >= p.start);
+            if (!currentPeriod) return null;
+
+            const diffTime = targetDate - currentPeriod.start;
             const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
             
             let nonWorkingCount = 0;
-            let tempDate = new Date(CYCLE_ANCHOR_DATE);
+            let tempDate = new Date(currentPeriod.start);
             let step = diffDays >= 0 ? 1 : -1;
             let absoluteDiff = Math.abs(diffDays);
             
@@ -440,7 +391,7 @@
                 if (isNonWorkingDay(tempDate)) nonWorkingCount += step;
             }
             const schoolDaysDiff = diffDays - nonWorkingCount;
-            let result = (CYCLE_ANCHOR_DAY_NUM + schoolDaysDiff) % 6;
+            let result = (currentPeriod.anchorDay + schoolDaysDiff) % 6;
             if (result <= 0) result += 6;
             return result;
         }
@@ -484,8 +435,21 @@
             const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
             const dayNamesShort = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
             let weekNumber = 1;
+            let currentPeriodName = "I Trimestre";
 
             while (checkDate <= endDate) {
+                let periodName = [...ACADEMIC_PERIODS].reverse().find(p => checkDate >= p.start).name;
+                if (periodName !== currentPeriodName) {
+                    currentPeriodName = periodName;
+                    tbody.insertAdjacentHTML('beforeend', `
+                        <tr class="no-print">
+                            <td colspan="8" class="bg-emerald-600 text-white text-center py-2 font-black text-xs tracking-widest uppercase">
+                                ✨ INICIO ${currentPeriodName.toUpperCase()} - REINICIO CICLO ✨
+                            </td>
+                        </tr>
+                    `);
+                }
+
                 let cycleRow = { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null };
                 let weekendItems = [];
                 let daysInCycle = 0;
@@ -493,6 +457,11 @@
                 let isTodayInWeekend = false;
 
                 while (daysInCycle < 6 && checkDate <= endDate) {
+                    let checkPeriodName = [...ACADEMIC_PERIODS].reverse().find(p => checkDate >= p.start).name;
+                    if (checkPeriodName !== currentPeriodName) {
+                        break;
+                    }
+
                     const iso = getLocalISODate(checkDate);
                     const bdays = BIRTHDAYS.filter(b => b.month === checkDate.getMonth() && b.day === checkDate.getDate());
                     const dateLabel = `${dayNamesShort[checkDate.getDay()]}, ${checkDate.getDate()} ${monthNames[checkDate.getMonth()]}`;
@@ -502,16 +471,15 @@
                         let info = `<div class="${isTodayLocal ? 'is-today-marker rounded px-1' : ''}"><span class="font-bold annual-text-date">${dateLabel}</span>`;
                         if (bdays.length > 0) info += bdays.map(b => `<br><span class="text-blue-700 font-black annual-text-bday">🎂 ${b.name}</span>`).join('');
                         else if (isHoliday(checkDate)) {
-                            const isHolyWeek = checkDate >= new Date(2026, 2, 30) && checkDate <= new Date(2026, 3, 3);
-                            const isMidYear = checkDate >= new Date(2026, 5, 22) && checkDate <= new Date(2026, 6, 13);
-                            const isRecess = checkDate >= new Date(2026, 9, 5) && checkDate <= new Date(2026, 9, 9);
-                            
                             let label = 'FESTIVO';
-                            if (isHolyWeek) label = 'S. SANTA';
-                            else if (isMidYear) label = 'VACACIONES';
-                            else if (isRecess) label = 'RECESO';
-
+                            if (checkDate >= new Date(2026, 2, 30) && checkDate <= new Date(2026, 3, 3)) label = 'S. SANTA';
+                            else if (checkDate >= new Date(2026, 5, 22) && checkDate <= new Date(2026, 6, 13)) label = 'VACACIONES';
+                            else if (checkDate >= new Date(2026, 9, 5) && checkDate <= new Date(2026, 9, 9)) label = 'RECESO';
+                            else if (iso === "2026-05-08") label = 'PEDAGÓGICA';
                             info += `<br><span class="text-red-600 font-black uppercase annual-text-sub">${label}</span>`;
+                        }
+                        if (specialActivities[iso]) {
+                            info += `<br><span class="text-[9px] text-orange-600 font-bold uppercase">⚠️ ${specialActivities[iso].reminder}</span>`;
                         }
                         info += `</div>`;
                         weekendItems.push(info);
@@ -522,27 +490,30 @@
                             let cellContent = `<p class="font-black text-gray-900 annual-text-date mb-1">${dateLabel}</p>`;
                             if (bdays.length > 0) cellContent += bdays.map(b => `<p class="text-blue-800 annual-text-bday mt-1 leading-tight font-black">🎂 ${b.name}</p>`).join('');
                             if (specialActivities[iso]) {
-                                const reminder = specialActivities[iso].reminder || "Evento";
-                                cellContent += `<p class="text-[9px] mt-1 text-orange-600 font-bold uppercase">⚠️ ${reminder}</p>`;
+                                cellContent += `<p class="text-[9px] mt-1 text-orange-600 font-bold uppercase">⚠️ ${specialActivities[iso].reminder}</p>`;
                             }
-                            cycleRow[cycle] = { html: cellContent, isToday: isTodayLocal };
-                            if (isTodayLocal) hasToday = true;
-                            daysInCycle++;
+                            if (!cycleRow[cycle]) {
+                                cycleRow[cycle] = { html: cellContent, isToday: isTodayLocal };
+                                if (isTodayLocal) hasToday = true;
+                                daysInCycle++;
+                            } else {
+                                daysInCycle++;
+                            }
                         }
                     }
                     checkDate.setDate(checkDate.getDate() + 1);
                 }
 
-                let rowHtml = `<tr class="border-b-2 border-emerald-50 ${hasToday ? 'row-contains-today' : ''}">
-                    <td class="bg-emerald-50 p-4 text-center font-black text-emerald-800 text-sm uppercase border-r border-emerald-100">S${weekNumber++}</td>`;
-                for (let c = 1; c <= 6; c++) {
-                    const d = cycleRow[c];
-                    rowHtml += d ? `<td class="p-4 text-center cycle-${c} ${d.isToday ? 'is-today-marker' : ''}">${d.html}</td>` : `<td class="p-4 bg-gray-50 opacity-10"></td>`;
+                if (daysInCycle > 0 || weekendItems.length > 0) {
+                    let rowHtml = `<tr class="border-b-2 border-emerald-50 ${hasToday ? 'row-contains-today' : ''}">
+                        <td class="bg-emerald-50 p-4 text-center font-black text-emerald-800 text-sm uppercase border-r border-emerald-100">S${weekNumber++}</td>`;
+                    for (let c = 1; c <= 6; c++) {
+                        const d = cycleRow[c];
+                        rowHtml += d ? `<td class="p-4 text-center cycle-${c} ${d.isToday ? 'is-today-marker' : ''}">${d.html}</td>` : `<td class="p-4 bg-gray-50 opacity-10"></td>`;
+                    }
+                    rowHtml += `<td class="p-4 weekend-col annual-text-sub border-l border-emerald-100 ${isTodayInWeekend ? 'is-today-marker' : ''}">${weekendItems.join('<div class="my-2 border-b border-gray-200"></div>')}</td></tr>`;
+                    tbody.insertAdjacentHTML('beforeend', rowHtml);
                 }
-                rowHtml += `<td class="p-4 weekend-col annual-text-sub leading-relaxed border-l border-emerald-100 ${isTodayInWeekend ? 'is-today-marker' : ''}">
-                    ${weekendItems.length > 0 ? weekendItems.join('<div class="my-2 border-b border-gray-200"></div>') : '-'}
-                </td></tr>`;
-                tbody.insertAdjacentHTML('beforeend', rowHtml);
             }
         }
 
@@ -550,9 +521,11 @@
             const todayElement = document.querySelector('.is-today-marker');
             if (todayElement) {
                 const row = todayElement.closest('tr');
-                row.classList.remove('highlight-row'); 
-                void row.offsetWidth; 
-                row.classList.add('highlight-row');
+                if (row) {
+                    row.classList.remove('highlight-row'); 
+                    void row.offsetWidth; 
+                    row.classList.add('highlight-row');
+                }
                 todayElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
             } else {
                 const view = document.getElementById('annual-view');
@@ -565,7 +538,6 @@
             const container = document.getElementById('grid-container');
             container.innerHTML = '';
             const todayISO = getLocalISODate(REAL_TODAY);
-            
             let startDay = getMondayOfCurrentWeek();
             startDay.setDate(startDay.getDate() + (viewOffset * 7));
             const endDay = new Date(startDay);
@@ -582,18 +554,13 @@
                 const isToday = iso === todayISO;
                 const itsHoliday = isHoliday(curr);
                 
-                const isHolyWeek = curr >= new Date(2026, 2, 30) && curr <= new Date(2026, 3, 3);
-                const isMidYear = curr >= new Date(2026, 5, 22) && curr <= new Date(2026, 6, 13);
-                const isRecess = curr >= new Date(2026, 9, 5) && curr <= new Date(2026, 9, 9);
-                
                 let holidayText = 'FESTIVO';
-                if (isHolyWeek) holidayText = 'S. SANTA';
-                else if (isMidYear) holidayText = 'VACACIONES';
-                else if (isRecess) holidayText = 'RECESO';
+                if (curr >= new Date(2026, 2, 30) && curr <= new Date(2026, 3, 3)) holidayText = 'S. SANTA';
+                else if (curr >= new Date(2026, 5, 22) && curr <= new Date(2026, 6, 13)) holidayText = 'VACACIONES';
+                else if (iso === "2026-05-08") holidayText = 'PEDAGÓGICA';
 
                 const numDia = getCycleDay(curr);
                 const uniform = itsHoliday ? "N/A" : getUniformByCycle(numDia);
-                
                 let activityHtml = "";
                 const bdays = BIRTHDAYS.reduce((acc, b) => {
                     const realDate = new Date(curr.getFullYear(), b.month, b.day);
