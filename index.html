@@ -296,7 +296,9 @@
             6: "<li>• Artes</li><li>• Español</li><li>• Socioemocional</li><li>• Math</li><li>• English</li><li>• Teatro</li>"
         };
 
-        const granjaSegundo = ["2026-03-10", "2026-07-28", "2026-09-08", "2026-11-04"];
+        const granjaSegundo = ["2026-03-10", "2026-05-26", "2026-07-28", "2026-09-08", "2026-11-04"];
+        const salidaRange = ["2026-04-13", "2026-04-14", "2026-04-15", "2026-04-16", "2026-04-17"];
+        const muestraRange = ["2026-04-28"];
 
         const specialActivities = {
             "2026-02-16": { html: `<div class="bg-blue-50 p-2 rounded-lg border border-blue-200 mb-2"><p class="text-[9px] text-blue-700 font-black uppercase">🗳️ GOBIERNO ESCOLAR:</p><p class="text-[10px] text-blue-800 font-bold leading-tight">Socialización de funciones y requisitos.</p></div>`, reminder: "Gobierno Escolar: Socialización" },
@@ -340,6 +342,43 @@
             "2026-05-29": { html: `<div class="bg-yellow-50 p-2 rounded-lg border border-yellow-300 mb-2"><p class="text-[9px] text-yellow-700 font-black uppercase">🇨🇴 ACCESORIOS COLOMBIA:</p><p class="text-[10px] text-yellow-800 font-bold leading-tight">Traer accesorios de Colombia (no camisetas de la selección). Mensajito enviado con los niños.</p></div>`, reminder: "Accesorios de Colombia" },
             "2026-12-03": { html: `<div class="bg-emerald-50 p-2 rounded-lg border-2 border-emerald-300 mb-2"><p class="text-[9px] text-emerald-700 font-black uppercase">🎁 ANUARIO 2026:</p><p class="text-[10px] text-emerald-900 font-bold">Fecha de Entrega Oficial.</p></div>`, reminder: "Entrega de Anuario" }
         };
+
+        granjaSegundo.forEach(date => {
+            const current = specialActivities[date] ? specialActivities[date].html : "";
+            const logistics = `
+                <div class="bg-emerald-50 p-2 rounded-lg border-2 border-emerald-300 mb-2">
+                    <p class="text-[9px] text-emerald-700 font-black uppercase">🚜 VISITA GRANJA 2D:</p>
+                    <p class="text-[10px] text-emerald-800 font-bold mb-1 italic">¡Fecha de visita!</p>
+                    <div class="space-y-1 text-[9px] text-emerald-900 leading-tight">
+                        <p>⏰ 7:20 AM - Llegada Nexus</p>
+                        <p>🚌 8:00 AM - Salida Granja</p>
+                        <p>🥪 Merienda ligera y cómoda</p>
+                        <p>🎒 Maleta pequeña recomendada</p>
+                        <p>💵 Costo: $21.800 (sin ruta)</p>
+                    </div>
+                </div>
+            `;
+            specialActivities[date] = { 
+                html: current + logistics,
+                reminder: "Visita Granja 2D"
+            };
+        });
+
+        salidaRange.forEach(date => {
+            const current = specialActivities[date] ? specialActivities[date].html : "";
+            specialActivities[date] = { 
+                html: current + `<div class="bg-cyan-100 p-2 rounded-lg border border-cyan-300 mb-2"><p class="text-[9px] text-cyan-700 font-black uppercase">🚌 SALIDA:</p><p class="text-[10px] text-cyan-800 font-bold leading-tight italic">Pendiente asignar día exacto.</p></div>`,
+                reminder: "Salida Proyectos (Semana)"
+            };
+        });
+
+        muestraRange.forEach(date => {
+            const current = specialActivities[date] ? specialActivities[date].html : "";
+            specialActivities[date] = { 
+                html: current + `<div class="bg-indigo-100 p-2 rounded-lg border border-indigo-300 mb-2"><p class="text-[9px] text-indigo-700 font-black uppercase">🎭 MUESTRA:</p><p class="text-[10px] text-indigo-800 font-bold leading-tight italic">Pendiente asignar día exacto.</p></div>`,
+                reminder: "Muestra Proyectos"
+            };
+        });
 
         function injectScienceReminders() {
             const startDate = new Date(2026, 0, 1); 
